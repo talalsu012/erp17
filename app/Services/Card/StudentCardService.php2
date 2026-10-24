@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Services\Card;
+
+use App\Models\Reg\Card;
+use Illuminate\Support\Facades\Log;
+use Spatie\Browsershot\Browsershot;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+class StudentCardService
+{
+    /**
+     * توليد البطاقة كـ PDF باستخدام Browsershot حصراً
+     */
+    public static function generate(Card $Card): string
+    {
+        $student = $Card->student;
+
+        // 1. تجهيز بيانات الـ QR
+        $json = json_encode([
+            'id' => $student->university_no,
+            'name' => $student->name_ar,
+            'faculty' => $student->faculty->name_ar ?? '',
+            'expiry' => $Card->expiry_date,
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $qrCode = base64_encode(
+            QrCode::format('svg')
+                ->encoding('UTF-8')
+                ->size(160)
+                ->margin(0)
+                ->errorCorrection('H')
+                ->generate($json)
+        );
+
+        $avatar = null;
+
+        if ($student->hasMedia('avatar')) {
+
+            $path = $student->getFirstMediaPath('avatar');
+
+            if (file_exists($path)) {
+
+                $type = mime_content_type($path);
+
+                $avatar = 'data:' . $type . ';base64,' . base64_encode(file_get_contents($path));
+            }
+        }
+
+        // 2. تجهيز البيانات للـ Blade
+        $data = [
+            'avatar' => $avatar,
+            'name_ar' => $student->name_ar,
+            'university_no' => $student->university_no,
+            'faculty' => $student->faculty->name_ar ?? '',
+            'department' => $student->department->name_ar ?? '',
+            'level' => $student->level->name_ar ?? '',
+            'card_number' => $Card->card_number,
+            'expiry_date' => $Card->expiry_date,
+        ];
+
+        // 3. رندر ملف الـ Blade
+        $html = view('cards.card_template', compact('Card', 'qrCode', 'data'))->render();
+
+        // 4. تنفيذ Browsershot مع إعدادات السيرفر القوية
+        // return $html;
+        return self::executeBrowsershot($html);
+    }
+
+    private static function executeBrowsershot(string $html): string
+    {
+        $nodePath = self::findNodePath();
+        $chromePath = self::findChromePath();
+
+        $browsershot = Browsershot::html($html)
+            ->showBackground()
+            ->addChromiumArguments([
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage', // مهم جداً لتفادي مشاكل الذاكرة في Docker/Linux
+                '--disable-extensions',
+                '--disable-gpu'
+            ])
+            ->paperSize(85.6, 53.98, 'mm') // مقاس بطاقة الهوية القياسي
+            ->margins(0, 0, 0, 0)
+            ->deviceScaleFactor(2) // لزيادة دقة الوضوح (High Resolution)
+            ->waitUntilNetworkIdle() // لضمان تحميل الصور والـ QR بالكامل قبل الطباعة
+            ->timeout(60);
+
+        // if ($nodePath) {
+        //     $browsershot->setNodeBinary($nodePath);
+        // }
+
+        if ($chromePath) {
+            $browsershot->setChromePath($chromePath);
+        }
+
+        return $browsershot->pdf();
+    }
+
+    private static function findNodePath(): ?string
+    {
+        $paths = [
+            '/usr/bin/node',
+            '/usr/local/bin/node',
+            trim(shell_exec('which node 2>/dev/null'))
+        ];
+
+        foreach (array_filter($paths) as $path) {
+            if (is_executable($path))
+                return $path;
+        }
+        return null;
+    }
+
+    private static function findChromePath(): ?string
+    {
+        $paths = [
+            '/usr/bin/google-chrome',
+            '/usr/bin/google-chrome-stable',
+            '/usr/bin/chromium-browser',
+            trim(shell_exec('which google-chrome 2>/dev/null'))
+        ];
+
+        foreach (array_filter($paths) as $path) {
+            if (is_executable($path))
+                return $path;
+        }
+        return null;
+    }
+}

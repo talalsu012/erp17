@@ -1,0 +1,1 @@
+O:23:"PHPStan\Cache\CacheItem":2:{s:11:"variableKey";s:73:"v2-e82bd7c9872da896a8cdad9daeaa71bbb4fa9e310870100a7bfe574243ddc6d0-8.5.1";s:4:"data";a:3:{s:7:"classes";a:1:{s:51:"filament\querybuilder\constraints\booleanconstraint";b:1;}s:9:"functions";a:0:{}s:9:"constants";a:0:{}}}

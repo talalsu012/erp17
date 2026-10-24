@@ -1,0 +1,14 @@
+includes:
+    - phpstan-baseline.neon
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - app
+        - routes
+    excludePaths:
+        - app/Models/attendances.zip
+        - app/Services/Card/StudentCardService copy.php
+        - app/Helpers/Res/Services/MarkCalculationServiceCopy.php
+    tmpDir: storage/framework/phpstan

@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+@source '../views/student/**/*.blade.php';
+@source '../views/components/student/**/*.blade.php';
+
+@theme {
+    --font-sans: 'Cairo', 'Figtree', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+[dir='rtl'] {
+    direction: rtl;
+}

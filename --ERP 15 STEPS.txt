@@ -1,0 +1,48 @@
+--ERP 15 STEPS
+1- Export and Import (Students - Payment - Mark - Certificat [Student + Mark])
+2- change ltcolumn Add Parent and child field (Student and report)
+3- install
+-  git clone https://github.com/talalsu012/erp15.git
+- 
+    cd erp
+
+    # تثبيت مكتبات لارافيل
+    composer install --no-dev --optimize-autoloader
+
+    # تثبيت مكتبات الواجهة الأمامية (إن وجدت)
+    npm install
+    npm run build
+
+    cp .env.example .env
+
+    php artisan key:generate
+
+    # إنشاء الرابط الرمزي للملفات
+    php artisan storage:link
+
+    # منح الصلاحيات للمجلدات الضرورية
+    sudo chown -R kassala:www-data storage bootstrap/cache
+    sudo chmod -R 775 storage bootstrap/cache
+
+    php artisan migrate
+
+
+    php artisan make:filament-user
+    
+
+    ---update erp from github
+        
+        php artisan down
+
+        git pull origin main (git stash)
+
+        composer install --no-dev --optimize-autoloader
+
+        php artisan filament:upgrade
+        php artisan icons:cache
+
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+
+        php artisan up

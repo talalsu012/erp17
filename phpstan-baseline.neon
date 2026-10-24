@@ -1,0 +1,1933 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property App\\Models\\attendances\\Attendance\:\:\$batch_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Console/Commands/Res/EvaluateAbsence.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\attendances\\Attendance\:\:\$semester_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Console/Commands/Res/EvaluateAbsence.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\attendances\\Attendance\:\:\$subject_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Console/Commands/Res/EvaluateAbsence.php
+
+		-
+			message: '#^Cannot access property \$value on string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Console/Commands/Res/EvaluateAbsence.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Student\:\:\$lectures\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Pages/Attendance.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 6
+			path: app/Filament/Clusters/AcademicSupervision/Pages/Attendance.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$room\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Filament/Clusters/AcademicSupervision/Pages/Attendance.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Pages/Attendance.php
+
+		-
+			message: '#^Parameter \#1 \$rules of method App\\Filament\\Clusters\\AcademicSupervision\\Pages\\Attendance\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Pages/Attendance.php
+
+		-
+			message: '#^Relation ''groupings'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Filament/Clusters/AcademicSupervision/Pages/Attendance.php
+
+		-
+			message: '#^Relation ''lectures'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Pages/Attendance.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 9
+			path: app/Filament/Clusters/AcademicSupervision/Pages/Attendance.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Clusters\\AcademicSupervision\\Pages\\ReportLecture\:\:\$end_time\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Pages/ReportLecture.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Clusters\\AcademicSupervision\\Pages\\ReportLecture\:\:\$lectureStaff\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Pages/ReportLecture.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Clusters\\AcademicSupervision\\Pages\\ReportLecture\:\:\$start_time\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Pages/ReportLecture.php
+
+		-
+			message: '#^Relation ''lectureStaff'' is not found in App\\Models\\attendances\\Lecture model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Pages/ReportLecture.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Groupings/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:students\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Groupings/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\Relation\<\*, \*, \*\>\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Groupings/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Groupings/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between \(int\|string\) and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Groupings/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Groupings/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Groupings/Tables/GroupingsTable.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\attendances\\Staff\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\attendances\\Staff\>\:\:\$subjects\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Lectures/Schemas/LectureForm.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Lectures/Schemas/LectureForm.php
+
+		-
+			message: '#^Relation ''subjects'' is not found in App\\Models\\attendances\\Staff model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Lectures/Schemas/LectureForm.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Lectures/Tables/LecturesTable.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Lectures/Tables/LecturesTable.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Rooms/Tables/RoomsTable.php
+
+		-
+			message: '#^Call to an undefined method Filament\\Forms\\Components\\Field\:\:multiple\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Staff/RelationManagers/SubjectRelationManager.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 2
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Staff/RelationManagers/SubjectRelationManager.php
+
+		-
+			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Staff/Schemas/StaffForm.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Staff/Tables/StaffTable.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Clusters/AcademicSupervision/Resources/Staff/Tables/StaffTable.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$hijri_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Cert/Resources/Cert/CertStudentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$name_en\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Cert/Resources/Cert/CertStudentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$universityno\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Clusters/Cert/Resources/Cert/CertStudentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$universityno\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Clusters/Cert/Resources/Cert/CertStudentResource/Pages/viewCertificate.php
+
+		-
+			message: '#^Relation ''batch'' is not found in App\\Models\\Res\\Mark model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/Cert/Resources/Cert/CertStudentResource/Pages/viewCertificate.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Clusters\\Invoices\\Pages\\MovingStudent\:\:\$promotionForm\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Clusters/Invoices/Pages/MovingStudent.php
+
+		-
+			message: '#^Relation ''batch'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/Invoices/Pages/MovingStudent.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/Invoices/Pages/MovingStudent.php
+
+		-
+			message: '#^Relation ''level'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/Invoices/Pages/MovingStudent.php
+
+		-
+			message: '#^Cannot access property \$bank_pay on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Filament/Clusters/Invoices/Resources/Invoices/Pages/EditInvoice.php
+
+		-
+			message: '#^Relation ''users'' is not found in App\\Models\\Reg\\Faculty model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/Reg/Pages/FeesReport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$complete\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Reg/Pages/StatusReport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$noreg\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Reg/Pages/StatusReport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$total\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Filament/Clusters/Reg/Pages/StatusReport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$unreg\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Reg/Pages/StatusReport.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/Reg/Pages/StatusReport.php
+
+		-
+			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 5
+			path: app/Filament/Clusters/Reg/Pages/StatusReport.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/Reg/Pages/StatusReport.php
+
+		-
+			message: '#^Relation ''users'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Clusters/Reg/Pages/StatusReport.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Reg\\AdmissionStage will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Filament/Clusters/Reg/Resources/AdmissionWorkflows/Tables/AdmissionWorkflowsTable.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$portalUser\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Reg/Resources/Cards/Tables/CardsTable.php
+
+		-
+			message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Filament/Clusters/Reg/Resources/Cards/Tables/CardsTable.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 4
+			path: app/Filament/Clusters/Reg/Resources/OpenRegs/Tables/OpenRegsTable.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/Reg/Resources/Payments/Schemas/PaymentForm.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 3
+			path: app/Filament/Clusters/Reg/Resources/Payments/Tables/PaymentsTable.php
+
+		-
+			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/Reg/Resources/Payments/Tables/PaymentsTable.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$faculty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Reg/Resources/Specials/Schemas/SpecialsForm.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Clusters/Reg/Resources/Specials/Schemas/SpecialsForm.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/Reg/Resources/Students/Tables/Filters/StudentFilters.php
+
+		-
+			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 6
+			path: app/Filament/Clusters/Reg/Resources/Students/Tables/Filters/StudentFilters.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Student\:\:\$grouping\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Clusters/Res/Pages/EntryMarks/EntryMark.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$grade\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Res/Pages/EntryMarks/EntryMark.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$reson_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Res/Pages/EntryMarks/EntryMark.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>exam" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Clusters/Res/Pages/EntryMarks/EntryMark.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Clusters/Res/Pages/EntryMarks/EntryMark.php
+
+		-
+			message: '#^Trait App\\Filament\\Clusters\\Res\\Pages\\EntryMarks\\EntryMarkForm is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: app/Filament/Clusters/Res/Pages/EntryMarks/EntryMarkForm.php
+
+		-
+			message: '#^Trait App\\Filament\\Clusters\\Res\\Pages\\EntryMarks\\EntryMarkTable is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: app/Filament/Clusters/Res/Pages/EntryMarks/EntryMarkTable.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 2
+			path: app/Filament/Clusters/Res/Pages/Res/Report/PrintMark.php
+
+		-
+			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Reg\\AbsenceStatus\:\:DeprivationProposed, App\\Reg\\AbsenceStatus\:\:Deprived\} and true will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Filament/Clusters/Res/Resources/AbsenceDecisions/Tables/AbsenceDecisionsTable.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Reg\\AbsenceStatus\:\:DeprivationProposed will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Filament/Clusters/Res/Resources/AbsenceDecisions/Tables/AbsenceDecisionsTable.php
+
+		-
+			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/Res/Resources/Grades/Schemas/GradeForm.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_locked\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Clusters/Res/Resources/Marks/MarkResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Filament/Clusters/Res/Resources/Marks/Tables/MarksTable.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 4
+			path: app/Filament/Clusters/Res/Resources/Marks/Tables/MarksTable.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_locked\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Clusters/Res/Resources/Recoms/RecomResource.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/Res/Resources/Recoms/Schemas/RecomForm.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Clusters/Res/Resources/Subjects/Tables/SubjectsTable.php
+
+		-
+			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 2
+			path: app/Filament/Clusters/Res/Resources/Subjects/Tables/SubjectsTable.php
+
+		-
+			message: '#^Cannot call method update\(\) on array\<string, mixed\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Filament/Clusters/Res/Resources/Subjects/Tables/SubjectsTable.php
+
+		-
+			message: '#^Parameter \#1 \$message of function logger expects string\|null, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Imports/Cert/CertStudentImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$deleted_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fees\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fees1\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fees2\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fees3\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_en\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$reg_fees\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:trashed\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Imports/Reg/StudentImporter.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Reg\\Department\:\:\$faculty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Users/Schemas/UserForm.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Student\:\:\$count\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Widgets/FeesPaymentChart.php
+
+		-
+			message: '#^Relation ''students'' is not found in App\\Models\\Reg\\Faculty model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Widgets/FeesPaymentChart.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Filament/Widgets/StatusWidget.php
+
+		-
+			message: '#^Relation ''users'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Filament/Widgets/StatusWidget.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Subject\:\:\$special_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/Res/MarkHelper.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 2
+			path: app/Helpers/Res/MarkHelper.php
+
+		-
+			message: '#^Parameter \#1 \$e of static method App\\Helpers\\Res\\MarkHelper\:\:handleStatisticsError\(\) expects Exception, Throwable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Helpers/Res/MarkHelper.php
+
+		-
+			message: '#^Method App\\Helpers\\Res\\Services\\MarkCalculationService\:\:getPreviousExternalExamCount\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Helpers/Res/Services/MarkCalculationService.php
+
+		-
+			message: '#^Method App\\Helpers\\Res\\Services\\MarkCalculationService\:\:getPreviousRepeatCount\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Helpers/Res/Services/MarkCalculationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Mark\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Mark\:\:\$crch\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Mark\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Student\:\:\$attended_lectures\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Student\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Student\:\:\$total_lectures\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_visible\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Relation ''batch'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Relation ''department'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Relation ''lectures'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Relation ''special'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Helpers/StudentHelper.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$alumia_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$faculty_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$name_en\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$universityno\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_en\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Call to method count\(\) on an unknown class App\\Helpers\\Illuminate\\Support\\Collection\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Iterating over an object of an unknown class App\\Helpers\\Illuminate\\Support\\Collection\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Method App\\Helpers\\TranscriptGenerator\:\:marksFor\(\) should return Illuminate\\Support\\Collection\<int, App\\Models\\Res\\Mark\|App\\Models\\Res\\RecordMark\> but returns Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Res\\Mark\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Method App\\Helpers\\TranscriptGenerator\:\:marksFor\(\) should return Illuminate\\Support\\Collection\<int, App\\Models\\Res\\Mark\|App\\Models\\Res\\RecordMark\> but returns Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Res\\RecordMark\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Parameter \#1 \$yearMarks of static method App\\Helpers\\TranscriptGenerator\:\:calculateYearGrade\(\) expects App\\Helpers\\Illuminate\\Support\\Collection, Illuminate\\Support\\Collection\<int, App\\Models\\Res\\Mark\|App\\Models\\Res\\RecordMark\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Parameter \$allMarks of method App\\Helpers\\TranscriptGenerator\:\:calculateOverallClass\(\) has invalid type App\\Helpers\\Illuminate\\Support\\Collection\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Parameter \$yearMarks of method App\\Helpers\\TranscriptGenerator\:\:calculateYearGrade\(\) has invalid type App\\Helpers\\Illuminate\\Support\\Collection\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Relation ''batch'' is not found in App\\Models\\Res\\Mark model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Static method App\\Helpers\\TranscriptGenerator\:\:calculateOverallClass\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Static method App\\Helpers\\TranscriptGenerator\:\:getAcademicYear\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Helpers/TranscriptGenerator.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:students\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Attendance/AttendanceReportController.php
+
+		-
+			message: '#^Call to static method findOrFail\(\) on an unknown class App\\Models\\Reg\\Batch\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/BatchReportController.php
+
+		-
+			message: '#^Call to static method with\(\) on an unknown class App\\Models\\Reg\\Batch\.$#'
+			identifier: class.notFound
+			count: 3
+			path: app/Http/Controllers/BatchReportController.php
+
+		-
+			message: '#^Call to static method with\(\) on an unknown class App\\Models\\Result\\Subject\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/BatchReportController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 4
+			path: app/Http/Controllers/BatchReportController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$alumia_date\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/CertificateController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$faculty_code\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/CertificateController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$hijri_date\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/CertificateController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$verify_hash\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/CertificateController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/CertificateController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$marks\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Res/EntryMarkPrintController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Res/EntryMarkPrintController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$university_no\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Res/EntryMarkPrintController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Controllers/Res/EntryMarkPrintController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,array\<string, mixed\>\>\:\:filter\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Controllers/Res/EntryMarkPrintController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\LtRecom\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Res/PrintSummaryController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Res/PrintSummaryController.php
+
+		-
+			message: '#^Relation ''batch'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Res/PrintSummaryController.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Res/PrintSummaryController.php
+
+		-
+			message: '#^Relation ''level'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Res/PrintSummaryController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 4
+			path: app/Http/Controllers/Res/ReportController.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Http/Controllers/Res/StudentResultsController.php
+
+		-
+			message: '#^Relation ''academicYear'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Res/TranscriptController.php
+
+		-
+			message: '#^Relation ''batch'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Res/TranscriptController.php
+
+		-
+			message: '#^Relation ''department'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Res/TranscriptController.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Res/TranscriptController.php
+
+		-
+			message: '#^Relation ''special'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Res/TranscriptController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\StudentAccount\:\:\$avatar_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\StudentAccount\:\:\$university_no\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Student\\DashboardController\:\:buildTerms\(\) should return Illuminate\\Support\\Collection\<int, array\<string, mixed\>\> but returns Illuminate\\Support\\Collection\<int, array\{level\: mixed, batch\: mixed, semester\: int, exam_type\: int, marks\: Illuminate\\Support\\Collection\<int, mixed\>, recom\: App\\Models\\Res\\Recom\|null, sort\: array\{int, int, int, int\}\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''academicYear'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''admission'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''batch'' is not found in App\\Models\\Res\\Mark model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''batch'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''department'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''discountPercent'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''gender'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''installment'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''level'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''nationality'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''special'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''stady'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''status'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Relation ''x_status'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>payments" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/Student/DashboardController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\StudentAccount\:\:\$avatar_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Student/PhotoController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\InvoiceResource\:\:\$amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/InvoiceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\InvoiceResource\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/InvoiceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\InvoiceResource\:\:\$sys_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/InvoiceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\InvoiceResource\:\:\$university_no\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/InvoiceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StudentFeeResource\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StudentFeeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StudentFeeResource\:\:\$pay1\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StudentFeeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StudentFeeResource\:\:\$pay2\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StudentFeeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StudentFeeResource\:\:\$pay3\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StudentFeeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StudentFeeResource\:\:\$pay4\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StudentFeeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StudentFeeResource\:\:\$university_no\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StudentFeeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$alumia_date\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Cert/CertStudent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$faculty_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Cert/CertStudent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Cert/CertStudent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$name_en\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Cert/CertStudent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Cert\\CertStudent\:\:\$verify_hash\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Cert/CertStudent.php
+
+		-
+			message: '#^Method App\\Models\\Res\\Grade\:\:forPlan\(\) should return Illuminate\\Support\\Collection\<int, App\\Models\\Res\\Grade\> but returns Illuminate\\Database\\Eloquent\\Collection\<int, static\(App\\Models\\Res\\Grade\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Res/Grade.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Student\:\:\$student_account\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Student.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$recomName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Student.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Support\\HigherOrderCollectionProxy\<string, Illuminate\\Database\\Eloquent\\Model, Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\>\:\:\$fields\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/attendances/Grouping.php
+
+		-
+			message: '#^Method App\\Models\\attendances\\LectureStaff\:\:updateExecutiveTime\(\) should return bool but returns App\\Models\\attendances\\LectureStaff\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/attendances/LectureStaff.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\attendances\\LectureStaff\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/attendances/LectureStaff.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\attendances\\LectureStaff\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/attendances/LectureStaff.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\attendances\\LectureStudent\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/attendances/LectureStudent.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\attendances\\LectureStudent\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/attendances/LectureStudent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$staff\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/MarkPolicy.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Reg\\MarkApprovalStage\:\:Approved is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Policies/MarkPolicy.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Reg\\MarkApprovalStage\:\:Dean is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Policies/MarkPolicy.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Reg\\MarkApprovalStage\:\:HeadDepartment is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Policies/MarkPolicy.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Reg\\MarkApprovalStage\:\:Professor is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Policies/MarkPolicy.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Reg\\MarkApprovalStage\:\:Rejected is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Policies/MarkPolicy.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Reg\\MarkApprovalStage\:\:ScientificAffairs is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: app/Policies/MarkPolicy.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:hasAnyRole\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Policies/Reg/AdmissionWorkflowPolicy.php
+
+		-
+			message: '#^Parameter \#1 \$queue of method ShuvroRoy\\FilamentSpatieLaravelBackup\\FilamentSpatieLaravelBackupPlugin\:\:usingQueue\(\) expects string, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/Filament/AdminPanelProvider.php
+
+		-
+			message: '#^Method App\\Reg\\AbsStatus\:\:getColor\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AbsStatus.php
+
+		-
+			message: '#^Method App\\Reg\\AbsStatus\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AbsStatus.php
+
+		-
+			message: '#^Method App\\Reg\\AbsStatus\:\:getIcon\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AbsStatus.php
+
+		-
+			message: '#^Method App\\Reg\\AbsStatus\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AbsStatus.php
+
+		-
+			message: '#^Method App\\Reg\\AbsenceStatus\:\:getColor\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AbsenceStatus.php
+
+		-
+			message: '#^Method App\\Reg\\AbsenceStatus\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AbsenceStatus.php
+
+		-
+			message: '#^Method App\\Reg\\AbsenceStatus\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AbsenceStatus.php
+
+		-
+			message: '#^Method App\\Reg\\AdmissionStage\:\:getColor\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AdmissionStage.php
+
+		-
+			message: '#^Method App\\Reg\\AdmissionStage\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AdmissionStage.php
+
+		-
+			message: '#^Method App\\Reg\\AdmissionStage\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/AdmissionStage.php
+
+		-
+			message: '#^Method App\\Reg\\CardStatus\:\:getColor\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/CardStatus.php
+
+		-
+			message: '#^Method App\\Reg\\CardStatus\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/CardStatus.php
+
+		-
+			message: '#^Method App\\Reg\\CardStatus\:\:getIcon\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/CardStatus.php
+
+		-
+			message: '#^Method App\\Reg\\CardStatus\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/CardStatus.php
+
+		-
+			message: '#^Method App\\Reg\\InvoiceStatus\:\:getColor\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/InvoiceStatus.php
+
+		-
+			message: '#^Method App\\Reg\\InvoiceStatus\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/InvoiceStatus.php
+
+		-
+			message: '#^Method App\\Reg\\InvoiceStatus\:\:getIcon\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/InvoiceStatus.php
+
+		-
+			message: '#^Method App\\Reg\\InvoiceStatus\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/InvoiceStatus.php
+
+		-
+			message: '#^Method App\\Reg\\MarkApprovalStage\:\:getColor\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/MarkApprovalStage.php
+
+		-
+			message: '#^Method App\\Reg\\MarkApprovalStage\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/MarkApprovalStage.php
+
+		-
+			message: '#^Method App\\Reg\\MarkApprovalStage\:\:getIcon\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/MarkApprovalStage.php
+
+		-
+			message: '#^Method App\\Reg\\MarkApprovalStage\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/MarkApprovalStage.php
+
+		-
+			message: '#^Method App\\Reg\\PlanStatus\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/PlanStatus.php
+
+		-
+			message: '#^Method App\\Reg\\Semester\:\:getColor\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/Semester.php
+
+		-
+			message: '#^Method App\\Reg\\Semester\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/Semester.php
+
+		-
+			message: '#^Method App\\Reg\\Semester\:\:getIcon\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/Semester.php
+
+		-
+			message: '#^Method App\\Reg\\Semester\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/Semester.php
+
+		-
+			message: '#^Method App\\Reg\\ltColumnCode\:\:getIcon\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/ltColumnCode.php
+
+		-
+			message: '#^Method App\\Reg\\ltColumnCode\:\:getLabel\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Reg/ltColumnCode.php
+
+		-
+			message: '#^Cannot call method getLabel\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/AdmissionWorkflowService.php
+
+		-
+			message: '#^Parameter \#1 \$student of method App\\Services\\AdmissionWorkflowService\:\:createStudentAccount\(\) expects App\\Models\\Student, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/AdmissionWorkflowService.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and App\\Reg\\AdmissionStage will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Services/AdmissionWorkflowService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$gpa\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$avg\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$currency\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$debtors\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$due\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$faculty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fees\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$gpa\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$k\.$#'
+			identifier: property.notFound
+			count: 11
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$n\.$#'
+			identifier: property.notFound
+			count: 11
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$paid\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$passed\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$students\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: array\{name\: string, gpa\: float, meta\: string\}, Closure\(App\\Models\\Res\\Recom\)\: array\{name\: string, gpa\: float, meta\: string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>value" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Analytics/DashboardAnalyticsService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$faculty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Card/StudentCardService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Card/StudentCardService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$university_no\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Card/StudentCardService.php
+
+		-
+			message: '#^Static method App\\Services\\Card\\StudentCardService\:\:mediaToBase64\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Services/Card/StudentCardService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 3
+			path: app/Services/Card/StudentCardService.php
+
+		-
+			message: '#^Parameter \#1 \$universityNo of method App\\Helpers\\TranscriptGenerator\:\:generateTranscript\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/CertificateService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Invoice\\Invoice\:\:\$bank_pay\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/PaymentService.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Invoice\\Invoice model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Services/PaymentService.php
+
+		-
+			message: '#^Relation ''faculty'' is not found in App\\Models\\Student model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Services/PaymentService.php
+
+		-
+			message: '#^Relation ''systype'' is not found in App\\Models\\Invoice\\Invoice model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Services/PaymentService.php
+
+		-
+			message: '#^Call to function in_array\(\) with arguments string, array\{App\\Reg\\AbsenceStatus\:\:DeprivationProposed, App\\Reg\\AbsenceStatus\:\:Deprived\} and true will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Services/Res/AbsenceService.php
+
+		-
+			message: '#^Cannot call method isDecided\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Res/AbsenceService.php
+
+		-
+			message: '#^Method App\\Services\\Res\\AbsenceService\:\:decide\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Services/Res/AbsenceService.php
+
+		-
+			message: '#^Property App\\Models\\Res\\AbsenceDecision\:\:\$status \(string\) does not accept App\\Reg\\AbsenceStatus\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Services/Res/AbsenceService.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and App\\Reg\\AbsenceStatus\:\:DeprivationProposed will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Services/Res/AbsenceService.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: app/Services/Res/AbsenceService.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
+			path: app/Services/Res/AbsenceService.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Res/AbsenceService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Mark\:\:\$department_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Mark\:\:\$special_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$cgpa\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$countSubject\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$crch_fail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$department_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$gpa\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$s_abs\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$s_fail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$s_pass\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$special_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$sumMarks\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\SubjectApprovalStatus\:\:\$current_stage\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$crch\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_en\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Cannot access property \$value on string\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: array\<string, mixed\>, Closure\(App\\Models\\Res\\RecordMark\)\: array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: array\<string, mixed\>, Closure\(App\\Models\\Res\\RecordRecom\)\: array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/Res/FinalizationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Subject\:\:\$special_code\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Res/MarkEntryService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\SubjectApprovalStatus\:\:\$current_stage\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/MarkEntryService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>current_stage" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Res/MarkEntryService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>lower" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Res/MarkEntryService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>title" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Res/MarkEntryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$recom_code\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Res/RegulationService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>lower" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Res/RegulationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\SubjectApprovalStatus\:\:\$current_stage\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/ResultService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>current_stage" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Res/ResultService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Reg\\Department\:\:\$metadata\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Reg\\Faculty\:\:\$metadata\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Res\\Recom\:\:\$gpa\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Student\:\:\$sheetRecom\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$grade\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$mark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_ar\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Method App\\Services\\Res\\ResultSheetService\:\:history\(\) should return Illuminate\\Support\\Collection\<int\|string, array\{batch\: mixed, level\: string\|null, gpa\: mixed, recom\: string\|null\}\> but returns Illuminate\\Support\\Collection\<\(int\|string\), array\{batch\: int\<0, max\>, level\: mixed, gpa\: mixed, recom\: mixed\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Res\\Recom\>\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>metadata" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_ar" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/Res/ResultSheetService.php
+
+		-
+			message: '#^Trait App\\Traits\\ArabicGlyph is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: app/Traits/ArabicGlyph.php

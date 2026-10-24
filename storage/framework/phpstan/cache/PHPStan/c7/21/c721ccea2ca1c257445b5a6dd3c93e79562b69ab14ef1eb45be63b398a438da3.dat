@@ -1,0 +1,1 @@
+O:23:"PHPStan\Cache\CacheItem":2:{s:11:"variableKey";s:73:"v2-010e49e91cb26f539e6d64554ebe5ea005eef9c8015e0528b94e02daeb086f42-8.5.1";s:4:"data";a:3:{s:7:"classes";a:1:{s:44:"symfony\component\console\helper\progressbar";b:1;}s:9:"functions";a:0:{}s:9:"constants";a:0:{}}}
