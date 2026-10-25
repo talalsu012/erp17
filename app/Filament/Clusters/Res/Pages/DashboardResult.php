@@ -218,7 +218,7 @@ class DashboardResult extends Page
                                 $set('university_no', null);
                             }),
 
-                        Hidden::make('semester')->default(1),
+                        Hidden::make('semester')->default(\App\Services\Res\RegulationProfile::current()->defaultSemester()),
 
                         Select::make('absent')
                             ->label(__('res.absent'))
@@ -544,6 +544,33 @@ class DashboardResult extends Page
                                                 collect($formData)->only(['batch', 'faculty', 'department', 'special', 'level', 'absent', 'subjects', 'result_type'])->all(),
                                                 filled(...),
                                             ));
+                                        }),
+                                    Action::make('printYearResult')
+                                        ->label(__('res.print_year_result'))
+                                        ->icon('heroicon-m-document-text')
+                                        ->color('gray')
+                                        ->outlined()
+                                        ->visible(fn (): bool => \App\Services\Res\RegulationProfile::current()->combinesYearForSupplements())
+                                        ->action(function ($livewire) {
+                                            $livewire->validate([
+                                                'batch' => 'required',
+                                                'faculty' => 'required',
+                                                'department' => 'required',
+                                                'level' => 'required',
+                                            ], [
+                                                'batch.required' => Bilingual::msg('res_validation.batch_required'),
+                                                'faculty.required' => Bilingual::msg('res_validation.faculty_required'),
+                                                'department.required' => Bilingual::msg('res_validation.department_required'),
+                                                'level.required' => Bilingual::msg('res_validation.level_required'),
+                                            ]);
+
+                                            return redirect()->route('reports.year_result', array_filter([
+                                                'batch' => $livewire->batch,
+                                                'faculty' => $livewire->faculty,
+                                                'department' => $livewire->department,
+                                                'special' => $livewire->special,
+                                                'level' => $livewire->level,
+                                            ], filled(...)));
                                         }),
                                     Action::make('printStudent')
                                         ->label(__('res.print_student'))

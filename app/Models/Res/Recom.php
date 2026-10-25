@@ -9,13 +9,14 @@ use App\Models\Student;
 use App\Reg\AbsStatus;
 use App\Reg\Semester;
 use App\Traits\GuardsFinalizedRecords;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Recom extends Model
 {
-    use GuardsFinalizedRecords, SoftDeletes;
+    use GuardsFinalizedRecords, HasFactory, SoftDeletes;
 
     // Explicitly define the table name if it doesn't follow Laravel's pluralization convention
     protected $table = 'res_recoms';

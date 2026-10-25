@@ -2,15 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\Student;
 use Illuminate\Database\Seeder;
 
 class StudentSeedr extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    public const STUDENTS_COUNT = 50;
+
     public function run(): void
     {
-        \App\Models\Student::factory()->count(5)->create();
+        Student::factory()->count(self::STUDENTS_COUNT)->create();
     }
 }

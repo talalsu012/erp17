@@ -348,7 +348,7 @@ class ResultSheetService
     }
 
     /** @return array<int, array{name: string, title: string}> */
-    private function signatories(?Faculty $faculty, ?Department $department): array
+    public function signatories(?Faculty $faculty, ?Department $department): array
     {
         $meta = (object) ($faculty?->metadata ?? []);
         $departmentMeta = (object) ($department?->metadata ?? []);

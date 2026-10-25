@@ -183,13 +183,16 @@ class SubjectsForm
                                     ->label(__('res.semester'))
                                     ->required()
                                     ->native(false)
-                                    ->options([
-                                        '1' => __('res.first_semester'),
-                                        // '2' => __('res.second_semester'),
-                                    ])
+                                    ->options(collect(\App\Services\Res\RegulationProfile::current()->subjectSemesters())
+                                        ->mapWithKeys(fn (int $semester): array => [(string) $semester => match ($semester) {
+                                            1 => __('res.first_semester'),
+                                            2 => __('res.second_semester'),
+                                            default => \App\Reg\Semester::Summer->getLabel(),
+                                        }])
+                                        ->all())
                                     ->selectablePlaceholder(false)
                                     ->prefixIcon('heroicon-o-calendar')
-                                    ->default('1'),
+                                    ->default((string) \App\Services\Res\RegulationProfile::current()->defaultSemester()),
                             ]),
                     ]),
                 // ->collapsible(),

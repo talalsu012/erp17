@@ -1,0 +1,33 @@
+user =shakan_key_ssh
+pass =shakan_key_ssh123
+
+DBName=portal_erp17
+user=portal_erp17
+Password=portal_erp17@123
+
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/portal/.ssh/shakan_key_ssh
+Your public key has been saved in /home/portal/.ssh/shakan_key_ssh.pub
+The key fingerprint is:
+SHA256:EFxenkiJhVrTLUCeuUmTb6glpNHndW/uhUjYdqZo/3Q 
+The key's randomart image is:
++---[RSA 2048]----+
+|     o+B+o.      |
+|   . .*B++..     |
+|  . ooX.+.+      |
+|   +.+ O + .     |
+|  . . * S + =    |
+|     + . + B .   |
+|    .   o o + E  |
+|       . . o o   |
+|          ..o    |
++----[SHA256]-----+
+
+
+
+
+
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMSzDaDcIwtaep/jEM1taX7vnQ96R9MhEkhPcv3fp5wISL+PZQQ7rEA2pRA4huU3SqqmEP99UYH/IyuKDcOre71hcyhSxAJjSDHA+Vg5sxccON4VmLN5zJNKCcPfR7Aa+xij8hqeCb9RXxvmj3GJs1jtgYoU6YfyAmhM7llxg8EjfpkU6t1i8fBxBgbrWn+Mvi9Lf9RPWtHLpn0RafbyjBbioBAYWmJePqwf6Jw8SKde3n1bgGwrrC9NvCeI3+zez/30tcjJS1hAYx/rArN/LQk6LaXueRNxHz9B13boXMWlVl1J6lvY0agrQiSBXYyZoxg/eax4eBL3i6HjuxrYaV

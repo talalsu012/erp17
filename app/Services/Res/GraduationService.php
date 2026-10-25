@@ -10,7 +10,7 @@ use App\Models\Student;
  */
 class GraduationService
 {
-    /** أدنى معدل تراكمي للتخرج */
+    /** @deprecated القيمة الفعلية: regulations.graduation.min_gpa */
     public const MIN_GPA = 2.0;
 
     /**
@@ -19,13 +19,15 @@ class GraduationService
      */
     public function cumulativeGpa(Student $student): float
     {
+        $profile = RegulationProfile::forFaculty($student->faculty_code);
+
         $marks = Mark::query()
             ->with('subject:code,crch')
             ->where('university_no', $student->university_no)
             ->whereNotNull('point')
             ->orderByDesc('id')
             ->get()
-            ->filter(fn (Mark $m): bool => ! in_array((int) $m->reson_code, [RegulationService::REASON_EXCLUDED, ...RegulationService::ABSENT_REASONS], true))
+            ->filter(fn (Mark $m): bool => ! in_array((int) $m->reson_code, [$profile->excludedReason(), ...$profile->absentReasons()], true))
             ->unique('subject_code');
 
         return self::gpa(
@@ -41,7 +43,7 @@ class GraduationService
 
     public static function meetsGraduation(float $gpa): bool
     {
-        return $gpa >= self::MIN_GPA;
+        return $gpa >= RegulationProfile::current()->minGpa();
     }
 
     /**
@@ -54,20 +56,15 @@ class GraduationService
             return null;
         }
 
-        if ($honours) {
-            return match (true) {
-                $gpa >= 3.5 => 'مرتبة الشرف الأولى',
-                $gpa >= 3.0 => 'مرتبة الشرف الثانية (القسم الأول)',
-                $gpa >= 2.5 => 'مرتبة الشرف الثانية (القسم الثاني)',
-                default => 'مرتبة الشرف الثالثة',
-            };
+        $profile = RegulationProfile::current();
+        $key = $honours ? 'honours' : 'general';
+
+        foreach ($profile->graduationBands() as $band) {
+            if ($gpa >= $band['min']) {
+                return $band[$key];
+            }
         }
 
-        return match (true) {
-            $gpa >= 3.5 => 'ممتاز',
-            $gpa >= 3.0 => 'جيد جداً',
-            $gpa >= 2.5 => 'جيد',
-            default => 'مقبول',
-        };
+        return $profile->graduationFallback()[$key];
     }
 }

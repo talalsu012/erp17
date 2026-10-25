@@ -16,20 +16,21 @@ use Illuminate\Support\Collection;
  */
 class RegulationService
 {
+    /** @deprecated القيم الفعلية في config/regulations.php (RegulationProfile). */
     public const PASS_MARK = 50;
 
-    /** سبب "مستبعد من الحساب" (res_resons.code) */
+    /** @deprecated القيمة الفعلية: regulations.reasons.excluded */
     public const REASON_EXCLUDED = 21;
 
-    /** سبب "غائب بعذر" (res_resons.code) */
+    /** @deprecated القيمة الفعلية: regulations.reasons.absent_codes */
     public const REASON_ABSENT = 3001;
 
-    /** رموز الغياب بعذر: الحالي 3001 والقديم 18 («غياب بعذر» من النظام السابق) */
+    /** @deprecated القيمة الفعلية: regulations.reasons.absent_codes */
     public const ABSENT_REASONS = [self::REASON_ABSENT, 18];
 
     public static function isAbsentReason(int|string|null $code): bool
     {
-        return in_array((int) $code, self::ABSENT_REASONS, true);
+        return RegulationProfile::current()->isAbsentReason($code);
     }
 
     /**
@@ -45,12 +46,15 @@ class RegulationService
     ): Recom {
         $examType = (int) $examType;
         $semester = (int) $semester;
+        $profile = RegulationProfile::forFaculty($faculty);
+        $yearEnd = $examType === 2 && $profile->combinesYearForSupplements();
+        $levels = $yearEnd ? app(AcademicYearService::class)->levelsOfYear($level) : [(int) $level];
 
         $all = Mark::query()
             ->with(['subject:code,crch', 'reason:code,recom_code'])
             ->where('university_no', $student->university_no)
             ->where('faculty_code', $faculty)
-            ->where('level_code', $level)
+            ->whereIn('level_code', $levels)
             ->where('batch_code', $batch)
             ->when($examType === 1, fn ($q) => $q->where('examType', 1))
             ->get()
@@ -59,20 +63,22 @@ class RegulationService
             ->unique('subject_code');
 
         $stats = $this->statistics(
-            $all->filter(fn (Mark $m) => (int) $m->semester === $semester),
-            $this->expectedSubjects($student, $faculty, $level),
-            self::passMarkFor($student),
+            $yearEnd ? $all : $all->filter(fn (Mark $m) => (int) $m->semester === $semester),
+            array_sum(array_map(fn (int $yearLevel): int => $this->expectedSubjects($student, $faculty, $yearLevel), $levels)),
+            self::passMarkFor($student, $profile),
+            $profile,
         );
 
-        $included = $all->filter(fn (Mark $m) => (int) $m->reson_code !== self::REASON_EXCLUDED)->count();
+        $included = $all->filter(fn (Mark $m) => (int) $m->reson_code !== $profile->excludedReason())->count();
 
         $code = self::decide(
             $examType,
             $stats,
             complete: $stats['countSubject'] === $included,
-            hasPreviousRepeat: fn () => $this->hasPrevious($student, $batch, [2001, 2002], $level),
-            hasPreviousExternal: fn () => $this->hasPrevious($student, $batch, [4005]),
-            isFinalYear: $this->isFinalYear($student, $faculty, $level),
+            hasPreviousRepeat: fn () => $this->hasPrevious($student, $batch, $profile->repeatHistoryCodes(), $level),
+            hasPreviousExternal: fn () => $this->hasPrevious($student, $batch, $profile->externalHistoryCodes()),
+            isFinalYear: $this->isFinalYear($student, $faculty, $level, $profile),
+            profile: $profile,
         );
 
         $reasonDecision = $this->reasonDecision($all);
@@ -81,7 +87,7 @@ class RegulationService
             $stats['gpa'] = 0;
         }
 
-        $targetSemester = ($semester === 1 && $examType === 2) ? 2 : $semester;
+        $targetSemester = $profile->recomSemester($semester, $examType);
 
         $key = [
             'university_no' => $student->university_no,
@@ -125,18 +131,21 @@ class RegulationService
     /**
      * حد النجاح لخطة الطالب: أدنى تقدير ناجح في res_grades (مثلاً 40 للدبلوم)، وإلا PASS_MARK.
      */
-    public static function passMarkFor(Student $student): int|float
+    public static function passMarkFor(Student $student, ?RegulationProfile $profile = null): int|float
     {
-        $lowest = Grade::lowestPassing((string) ($student->stady_code ?: Grade::DEFAULT_PLAN));
+        $profile ??= RegulationProfile::current();
+        $lowest = Grade::lowestPassing((string) ($student->stady_code ?: $profile->defaultPlan()));
 
-        return $lowest?->lower ?? self::PASS_MARK;
+        return $lowest?->lower ?? $profile->passMark();
     }
 
     /**
      * @param  Collection<int, Mark>  $marks  آخر سجل لكل مادة
      */
-    public function statistics(Collection $marks, int $subjectCount, int|float $passMark = self::PASS_MARK): array
+    public function statistics(Collection $marks, int $subjectCount, int|float|null $passMark = null, ?RegulationProfile $profile = null): array
     {
+        $profile ??= RegulationProfile::current();
+        $passMark ??= $profile->passMark();
         $stats = [
             'countSubject' => $subjectCount,
             'sumMarks' => 0,
@@ -150,7 +159,7 @@ class RegulationService
         ];
 
         foreach ($marks as $mark) {
-            if ((int) $mark->reson_code === self::REASON_EXCLUDED) {
+            if ((int) $mark->reson_code === $profile->excludedReason()) {
                 $stats['countSubject']--;
 
                 continue;
@@ -162,7 +171,7 @@ class RegulationService
             $stats['crch'] += $crch;
             $stats['points'] += (float) $mark->point * $crch;
 
-            if (self::isAbsentReason($mark->reson_code)) {
+            if ($profile->isAbsentReason($mark->reson_code)) {
                 $stats['s_abs']++;
             } elseif ($mark->mark >= $passMark) {
                 $stats['s_pass']++;
@@ -191,7 +200,10 @@ class RegulationService
         Closure $hasPreviousRepeat,
         Closure $hasPreviousExternal,
         bool $isFinalYear = false,
+        ?RegulationProfile $profile = null,
     ): RecomCode {
+        $profile ??= RegulationProfile::current();
+
         if (! $complete) {
             return RecomCode::Incomplete;
         }
@@ -215,8 +227,8 @@ class RegulationService
         $external = $once($hasPreviousExternal);
 
         return match ($examType) {
-            1 => self::decideBasicExam($stats, $failPct, $repeated, $isFinalYear),
-            2 => self::decideSupplementaryExam($stats, $failPct, $repeated, $external),
+            1 => self::decideBasicExam($stats, $failPct, $repeated, $isFinalYear, $profile),
+            2 => self::decideSupplementaryExam($stats, $failPct, $repeated, $external, $profile),
             default => RecomCode::Incomplete,
         };
     }
@@ -226,7 +238,7 @@ class RegulationService
      * رسوب أكثر من ثلث الساعات = إعادة الفصل، وأكثر من ثلثيها = فصل، وإعادة الفصل مرتين = فصل.
      * السنة النهائية لا فصل فيها بالرسوب، وتُعاد عند تجاوز الثلثين فقط.
      */
-    private static function decideBasicExam(array $stats, float $failPct, Closure $repeated, bool $isFinalYear): RecomCode
+    private static function decideBasicExam(array $stats, float $failPct, Closure $repeated, bool $isFinalYear, RegulationProfile $profile): RecomCode
     {
         $hasFail = $stats['s_fail'] > 0;
         $hasAbsent = $stats['s_abs'] > 0;
@@ -235,11 +247,11 @@ class RegulationService
             return RecomCode::Pass;
         }
 
-        if (self::failExceeds($stats, 'dismiss_above')) {
+        if (self::failExceeds($stats, 'dismiss_above', $profile)) {
             return $isFinalYear ? RecomCode::RepeatSome : RecomCode::AcademicDismissal;
         }
 
-        if (self::failExceeds($stats, 'repeat_above') && ! $isFinalYear) {
+        if (self::failExceeds($stats, 'repeat_above', $profile) && ! $isFinalYear) {
             return $repeated() ? RecomCode::AcademicDismissal : RecomCode::RepeatSome;
         }
 
@@ -255,19 +267,19 @@ class RegulationService
      *
      * @param  'repeat_above'|'dismiss_above'  $rule
      */
-    private static function failExceeds(array $stats, string $rule): bool
+    private static function failExceeds(array $stats, string $rule, RegulationProfile $profile): bool
     {
-        [$numerator, $denominator] = config("results.regulation.{$rule}");
+        [$numerator, $denominator] = $profile->failFraction($rule);
 
         return $stats['crch'] > 0
             && ($stats['crch_fail'] * $denominator) > ($stats['crch'] * $numerator);
     }
 
     /**
-     * هل المستوى من آخر فصول خطة القسم (عددها results.regulation.final_year_levels)؟
+     * هل المستوى من آخر فصول خطة القسم (عددها regulations.decisions.final_year_levels)؟
      * تُستنتج من أعلى مستويات مواد الكلية والقسم والتخصص.
      */
-    private function isFinalYear(Student $student, int|string $faculty, int|string $level): bool
+    private function isFinalYear(Student $student, int|string $faculty, int|string $level, RegulationProfile $profile): bool
     {
         $last = Subject::query()
             ->where('faculty_code', $faculty)
@@ -276,19 +288,22 @@ class RegulationService
             ->whereNotNull('level_code')
             ->distinct()
             ->orderByDesc('level_code')
-            ->limit((int) config('results.regulation.final_year_levels'))
+            ->limit($profile->finalYearLevels())
             ->pluck('level_code');
 
         return $last->contains((int) $level);
     }
 
     /** نتيجة الملاحق (examType = 2) */
-    private static function decideSupplementaryExam(array $stats, float $failPct, Closure $repeated, Closure $external): RecomCode
+    private static function decideSupplementaryExam(array $stats, float $failPct, Closure $repeated, Closure $external, RegulationProfile $profile): RecomCode
     {
+        $repeatAll = $profile->repeatAllAbovePct();
+        $repeatSome = $profile->repeatSomeAbovePct();
+
         return match (true) {
-            $failPct > 70 && ! $repeated() => RecomCode::RepeatAll,
-            $failPct > 50 && $failPct <= 70 && ! $repeated() => RecomCode::RepeatSome,
-            $stats['s_fail'] === 1 && ! $external() && ! $repeated() => RecomCode::RemoveFail,
+            $failPct > $repeatAll && ! $repeated() => RecomCode::RepeatAll,
+            $failPct > $repeatSome && $failPct <= $repeatAll && ! $repeated() => RecomCode::RepeatSome,
+            $stats['s_fail'] >= 1 && $stats['s_fail'] <= $profile->removeFailMaxSubjects() && ! $external() && ! $repeated() => RecomCode::RemoveFail,
             $stats['s_fail'] > 0 && $repeated() => RecomCode::AcademicDismissal,
             default => RecomCode::Pass,
         };

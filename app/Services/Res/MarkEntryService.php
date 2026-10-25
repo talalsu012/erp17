@@ -23,11 +23,8 @@ use Illuminate\Support\Facades\DB;
  */
 class MarkEntryService
 {
-    /** أقصى درجة في امتحان الملاحق */
+    /** @deprecated القيمة الفعلية: regulations.supplementary.max_mark (RegulationProfile::supplementaryMaxMark()) */
     public const SUPPLEMENTARY_MAX = 50;
-
-    /** نقاط ناتج الملاحق "*D" */
-    private const SUPPLEMENTARY_PASS_POINT = 2.00;
 
     public function __construct(private readonly RegulationService $regulation) {}
 
@@ -337,7 +334,7 @@ class MarkEntryService
             throw new DomainException("درجة الامتحان تتجاوز الحد الأقصى ({$examMax}).");
         }
 
-        return $examType === 2 ? min($score, self::SUPPLEMENTARY_MAX) : $score;
+        return $examType === 2 ? min($score, RegulationProfile::current()->supplementaryMaxMark()) : $score;
     }
 
     /** يجلب سجل الدرجة بقفل (أو ينشئه) بالمفتاح الفريد نفسه للجدول، ويستعيده إن كان محذوفاً. */
@@ -419,17 +416,19 @@ class MarkEntryService
         }
 
         $total = (int) $mark->mark + (int) $mark->cwork;
-        $grade = Grade::forMark($total, (string) ($student->stady_code ?: Grade::DEFAULT_PLAN));
+        $profile = RegulationProfile::current();
+        $plan = (string) ($student->stady_code ?: $profile->defaultPlan());
+        $grade = Grade::forMark($total, $plan);
 
         if (! $grade) {
             throw new DomainException("لا يوجد تقدير مُعرَّف للمجموع ({$total}) في لائحة الطالب.");
         }
 
-        if ($examType === 2 && ! RegulationService::isAbsentReason($previousReason)) {
-            $lowest = Grade::lowestPassing((string) ($student->stady_code ?: Grade::DEFAULT_PLAN));
+        if ($examType === 2 && ! $profile->isAbsentReason($previousReason)) {
+            $lowest = Grade::lowestPassing($plan);
 
-            if ((int) $mark->mark >= ($lowest?->lower ?? RegulationService::PASS_MARK)) {
-                return ['*'.($lowest?->title ?? 'D'), $lowest !== null ? (float) $lowest->point : self::SUPPLEMENTARY_PASS_POINT];
+            if ((int) $mark->mark >= ($lowest?->lower ?? $profile->passMark())) {
+                return ['*'.($lowest?->title ?? 'D'), $lowest !== null ? (float) $lowest->point : $profile->supplementaryPassPoint()];
             }
         }
 

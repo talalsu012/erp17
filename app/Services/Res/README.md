@@ -6,6 +6,10 @@
 > القاعدة الذهبية: **الصفحة للعرض فقط**. كل المنطق (الصلاحيات، التحقق، التقدير، اللائحة) في `app/Services/Res`.
 > لا تضف منطقاً داخل الصفحة، لأن خصائصها العامة (Livewire) يستطيع المتصفح تعديلها.
 
+> **تغيير اللائحة لجامعة أخرى:** كل قيم اللائحة (حد الملاحق، أرقام الأسباب، نسب الإعادة والفصل، التخرج، الغياب، نمط النظام الفصلي/السنوي)
+> صارت في `config/regulations.php` وتُقرأ عبر `RegulationProfile`. الثوابت المذكورة أدناه (`PASS_MARK`, `SUPPLEMENTARY_MAX`, ...) قديمة ولا يعتمد عليها الحساب.
+> راجع `Docs/ACADEMIC_REGULATIONS_CUSTOMIZATION.md`.
+
 ---
 
 ## 1. الخريطة السريعة
@@ -178,7 +182,7 @@ protected function scoreColumn(string $field, string $label): TextInputColumn
 | `cwork` في مادة امتحانها 100% | خطأ «ليس لها أعمال سنة» |
 | `cwork` أكبر من `100 - exam` | خطأ بالحد الأقصى |
 | `mark` أكبر من `exam` (الافتراضي 100) | خطأ بالحد الأقصى |
-| `mark` في **الملاحق** | يُقصّ إلى `SUPPLEMENTARY_MAX = 50` |
+| `mark` في **الملاحق** | يُقصّ إلى `regulations.supplementary.max_mark` (الافتراضي 50) |
 
 3. داخل معاملة: `lockRow` ثم يضبط الحقل ويصفّر `reson_code`، ثم `gradeFor`:
    - لا `mark` ولا `cwork` ← التقدير والنقاط `null`.
@@ -197,8 +201,9 @@ protected function scoreColumn(string $field, string $label): TextInputColumn
 - يجلب آخر صف لكل مادة للطالب (الأحدث `id` يغلب، فالملحق يغلب الأساسي).
 - `statistics()` يحسب: `countSubject, sumMarks, s_pass, s_fail, s_abs, crch, crch_fail, points, gpa`.
 - `decide()` دالة **نقية** (بلا قاعدة بيانات) تُرجع `RecomCode` من نوع الامتحان والإحصائيات والتاريخ السابق.
-  الحد: النجاح `PASS_MARK = 50`. الأساسي: بلا رسوب/غياب `1005`، نسبة رسوب الساعات ≥ 75% `4004`، ≥ 50% `2002` (أو `4004` إن سبقت إعادة)،
-  وأقل من ذلك: غياب فقط `3001`، غياب مع رسوب `3004`، رسوب فقط `4001`. الملاحق: > 70% `2001`، 50–70% `2002`، رسوب واحد `4005`، وإلا `1005`.
+  الحد: النجاح من `res_grades` (احتياطي `regulations.pass_mark = 50`). الأساسي: بلا رسوب/غياب `1005`، رسوب ساعات أكثر من ثلثين `4004` (السنة النهائية `2002`)،
+  أكثر من ثلث `2002` (أو `4004` إن سبقت إعادة)، وأقل من ذلك: غياب فقط `3001`، غياب مع رسوب `3004`، رسوب فقط `4001`.
+  الملاحق: > 70% `2001`، 50–70% `2002`، رسوب مادة واحدة `4005`، وإلا `1005` (النسب في `regulations.supplementary`).
 - يحفظ النتيجة في `res_recoms` (`updateOrCreate`) ويعيدها لإشعار الحفظ.
 
 ---
@@ -281,10 +286,10 @@ protected function scoreColumn(string $field, string $label): TextInputColumn
 4. لا تعدّل `EntryMark.php`: القائمة تُقرأ من الجدول. أضف اختباراً في `tests/Feature/ReasonEntryTest.php`.
 
 ### ب) تغيير سقف درجة الملاحق
-غيّر `MarkEntryService::SUPPLEMENTARY_MAX`. وللنجاح في الملاحق (`*D`) غيّر `RegulationService::PASS_MARK` ونقاط `SUPPLEMENTARY_PASS_POINT`.
+غيّر `regulations.supplementary.max_mark` و`regulations.supplementary.pass_point` في `config/regulations.php`.
 
 ### ج) تغيير حد النجاح
-`RegulationService::PASS_MARK` (يؤثر على الإحصاء وعلى `*D`). لا يغيّر جدول التقديرات؛ للتقديرات عدّل `res_grades`.
+حد النجاح يُشتق من أدنى تقدير ناجح في `res_grades`، والاحتياطي `regulations.pass_mark`. للتقديرات عدّل `res_grades`.
 
 ### د) تعديل جدول التقديرات
 عدّل صفوف `res_grades` (لكل خطة `plan`). الكاش يُمسح تلقائياً. تأكد ألا تبقى فجوات بين `lower` و`upper`.
@@ -361,7 +366,7 @@ vendor/bin/pint --format agent <الملفات التي عدّلتها>
   (`isBarredFromFinalExam`). تعيين السبب (`saveReason`) و`cwork` غير مقيدين.
 
 ### وصفات
-- **تغيير النسب:** الثابتتان `WARNING_PCT` و`DEPRIVATION_PCT` في `AbsenceService`.
+- **تغيير النسب:** `regulations.absence.warning_pct` و`regulations.absence.deprivation_pct` في `config/regulations.php`.
 - **تشغيل يدوي:** `php artisan res:evaluate-absence --batch=2026 --from=2026-09-01 --to=2026-12-31`.
 - **الدفعة والفصل** لكل سجل تؤخذان من `students.batch_code` و`subjects.semester_id`.
 - **اختبارات:** `tests/Unit/Res/AbsenceServiceTest.php`.

@@ -5,13 +5,16 @@ namespace App\Models\Invoice;
 use App\Models\Reg\Faculty;
 use App\Models\Reg\LtColumn;
 use App\Reg\InvoiceStatus;
+use Database\Factories\INV\InvoiceFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[UseFactory(InvoiceFactory::class)]
 class Invoice extends Model
 {
-    /** @use HasFactory<\Database\Factories\INV\InvoiceFactory> */
+    /** @use HasFactory<InvoiceFactory> */
     use HasFactory;
 
     use SoftDeletes;

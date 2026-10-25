@@ -14,6 +14,7 @@ use App\Models\Res\SubjectApprovalStatus;
 use App\Models\Student;
 use App\Models\User;
 use App\Reg\MarkApprovalStage;
+use App\Services\Res\RegulationProfile;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -31,6 +32,7 @@ class DashboardAnalyticsService
     /** قرارات تعني الإعادة أو الفصل (طالب في خطر) */
     public const RISK_RECOMS = [2001, 2002, 4004];
 
+    /** @deprecated القيمة الفعلية: regulations.pass_mark */
     public const PASS_MARK = 50;
 
     /** ترتيب عرض التقديرات (الخطة الافتراضية) ثم أي تقدير آخر */
@@ -341,7 +343,7 @@ class DashboardAnalyticsService
     private function subjects(User $user, array $f): array
     {
         $rows = $this->marks($user, $f)->whereNotNull('mark')
-            ->selectRaw('subject_code AS k, COUNT(*) AS n, AVG(mark) AS avg, SUM(CASE WHEN mark >= '.self::PASS_MARK.' THEN 1 ELSE 0 END) AS passed')
+            ->selectRaw('subject_code AS k, COUNT(*) AS n, AVG(mark) AS avg, SUM(CASE WHEN mark >= '.(float) RegulationProfile::current()->passMark().' THEN 1 ELSE 0 END) AS passed')
             ->groupBy('subject_code')->orderByDesc('n')->limit(60)->get();
 
         $names = Subject::query()->whereIn('code', $rows->pluck('k'))->pluck('name_ar', 'code');

@@ -3,6 +3,7 @@
 namespace App\Models\Res;
 
 use App\Models\Reg\LtColumn;
+use App\Services\Res\RegulationProfile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ class Grade extends Model
 {
     use SoftDeletes;
 
-    /** خطة البكالريوس: تُستخدم عند خلو بيانات الطالب من الخطة */
+    /** @deprecated الخطة الافتراضية الفعلية: config/regulations.php → default_plan (RegulationProfile::defaultPlan()) */
     public const DEFAULT_PLAN = '20060001';
 
     private const CACHE_SECONDS = 3600;
@@ -60,17 +61,17 @@ class Grade extends Model
     }
 
     /** التقدير المطابق لمجموع الدرجات في خطة الطالب (null إن لم يوجد نطاق مطابق) */
-    public static function forMark(int|float $mark, string $plan = self::DEFAULT_PLAN): ?Grade
+    public static function forMark(int|float $mark, ?string $plan = null): ?Grade
     {
-        return self::forPlan($plan)->first(
+        return self::forPlan($plan ?? RegulationProfile::current()->defaultPlan())->first(
             fn (Grade $grade): bool => $mark >= $grade->lower && $mark <= $grade->upper,
         );
     }
 
     /** أدنى تقدير ناجح في الخطة (نقاطه > 0)، ويحدد حد النجاح للخطة */
-    public static function lowestPassing(string $plan = self::DEFAULT_PLAN): ?Grade
+    public static function lowestPassing(?string $plan = null): ?Grade
     {
-        return self::forPlan($plan)
+        return self::forPlan($plan ?? RegulationProfile::current()->defaultPlan())
             ->filter(fn (Grade $grade): bool => (float) $grade->point > 0)
             ->sortBy('lower')
             ->first();

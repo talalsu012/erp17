@@ -63,7 +63,7 @@ class RecomForm
                                     ->preload()
                                     ->required(),
 
-                                Hidden::make('semester')->default(1),
+                                Hidden::make('semester')->default(\App\Services\Res\RegulationProfile::current()->defaultSemester()),
 
                                 Select::make('examType')
                                     ->label(__('res.absent'))

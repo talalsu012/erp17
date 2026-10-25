@@ -18,20 +18,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Academic regulation thresholds (2020)
+    | Academic regulation thresholds
     |--------------------------------------------------------------------------
     |
-    | Fractions of the semester credit hours as [numerator, denominator].
-    | repeat_above: failing MORE than this fraction repeats the semester.
-    | dismiss_above: failing MORE than this fraction dismisses (not in the final year).
-    | final_year_levels: how many last levels of a department plan count as final year.
+    | Moved to config/regulations.php (decisions.repeat_above, decisions.dismiss_above,
+    | decisions.final_year_levels) so every academic rule lives in one file.
     |
     */
-
-    'regulation' => [
-        'repeat_above' => [1, 3],
-        'dismiss_above' => [2, 3],
-        'final_year_levels' => 2,
-    ],
 
 ];

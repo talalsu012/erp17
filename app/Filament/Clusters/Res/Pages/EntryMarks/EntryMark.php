@@ -223,7 +223,7 @@ class EntryMark extends Page implements HasForms, HasTable
                             ->required()
                             ->live(),
 
-                        Hidden::make('semester')->default(1),
+                        Hidden::make('semester')->default(\App\Services\Res\RegulationProfile::current()->defaultSemester()),
 
                         Select::make('subject')
                             ->label(__('res.subject'))

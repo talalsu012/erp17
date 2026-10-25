@@ -2,108 +2,133 @@
 
 namespace Database\Factories;
 
-use App\Models\Reg\Campus;
-use App\Models\Reg\Department;
 use App\Models\Reg\Faculty;
-use App\Models\Reg\Level;
 use App\Models\Reg\LtColumn;
+use App\Models\Reg\Special;
+use App\Models\Res\Subject;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
+ * @extends Factory<Student>
  */
 class StudentFactory extends Factory
 {
+    private const GENDER_MALE = 10010001;
+
+    private const STATUS_ACTIVE = 20040001;
+
+    private const X_STATUS_UNREGISTERED = 20070003;
+
+    private const INSTALLMENT_FULL = 20050001;
+
+    private const NO_DISCOUNT = 2008000;
+
     /**
-     * Define the model's default state.
+     * يتطلب تشغيل SettingsSeeder أولاً: الكلية والقسم والمستوى تؤخذ من مقرر فعلي حتى تتسق مع جدول المقررات.
      *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
-        $fakerAr = \Faker\Factory::create('ar_SA');
-
-        $universityNo = $this->faker->unique()->numberBetween(1000000, 9999999);
+        $arabic = \Faker\Factory::create('ar_SA');
+        $subject = $this->randomCohortSubject();
+        $gender = $this->randomCode('gender');
+        $isMale = (int) $gender === self::GENDER_MALE;
+        $batchCode = $this->randomCode('academic_year');
+        $names = [
+            $arabic->firstName($isMale ? 'male' : 'female'),
+            $arabic->firstName('male'),
+            $arabic->firstName('male'),
+            $arabic->lastName(),
+        ];
+        $fees = $this->faker->randomElement([42500, 61250, 120000, 260000]);
+        $regFees = 50000;
+        $fees1 = 10000;
 
         return [
-            'university_no' => $universityNo,
-            'name_ar' => $fakerAr->name('male'),
-            'name_en' => $this->faker->name(),
-            'first_name' => $fakerAr->firstName(),
-            'second_name' => $fakerAr->firstName(),
-            'third_name' => $fakerAr->firstName(),
-            'fourth_name' => $fakerAr->lastName(),
+            'university_no' => $this->faker->unique()->numerify('2#########'),
+            'name_ar' => implode(' ', $names),
+            'name_en' => $this->faker->name($isMale ? 'male' : 'female'),
+            'first_name' => $names[0],
+            'second_name' => $names[1],
+            'third_name' => $names[2],
+            'fourth_name' => $names[3],
 
-            'faculty_code' => Faculty::inRandomOrder()->first()->code,
-            'level_code' => Level::inRandomOrder()->first()->code,
-            'campus_code' => Campus::inRandomOrder()->first()->code,
-            'department_code' => Department::inRandomOrder()->first()->code,
-            'stady_code' => LtColumn::where('group_slug', 'stady_code')->inRandomOrder()->first()->code,
-            'admission_code' => LtColumn::where('group_slug', 'admission_type')->inRandomOrder()->first()->code,
-            'academic_year_code' => LtColumn::where('group_slug', 'academic_year')->inRandomOrder()->first()->code,
-            'status_code' => LtColumn::where('group_slug', 'x_status')->inRandomOrder()->first()->code,
-            'batch_code' => LtColumn::where('group_slug', 'academic_year')->inRandomOrder()->first()->code,
-            'gender_code' => LtColumn::where('group_slug', 'gender')->inRandomOrder()->first()->code,
-            'installment_code' => LtColumn::where('group_slug', 'installment_code')->inRandomOrder()->first()->code,
-            'nationality_code' => LtColumn::where('group_slug', 'nationality')->inRandomOrder()->first()->code,
-            'nationaltyno' => $this->faker->unique()->numerify('##########'),
-            'id_photo' => null,
-            // 'gender_code' => $this->faker->numberBetween(1, 2),
-            'birth_place' => $fakerAr->city(),
-            'birth_date' => $this->faker->date(),
-            'photo' => null,
-            // 'nationality_code' => $this->faker->numberBetween(1, 10),
-            'state_code' => LtColumn::where('group_slug', 'states')->inRandomOrder()->first()->code,
-            'city' => $fakerAr->city(),
-            'localty' => $fakerAr->streetName(),
+            'campus_code' => Faculty::query()->whereKey($subject->faculty_code)->value('campus_code'),
+            'faculty_code' => $subject->faculty_code,
+            'department_code' => $subject->department_code,
+            'special_code' => Special::query()->whereKey($subject->special_code)->value('code'),
+            'level_code' => $subject->level_code,
+            'admission_code' => $this->randomCode('admission_type'),
+            'stady_code' => $this->faker->randomElement([20060001, 20060002]),
+            'academic_year_code' => $batchCode,
+            'status_code' => self::STATUS_ACTIVE,
+            'batch_code' => $batchCode,
+            'gender_code' => $gender,
+            'nationality_code' => $this->randomCode('nationality'),
+            'state_code' => $this->randomCode('states'),
+            'installment_code' => self::INSTALLMENT_FULL,
+
+            'nationaltyno' => $this->faker->unique()->numerify('###########'),
+            'birth_place' => $arabic->city(),
+            'birth_date' => $this->faker->dateTimeBetween('-30 years', '-18 years')->format('Y-m-d'),
+            'city' => $arabic->city(),
+            'localty' => $arabic->streetName(),
             'block' => $this->faker->buildingNumber(),
             'home_no' => $this->faker->buildingNumber(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
-            'mobile' => $this->faker->phoneNumber(),
-            'social_media' => null,
-            'activites' => null,
-            'skill' => null,
-            'parent' => $fakerAr->name('male'),
-            'parent_alive' => $this->faker->boolean(),
-            'parent_job' => $this->faker->jobTitle(),
-            'parent_address' => $this->faker->address(),
-            'parent_contacts' => $this->faker->phoneNumber(),
-            'mother' => $fakerAr->name('female'),
-            'mother_alive' => $this->faker->boolean(),
-            'mother_job' => $fakerAr->jobTitle(),
-            'mother_address' => $fakerAr->address(),
-            'mother_contacts' => $this->faker->phoneNumber(),
-            'brothers' => $this->faker->numberBetween(0, 5),
-            'currency' => $this->faker->randomElement(['SDG', 'USD']),
-            // 'installment_code' => $this->faker->numberBetween(1, 10),
-            'discount_percent' => $this->faker->numberBetween(0, 50),
-            'fees' => $this->faker->randomFloat(2, 1000, 5000),
-            'reg_fees' => $this->faker->randomFloat(2, 100, 500),
-            'fees1' => 0,
-            'fees2' => 0,
-            'fees3' => 0,
-            'fees4' => 0,
-            'fees5' => 0,
-            'fees6' => 0,
-            'fees7' => 0,
-            'fees8' => 0,
-            'fees9' => 0,
-            'fees10' => 0,
-            'pay1' => 0,
-            'pay2' => 0,
-            'pay3' => 0,
-            'pay4' => 0,
-            'all_fees' => 0,
-            'pay' => 0,
-            'xmod' => 0,
-            'xstatus' => 1001,
+            'mobile' => $this->faker->numerify('09########'),
+
+            'parent' => $arabic->name('male'),
+            'parent_alive' => true,
+            'parent_job' => $arabic->jobTitle(),
+            'parent_address' => $arabic->address(),
+            'parent_contacts' => $this->faker->numerify('09########'),
+            'mother' => $arabic->name('female'),
+            'mother_alive' => true,
+            'mother_job' => $arabic->jobTitle(),
+            'mother_address' => $arabic->address(),
+            'mother_contacts' => $this->faker->numerify('09########'),
+            'brothers' => (string) $this->faker->numberBetween(0, 5),
+
+            'currency' => 'SDG',
+            'discount_percent' => self::NO_DISCOUNT,
+            'fees' => $fees,
+            'reg_fees' => $regFees,
+            'fees1' => $fees1,
+            'all_fees' => $fees + $regFees + $fees1,
+            'xmod' => $fees + $regFees + $fees1,
+            'xstatus' => self::X_STATUS_UNREGISTERED,
             'indexno' => $this->faker->numerify('STU-####'),
-            'note' => $fakerAr->paragraph(),
             'is_visible' => true,
         ];
+    }
+
+    private function randomCohortSubject(): Subject
+    {
+        return Subject::query()
+            ->whereNotNull('faculty_code')
+            ->whereNotNull('department_code')
+            ->whereNotNull('level_code')
+            ->where('is_visible', true)
+            ->whereHas('faculty')
+            ->whereHas('department')
+            ->whereHas('level')
+            ->inRandomOrder()
+            ->firstOrFail();
+    }
+
+    private function randomCode(string $groupSlug): int
+    {
+        return (int) LtColumn::query()
+            ->where('group_slug', $groupSlug)
+            ->where('is_visible', true)
+            ->inRandomOrder()
+            ->value('code');
     }
 }

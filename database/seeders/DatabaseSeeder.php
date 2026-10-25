@@ -15,16 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
         $this->call([
-            RegSettingsTableSeeder::class,
-            RegLtColumns::class,
+            SettingsSeeder::class,
             StudentSeedr::class,
-            RoleSeeder::class,
+            ResultSeeder::class,
             PaymentSeeder::class,
-            RecommendationSeeder::class,
-            ResResonsSeeder::class,
         ]);
 
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@erp.test',
+        ])->assignRole('super_admin');
     }
 }

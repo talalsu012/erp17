@@ -1,0 +1,14 @@
+[
+{"code":1,"name_ar":"حرمان دائم","name_en":"top class","description":null,"mark":null,"grade":null,"point":null,"recom_code":null,"is_visible":1,"created_at":"2026-04-08 12:55:29","updated_at":"2026-04-08 12:56:01","deleted_at":"2026-04-08 12:56:01"},
+{"code":2,"name_ar":"حرمان دائم طوالي","name_en":"stop classes","description":null,"mark":null,"grade":null,"point":null,"recom_code":null,"is_visible":1,"created_at":"2026-04-08 12:55:29","updated_at":"2026-04-08 12:56:01","deleted_at":"2026-04-08 12:56:01"},
+{"code":3,"name_ar":"tytyjtyj","name_en":"rrrr","description":null,"mark":null,"grade":null,"point":null,"recom_code":null,"is_visible":1,"created_at":"2026-04-08 13:02:07","updated_at":"2026-04-08 13:06:16","deleted_at":"2026-04-08 13:06:16"},
+{"code":4,"name_ar":"tyjtyjt","name_en":"tttt","description":null,"mark":null,"grade":null,"point":null,"recom_code":null,"is_visible":1,"created_at":"2026-04-08 13:02:07","updated_at":"2026-04-08 13:06:16","deleted_at":"2026-04-08 13:06:16"},
+{"code":1001,"name_ar":"نجاح","name_en":"Pass","description":null,"mark":null,"grade":null,"point":null,"recom_code":null,"is_visible":1,"created_at":null,"updated_at":null,"deleted_at":null},
+{"code":1002,"name_ar":"نجاح سابق","name_en":null,"description":null,"mark":50,"grade":"A","point":"4.00","recom_code":null,"is_visible":1,"created_at":null,"updated_at":"2026-10-05 08:58:24","deleted_at":null},
+{"code":2001,"name_ar":"رسوب","name_en":"Fail","description":"رسوب","mark":null,"grade":"رسوب","point":null,"recom_code":null,"is_visible":1,"created_at":null,"updated_at":null,"deleted_at":null},
+{"code":2002,"name_ar":"غياب","name_en":"Absence without leave","description":"رسوب","mark":null,"grade":"رسوب","point":null,"recom_code":null,"is_visible":1,"created_at":null,"updated_at":null,"deleted_at":null},
+{"code":2003,"name_ar":"حرمان","name_en":null,"description":"رسوب","mark":null,"grade":"رسوب","point":null,"recom_code":null,"is_visible":1,"created_at":null,"updated_at":null,"deleted_at":null},
+{"code":2004,"name_ar":"حالة غش","name_en":null,"description":"رسوب","mark":null,"grade":"رسوب","point":null,"recom_code":null,"is_visible":1,"created_at":null,"updated_at":null,"deleted_at":null},
+{"code":2005,"name_ar":"فصل اداري","name_en":null,"description":"رسوب","mark":null,"grade":"رسوب","point":null,"recom_code":null,"is_visible":1,"created_at":null,"updated_at":null,"deleted_at":null},
+{"code":3001,"name_ar":"بديل","name_en":"Abs","description":"بديل","mark":null,"grade":"بديل","point":null,"recom_code":null,"is_visible":1,"created_at":null,"updated_at":null,"deleted_at":null}
+]

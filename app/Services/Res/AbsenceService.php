@@ -15,13 +15,13 @@ use DomainException;
  */
 class AbsenceService
 {
-    /** نسبة الغياب التي يُنذر عندها الطالب (تبلغ 15%) */
+    /** @deprecated القيمة الفعلية: regulations.absence.warning_pct */
     public const WARNING_PCT = 15;
 
-    /** النسبة التي يُحرم بعد تجاوزها (تتجاوز 25%) */
+    /** @deprecated القيمة الفعلية: regulations.absence.deprivation_pct */
     public const DEPRIVATION_PCT = 25;
 
-    /** الغياب بعذر يُحتسب غياباً "بصرف النظر عن سبب الغياب" حسب نص اللائحة */
+    /** @deprecated القيمة الفعلية: regulations.absence.count_excused */
     public const COUNT_EXCUSED_AS_ABSENT = true;
 
     /**
@@ -34,9 +34,11 @@ class AbsenceService
 
     public static function classify(float $pct): AbsenceStatus
     {
+        $profile = RegulationProfile::current();
+
         return match (true) {
-            $pct > self::DEPRIVATION_PCT => AbsenceStatus::DeprivationProposed,
-            $pct >= self::WARNING_PCT => AbsenceStatus::Warning,
+            $pct > $profile->absenceDeprivationPct() => AbsenceStatus::DeprivationProposed,
+            $pct >= $profile->absenceWarningPct() => AbsenceStatus::Warning,
             default => AbsenceStatus::Normal,
         };
     }
@@ -52,7 +54,7 @@ class AbsenceService
         ?CarbonInterface $from = null,
         ?CarbonInterface $to = null,
     ): array {
-        $absentStatuses = self::COUNT_EXCUSED_AS_ABSENT ? ['absent', 'excused'] : ['absent'];
+        $absentStatuses = RegulationProfile::current()->countExcusedAsAbsent() ? ['absent', 'excused'] : ['absent'];
 
         $query = Attendance::query()
             ->where('university_no', $universityNo)

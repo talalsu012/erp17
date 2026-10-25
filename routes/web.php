@@ -72,6 +72,10 @@ Route::get('/reports/semester-summary', [ReportController::class, 'semesterSumma
     ->name('reports.result_summary')
     ->middleware([Authenticate::class]);
 
+Route::get('/reports/year-result', [ReportController::class, 'yearResult'])
+    ->name('reports.year_result')
+    ->middleware([Authenticate::class]);
+
 // ------------------------------------------------------------------------
 Route::get('/student-results/{dataForm}', [StudentResultsController::class, 'showResults'])
     ->name('student.results')

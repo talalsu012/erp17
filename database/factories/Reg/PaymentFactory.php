@@ -2,52 +2,45 @@
 
 namespace Database\Factories\Reg;
 
-use App\Models\Reg\Level;
-use App\Models\Reg\LtColumn;
+use App\Models\Reg\Payment;
 use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends Factory<Payment>
  */
 class PaymentFactory extends Factory
 {
     /**
-     * Define the model's default state.
-     *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
+        $bankDate = $this->faker->dateTimeBetween('-1 year', 'now');
 
         return [
-            // جلب طالب عشوائي للتأكد من صحة العلاقة
-            'university_no' => Student::query()->inRandomOrder()->value('university_no')
-                                ?? $this->faker->numberBetween(100000, 999999),
-
-            'amount' => $this->faker->randomFloat(2, 5000, 150000),
-
-            'currency' => $this->faker->randomElement(['SDG', 'USD', 'SAR']),
-
-            'bankdate' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-
-            'bank' => $this->faker->randomElement(['BOK', 'FIB', 'LOC', 'OIB']),
-
-            'branch' => $this->faker->city().' Branch',
-
-            'voucher_no' => 'VCH-'.$this->faker->unique()->numberBetween(1000, 99999),
-
-            // جلب كود الدفعة من LtColumn بناءً على الـ group_slug الخاص بك
-            'batch_code' => LtColumn::where('grouped', '2003')->inRandomOrder()->value('code'),
-
-            // جلب كود المستوى
-            'level_code' => Level::query()->inRandomOrder()->value('code'),
-
-            'sys_type' => $this->faker->randomElement(['Online', 'Counter', 'Transfer']),
-
-            'created_at' => now(),
-            'updated_at' => now(),
-
+            'university_no' => Student::factory(),
+            'amount' => $this->faker->randomElement([60000, 110000, 260000, 500000]),
+            'currency' => 'SDG',
+            'bankdate' => $bankDate->format('Y-m-d'),
+            'bank' => $this->faker->randomElement(['FCB', 'ONB', 'NIL', 'FIB']),
+            'branch' => null,
+            'voucher_no' => $this->faker->unique()->numerify('##################'),
+            'transaction_id' => null,
+            'batch_code' => null,
+            'level_code' => null,
+            'sys_type' => null,
+            'created_at' => $bankDate,
         ];
+    }
+
+    public function forStudent(Student $student): static
+    {
+        return $this->state(fn (): array => [
+            'university_no' => $student->university_no,
+            'batch_code' => $student->batch_code,
+            'level_code' => $student->level_code,
+            'amount' => $student->all_fees > 0 ? $student->all_fees : $this->faker->randomElement([60000, 110000, 260000]),
+        ]);
     }
 }

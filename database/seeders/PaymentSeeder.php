@@ -2,15 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\Models\Reg\Payment;
+use App\Models\Student;
 use Illuminate\Database\Seeder;
 
 class PaymentSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * دفعة واحدة لكل طالب.
      */
     public function run(): void
     {
-        \App\Models\Reg\Payment::factory()->count(100)->create();
+        Student::query()->each(function (Student $student): void {
+            Payment::factory()->forStudent($student)->create();
+        });
     }
 }

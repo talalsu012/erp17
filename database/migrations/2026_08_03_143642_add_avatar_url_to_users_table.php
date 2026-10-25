@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string(config('filament-edit-profile.avatar_column', 'avatar_url'))->nullable();
+        $avatarColumn = config('filament-edit-profile.avatar_column', 'avatar_url');
+
+        if (Schema::hasColumn('users', $avatarColumn)) {
+            return;
+        }
+
+        Schema::table('users', function (Blueprint $table) use ($avatarColumn) {
+            $table->string($avatarColumn)->nullable();
         });
     }
 
@@ -21,8 +27,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(config('filament-edit-profile.avatar_column', 'avatar_url'));
-        });
+        $avatarColumn = config('filament-edit-profile.avatar_column', 'avatar_url');
+
+        if (Schema::hasColumn('users', $avatarColumn)) {
+            Schema::table('users', function (Blueprint $table) use ($avatarColumn) {
+                $table->dropColumn($avatarColumn);
+            });
+        }
     }
 };

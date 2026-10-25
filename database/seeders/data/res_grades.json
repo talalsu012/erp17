@@ -1,0 +1,13 @@
+[
+{"id":55,"title":"A","titlear":"أ","upper":100,"lower":80,"point":4,"plan":20060001,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":56,"title":"+B","titlear":"ب+","upper":79,"lower":75,"point":3.5,"plan":20060001,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":57,"title":"B","titlear":"ب","upper":74,"lower":70,"point":3,"plan":20060001,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":58,"title":"+C","titlear":"ج+","upper":69,"lower":60,"point":2.5,"plan":20060001,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":59,"title":"C","titlear":"ج","upper":59,"lower":50,"point":2,"plan":20060001,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":60,"title":"F","titlear":"ر","upper":49,"lower":0,"point":0,"plan":20060001,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":61,"title":"A","titlear":"أ","upper":100,"lower":80,"point":4,"plan":20060002,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":62,"title":"+B","titlear":"ب+","upper":79,"lower":70,"point":3.5,"plan":20060002,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":63,"title":"B","titlear":"ب","upper":69,"lower":60,"point":3,"plan":20060002,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":64,"title":"C","titlear":"ج","upper":59,"lower":40,"point":2,"plan":20060002,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null},
+{"id":65,"title":"F","titlear":"ر","upper":39,"lower":0,"point":0,"plan":20060002,"created_at":"2026-10-14 19:31:09","updated_at":"2026-10-14 19:31:09","deleted_at":null}
+]

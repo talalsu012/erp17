@@ -113,7 +113,7 @@ trait EntryMarkForm
                             // //    ->afterStateUpdated(fn () => $this->table->reload())
                             // ,
 
-                            Hidden::make('semester')->default(1),
+                            Hidden::make('semester')->default(\App\Services\Res\RegulationProfile::current()->defaultSemester()),
 
                             Select::make('absent')
                                 ->label(__('res.absent'))

@@ -10,9 +10,9 @@ return new class extends Migration
     {
         if (! Schema::hasTable('usersapi')) {
             Schema::create('usersapi', function (Blueprint $table): void {
-                $table->id();
+                $table->increments('id');
                 $table->string('name', 50);
-                $table->string('email', 50)->unique();
+                $table->string('email', 50);
                 $table->string('password', 150);
                 $table->string('bank', 50)->nullable();
                 $table->string('university', 50)->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
 
         if (! Schema::hasColumn('payments', 'transaction_id')) {
             Schema::table('payments', function (Blueprint $table): void {
-                $table->string('transaction_id', 255)->nullable()->index()->after('voucher_no');
+                $table->string('transaction_id', 255)->nullable()->after('voucher_no');
             });
         }
     }

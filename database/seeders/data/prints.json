@@ -1,0 +1,16 @@
+[
+{"id":1,"fields":"university_no","name_ar":"ألرقم الجامعي","name_en":"university no","type":1,"created_at":null,"updated_at":"2025-01-09 10:57:44"},
+{"id":2,"fields":"name_ar","name_ar":"الاسم عربي","name_en":"name ar","type":1,"created_at":"2025-01-09 10:58:22","updated_at":"2025-01-09 10:58:22"},
+{"id":3,"fields":"name_en","name_ar":"الاسم انجليزي","name_en":"name en","type":1,"created_at":"2025-01-09 10:58:51","updated_at":"2025-01-09 10:58:51"},
+{"id":4,"fields":"indexno","name_ar":"رقم الجلوس","name_en":"Index","type":1,"created_at":"2025-01-09 10:59:12","updated_at":"2025-01-09 10:59:12"},
+{"id":6,"fields":"mark","name_ar":"درجة","name_en":"mark","type":2,"created_at":"2025-01-09 10:59:57","updated_at":"2025-01-09 10:59:57"},
+{"id":7,"fields":"grade","name_ar":"التقدير","name_en":"grade","type":2,"created_at":"2025-01-09 11:00:19","updated_at":"2025-01-09 11:02:34"},
+{"id":8,"fields":"point","name_ar":"نقاط","name_en":"point","type":1,"created_at":"2025-01-09 11:00:39","updated_at":"2025-01-09 11:00:39"},
+{"id":9,"fields":"gpa","name_ar":"معدل فصلي","name_en":"gpa","type":1,"created_at":"2025-01-09 11:01:09","updated_at":"2025-01-09 11:01:09"},
+{"id":10,"fields":"crch","name_ar":"ساعات","name_en":"crch","type":3,"created_at":"2025-01-09 11:01:37","updated_at":"2025-01-09 11:01:37"},
+{"id":11,"fields":"recom","name_ar":"توصية","name_en":"recom","type":1,"created_at":"2025-01-09 11:02:18","updated_at":"2025-01-09 11:02:18"},
+{"id":12,"fields":"subjectFail","name_ar":"مواد الرسوب","name_en":"subjectFail","type":1,"created_at":null,"updated_at":null},
+{"id":13,"fields":"crch_fail","name_ar":"ساعات الرسوب","name_en":"crch_fail","type":1,"created_at":null,"updated_at":null},
+{"id":14,"fields":"ids","name_ar":"م","name_en":"#ids","type":1,"created_at":null,"updated_at":null},
+{"id":15,"fields":"sumMarks","name_ar":"مجموع الدرجات","name_en":"sumMarks","type":1,"created_at":null,"updated_at":null}
+]
