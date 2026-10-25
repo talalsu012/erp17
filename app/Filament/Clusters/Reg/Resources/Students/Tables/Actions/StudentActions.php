@@ -131,141 +131,16 @@ class StudentActions
                 self::registrationAccessAction('resetRegistrationBulk', 'إعادة التسجيل حسب الفترة', 'heroicon-o-arrow-path', 'gray', null, bulk: true),
             ]),
 
-            // BulkAction::make('updateStudents')
-            //     ->label(__('reg.updateStudent'))
-            //     ->icon('heroicon-o-pencil-square')
-            //     ->color('warning')
-            //     ->modalWidth(Width::SixExtraLarge)
-            //     ->action(function (Collection $records, array $data) {
-
-            //         // 1. تجميع الحقول التي اختار المستخدم تحديثها من التبويبين
-            //         $fieldsToUpdate = array_merge(
-            //             $data['academic_fields'] ?? [],
-            //             $data['fees_fields'] ?? []
-            //         );
-
-            //         // 2. التحقق من أنه اختار حقلاً واحداً على الأقل
-            //         if (empty($fieldsToUpdate)) {
-            //             \Filament\Notifications\Notification::make()
-            //                 ->title(__('students.bulk_select_one_field'))
-            //                 ->warning()
-            //                 ->send();
-            //             return;
-            //         }
-
-            //         // 3. بناء مصفوفة التحديث بناءً على الحقول المحددة فقط
-            //         $updateData = [];
-            //         foreach ($fieldsToUpdate as $field) {
-            //             $updateData[$field] = $data[$field] ?? null;
-            //         }
-
-            //         // 4. تنفيذ التحديث
-            //         foreach ($records as $record) {
-            //             $record->update($updateData);
-            //         }
-
-            //         \Filament\Notifications\Notification::make()
-            //             ->title(__('reg.updated_successfully'))
-            //             ->success()
-            //             ->send();
-            //     })
-            //     ->form([
-            //         Tabs::make('Bulk Update')
-            //             ->tabs([
-            //                 // ==========================================
-            //                 // التبويب الأول: البيانات الأكاديمية
-            //                 // ==========================================
-            //                 Tabs\Tab::make(__('reg.basic_info'))
-            //                     ->icon('heroicon-o-academic-cap')
-            //                     ->schema([
-
-            //                         CheckboxList::make('academic_fields')
-            //                             ->label(__('students.bulk_academic_fields'))
-            //                             ->options([
-            //                                 'faculty_code'       => __('reg.faculty'),
-            //                                 'department_code'    => __('reg.department'),
-            //                                 'special_code'       => __('reg.special'),
-            //                                 'level_code'         => __('reg.level'),
-            //                                 'stady_code'         => __('reg.stady'),
-            //                                 'batch_code'         => __('reg.batch'),
-            //                                 'academic_year_code' => __('reg.academic_year'),
-            //                                 'status_code'        => __('reg.status_code'),
-            //                                 'admission_code'     => __('reg.admission'),
-            //                                 'nationality_code'   => __('reg.nationality'),
-            //                                 'gender_code'        => __('reg.gender'),
-            //                                 'student_account'    => __('reg.student_account'),
-            //                             ])
-            //                             ->columns(4)
-            //                             ->live(),
-
-            //                         Grid::make(3)
-            //                             ->schema([
-            //                                 Select::make('faculty_code')
-            //                                     ->label(__('reg.faculty'))
-            //                                     ->options(fn() => Faculty::forAuthUser()->pluck('name_ar', 'code'))
-            //                                     ->live()->searchable()
-            //                                     ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.faculty_code'))
-            //                                     ->visible(fn(Get $get) => in_array('faculty_code', $get('academic_fields') ?? [])),
-
-            //                                 Select::make('department_code')
-            //                                     ->label(__('reg.department'))
-            //                                     ->options(fn(Get $get): Collection => Department::query()->where('faculty_code', $get('faculty_code'))->pluck('name_ar', 'code'))
-            //                                     ->live()->searchable()
-            //                                     ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.department_code'))
-            //                                     ->visible(fn(Get $get) => in_array('department_code', $get('academic_fields') ?? [])),
-
-            //                                 Select::make('special_code')
-            //                                     ->label(__('reg.special'))
-            //                                     ->options(fn(Get $get): Collection => Special::query()->where('department_code', $get('department_code'))->pluck('name_ar', 'code'))
-            //                                     ->searchable()
-            //                                     ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.special_code'))
-            //                                     ->visible(fn(Get $get) => in_array('special_code', $get('academic_fields') ?? [])),
-
-            //                                 Select::make('level_code')
-            //                                     ->label(__('reg.level'))
-            //                                     ->options(fn() => Level::query()->pluck('name_ar', 'code'))
-            //                                     ->searchable()
-            //                                     ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.level_code'))
-            //                                     ->visible(fn(Get $get) => in_array('level_code', $get('academic_fields') ?? [])),
-
-            //                                 Select::make('stady_code')
-            //                                     ->label(__('reg.stady'))
-            //                                     ->options(fn() => LtColumn::query()->where('grouped', LtGroup::Stady->value)->pluck('name_ar', 'code'))
-            //                                     ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.stady_code'))
-            //                                     ->visible(fn(Get $get) => in_array('stady_code', $get('academic_fields') ?? [])),
-
-            //                                 Select::make('batch_code')
-            //                                     ->label(__('reg.batch'))
-            //                                     ->options(fn() => LtColumn::query()->where('grouped', LtGroup::AcademicYear->value)->pluck('name_ar', 'code'))
-            //                                     ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.batch_code'))
-            //                                     ->visible(fn(Get $get) => in_array('batch_code', $get('academic_fields') ?? [])),
-
-            //                                 Select::make('academic_year_code')
-            //                                     ->label(__('reg.academic_year'))
-            //                                     ->options(fn() => LtColumn::query()->where('grouped', LtGroup::AcademicYear->value)->pluck('name_ar', 'code'))
-            //                                     ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.academic_year_code'))
-            //                                     ->visible(fn(Get $get) => in_array('academic_year_code', $get('academic_fields') ?? [])),
-
-            //                                 Select::make('status_code')
-            //                                     ->label(__('reg.status_code'))
-            //                                     ->options(fn() => LtColumn::query()->where('grouped', LtGroup::Status->value)->pluck('name_ar', 'code'))
-            //                                     ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.status_code'))
-            //                                     ->visible(fn(Get $get) => in_array('status_code', $get('academic_fields') ?? [])),
-
-            //                                 Select::make('nationality_code')
-            //                                     ->label(__('reg.nationality'))
-            //                                     ->options(fn() => LtColumn::query()->where('grouped', LtGroup::Nationality->value)->pluck('name_ar', 'code'))
-            //                                     ->searchable()
-            //                                     ->visible(fn(Get $get) => in_array('nationality_code', $get('academic_fields') ?? [])),
-
-            //                             ]),
             BulkAction::make('updateStudents')
                 ->authorize('bulkUpdate')
                 ->label(__('reg.updateStudent'))
                 ->icon('heroicon-o-pencil-square')
                 ->color('warning')
                 ->modalWidth(Width::SixExtraLarge)
-                ->action(function (Collection $records, array $data, BulkUpdateStudents $bulkUpdateStudents): void {
+                ->accessSelectedRecords()
+                ->action(function (BulkAction $action, array $data, BulkUpdateStudents $bulkUpdateStudents): void {
+                    $records = $action->getSelectedRecords();
+
                     if (empty($bulkUpdateStudents->selectedFields($data))) {
                         \Filament\Notifications\Notification::make()
                             ->title(__('students.bulk_select_one_field'))
@@ -303,6 +178,7 @@ class StudentActions
                                             'nationality_code' => __('reg.nationality'),
                                             'gender_code' => __('reg.gender'),
                                             'student_account' => __('reg.student_account'),
+                                            'reg_access' => 'حالة التسجيل للطالب',
                                         ])
                                         ->columns(4)
                                         ->live()
@@ -402,9 +278,6 @@ class StudentActions
                                                 ->required(fn (Get $get) => in_array('special_code', $get('academic_fields') ?? []))
                                                 ->visible(fn (Get $get) => in_array('special_code', $get('academic_fields') ?? [])),
 
-                                            // ... بقية الحقول (level_code, batch_code, إلخ)
-
-                                            // بقية الحقول كما هي...
                                             Select::make('level_code')
                                                 ->label(__('reg.level'))
                                                 ->options(fn () => Level::forAuthUser()->pluck('name_ar', 'code'))
@@ -441,10 +314,7 @@ class StudentActions
                                                 ->options(fn () => LtColumn::optionsFor(LtGroup::Nationality))
                                                 ->searchable()
                                                 ->visible(fn (Get $get) => in_array('nationality_code', $get('academic_fields') ?? [])),
-                                        ]),
-                                    // ... بقية التبويبات والمخطط
-                                    Grid::make(2)
-                                        ->schema([
+
                                             Select::make('admission_code')
                                                 ->label(__('reg.admission'))
                                                 ->options(function () {
@@ -476,6 +346,13 @@ class StudentActions
                                                 ->options(fn () => LtColumn::optionsFor(LtGroup::StudentAccount))
                                                 ->disabled(fn () => ! auth()->user()?->hasFieldPermission('students.student_account'))
                                                 ->visible(fn (Get $get) => in_array('student_account', $get('academic_fields') ?? [])),
+
+                                            Select::make('reg_access')
+                                                ->label('حالة التسجيل للطالب')
+                                                ->options(\App\Reg\RegAccess::class)
+                                                ->placeholder('حسب فترة open-regs')
+                                                ->native(false)
+                                                ->visible(fn (Get $get) => in_array('reg_access', $get('academic_fields') ?? [])),
                                         ]),
                                 ]),
 

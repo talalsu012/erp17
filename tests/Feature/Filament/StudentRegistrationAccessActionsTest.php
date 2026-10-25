@@ -16,9 +16,10 @@ beforeEach(function () {
 });
 
 it('blocks, opens and resets registration from the row actions', function () {
-    actingAsSuperAdmin();
+    $user = actingAsSuperAdmin();
+    DB::table('reg_faculty_user')->insert(['user_id' => $user->id, 'faculty_code' => 10]);
 
-    $table = Livewire::test(ListStudents::class);
+    $table = Livewire::test(ListStudents::class)->loadTable();
 
     $table->callTableAction('blockRegistration', $this->student)->assertHasNoTableActionErrors();
     expect($this->student->fresh()->reg_access)->toBe(RegAccess::Closed);
@@ -31,11 +32,28 @@ it('blocks, opens and resets registration from the row actions', function () {
 });
 
 it('blocks registration for the selected students in bulk', function () {
-    actingAsSuperAdmin();
+    $user = actingAsSuperAdmin();
+    DB::table('reg_faculty_user')->insert(['user_id' => $user->id, 'faculty_code' => 10]);
 
     Livewire::test(ListStudents::class)
+        ->loadTable()
         ->callTableBulkAction('blockRegistrationBulk', [$this->student])
         ->assertHasNoTableBulkActionErrors();
 
     expect($this->student->fresh()->reg_access)->toBe(RegAccess::Closed);
+});
+
+it('bulk updates the chosen fields of the selected students', function () {
+    $user = actingAsSuperAdmin();
+    DB::table('reg_faculty_user')->insert(['user_id' => $user->id, 'faculty_code' => 10]);
+
+    Livewire::test(ListStudents::class)
+        ->loadTable()
+        ->callTableBulkAction('updateStudents', [$this->student], [
+            'academic_fields' => ['reg_access'],
+            'reg_access' => RegAccess::Open->value,
+        ])
+        ->assertHasNoTableBulkActionErrors();
+
+    expect($this->student->fresh())->reg_access->toBe(RegAccess::Open)->reg_access_at->not->toBeNull();
 });

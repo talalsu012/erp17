@@ -147,7 +147,7 @@ class BasicInfoTab
                     ]),
 
                 Fieldset::make()
-                    ->columns(4)
+                    ->columns(5)
                     ->schema([
                         Select::make('admission_code')
                             ->label(__('reg.admission'))
