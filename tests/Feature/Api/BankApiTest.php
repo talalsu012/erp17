@@ -21,6 +21,7 @@ beforeEach(function () {
         'bank' => 'ONB', 'university' => 'SABFS', 'ip' => '127.0.0.1',
     ]);
     $this->student = Student::factory()->create(['pay1' => 400, 'pay2' => 0, 'pay3' => 0, 'pay4' => 0]);
+    openRegistrationFor($this->student);
     $this->token = $this->postJson('/apibank/login', ['email' => 'bank@example.test', 'password' => 'Passw0rd!'])->json('token');
     $this->auth = ['Authorization' => "Bearer {$this->token}"];
 });
@@ -77,4 +78,11 @@ it('posts a payment and finds it again by voucher', function () {
 
 it('answers other methods with the legacy not found message', function () {
     $this->deleteJson('/apibank/APITIQ')->assertStatus(404)->assertJson(['message' => 'Page Not Found!']);
+});
+
+it('hides students whose registration is closed from the inquiry', function () {
+    $this->student->forceFill(['reg_access' => App\Reg\RegAccess::Closed])->saveQuietly();
+
+    $this->getJson('/apibank/APITIQ', [...$this->auth, 'Stdid' => (string) $this->student->university_no])
+        ->assertStatus(404);
 });

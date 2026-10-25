@@ -5,7 +5,6 @@ namespace App\Filament\Clusters\Reg\Resources\Faculties\Schemas;
 use App\Models\Reg\Faculty;
 use App\Models\User;
 use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -72,17 +71,6 @@ class FacultiesForm
                             ->maxLength(150)->required()
                             ->unique(ignoreRecord: true)
                             ->columnSpan('full'),
-
-                        DatePicker::make('start_reg')->label(__('reg.start_date'))
-                            ->native(false)
-                            ->displayFormat('d/m/Y')
-                            ->required()
-                            ->placeholder('DD/MM/YYYY'),
-                        DatePicker::make('end_reg')->label(__('reg.end_date'))
-                            ->native(false)
-                            ->displayFormat('d/m/Y')
-                            ->required()
-                            ->placeholder('DD/MM/YYYY'),
 
                     ])
                         ->columns(3),

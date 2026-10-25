@@ -2,8 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Reg\OpenReg;
 use App\Models\Reg\Payment;
+use App\Models\Student;
+use App\Observers\OpenRegObserver;
 use App\Observers\PaymentAdmissionObserver;
+use App\Observers\PaymentFeesObserver;
+use App\Observers\StudentFeesObserver;
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
@@ -47,6 +52,9 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Payment::observe(PaymentAdmissionObserver::class);
+        Payment::observe(PaymentFeesObserver::class);
+        Student::observe(StudentFeesObserver::class);
+        OpenReg::observe(OpenRegObserver::class);
 
         RateLimiter::for('student-register', fn (Request $request): array => [
             Limit::perHour((int) config('student.rate_limits.register_per_ip_per_hour'))->by('ip:'.$request->ip()),

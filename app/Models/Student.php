@@ -127,9 +127,13 @@ class Student extends Model implements HasMedia
         'indexno',
         'note',
         'is_visible',
+        'reg_access',
+        'reg_access_at',
     ];
 
     protected $casts = [
+        'reg_access' => \App\Reg\RegAccess::class,
+        'reg_access_at' => 'datetime',
         'birth_date' => 'date',
         'email_verified_at' => 'datetime',
         'parent_alive' => 'boolean',

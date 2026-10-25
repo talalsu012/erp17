@@ -213,7 +213,7 @@ class MovingStudent extends Page implements HasForms, HasTable
             return;
         }
 
-        Student::query()
+        $promotion = Student::query()
             ->where('faculty_code', $formData['faculty_code'] ?? null)
             ->where('level_code', $formData['current_level'] ?? null)
             ->where('batch_code', $formData['current_batch_code'] ?? null)
@@ -228,12 +228,17 @@ class MovingStudent extends Page implements HasForms, HasTable
                 $query->whereColumn('res_recoms.level_code', 'students.level_code');
                 $query->whereColumn('res_recoms.batch_code', 'students.batch_code');
                 $query->where('res_recoms.semester', 2);
-            })
-            ->update([
-                'level_code' => $this->promotionData['new_level'],
-                'batch_code' => $this->promotionData['new_batch_code'], // لو العام الجديد نفسه
-                'fees8' => DB::raw('fees8 + xmod'),
-            ]);
+            });
+
+        $promotedStudents = (clone $promotion)->pluck('university_no');
+
+        $promotion->update([
+            'level_code' => $this->promotionData['new_level'],
+            'batch_code' => $this->promotionData['new_batch_code'], // لو العام الجديد نفسه
+            'fees8' => DB::raw('fees8 + xmod'),
+        ]);
+
+        app(\App\Services\Reg\StudentFeeService::class)->refreshMany($promotedStudents);
 
         Notification::make()
             ->title('تم ترحيل الطلاب بنجاح')

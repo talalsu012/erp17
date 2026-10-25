@@ -82,6 +82,10 @@ class StudentActions
                             ->send();
                     }),
 
+                self::registrationAccessAction('openRegistration', 'فتح التسجيل للطالب', 'heroicon-o-lock-open', 'success', \App\Reg\RegAccess::Open),
+                self::registrationAccessAction('blockRegistration', 'حجب التسجيل عن الطالب', 'heroicon-o-lock-closed', 'danger', \App\Reg\RegAccess::Closed),
+                self::registrationAccessAction('resetRegistration', 'إعادة التسجيل حسب الفترة', 'heroicon-o-arrow-path', 'gray', null),
+
                 Action::make('activities')
                     ->url(fn ($record) => StudentsResource::getUrl('activities', ['record' => $record])),
             ])
@@ -92,6 +96,29 @@ class StudentActions
         ];
     }
 
+    /**
+     * إجراء فتح التسجيل للطالب (فردياً) أو حجبه أو إعادته لفترة open-regs.
+     */
+    private static function registrationAccessAction(string $name, string $label, string $icon, string $color, ?\App\Reg\RegAccess $access, bool $bulk = false): Action|BulkAction
+    {
+        $action = $bulk ? BulkAction::make($name)->accessSelectedRecords() : Action::make($name);
+
+        return $action
+            ->label($label)
+            ->icon($icon)
+            ->color($color)
+            ->requiresConfirmation()
+            ->action(function (\App\Services\Reg\RegistrationAccessService $service, ?\App\Models\Student $record = null) use ($access, $bulk, $action): void {
+                $students = $bulk ? $action->getSelectedRecords() : [$record];
+
+                foreach ($students as $student) {
+                    $service->grant($student, $access);
+                }
+
+                Notification::make()->success()->title('تم تحديث حالة التسجيل')->send();
+            });
+    }
+
     public static function getBulkActions(): array
     {
         return [
@@ -99,6 +126,9 @@ class StudentActions
                 \Filament\Actions\DeleteBulkAction::make(),
                 \Filament\Actions\ForceDeleteBulkAction::make(),
                 \Filament\Actions\RestoreBulkAction::make(),
+                self::registrationAccessAction('openRegistrationBulk', 'فتح التسجيل للمحدَّدين', 'heroicon-o-lock-open', 'success', \App\Reg\RegAccess::Open, bulk: true),
+                self::registrationAccessAction('blockRegistrationBulk', 'حجب التسجيل عن المحدَّدين', 'heroicon-o-lock-closed', 'danger', \App\Reg\RegAccess::Closed, bulk: true),
+                self::registrationAccessAction('resetRegistrationBulk', 'إعادة التسجيل حسب الفترة', 'heroicon-o-arrow-path', 'gray', null, bulk: true),
             ]),
 
             // BulkAction::make('updateStudents')

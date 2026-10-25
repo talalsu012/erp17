@@ -194,6 +194,13 @@ class BasicInfoTab
                             ->disabled(fn () => ! auth()->user()?->hasFieldPermission('students.status_code'))
                             ->dehydrated(),
 
+                        Select::make('reg_access')
+                            ->label('حالة التسجيل للطالب')
+                            ->options(\App\Reg\RegAccess::class)
+                            ->placeholder('حسب فترة open-regs')
+                            ->helperText('فتح التسجيل للطالب منفرداً يتجاوز قفل الفترة، وحجبه يمنعه حتى لو كانت الفترة مفتوحة. الفارغ = حسب فترة open-regs.')
+                            ->native(false),
+
                         Select::make('student_account')
                             ->label(__('reg.student_account'))
                             ->native()

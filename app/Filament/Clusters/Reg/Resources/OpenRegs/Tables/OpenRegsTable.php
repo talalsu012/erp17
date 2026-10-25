@@ -2,6 +2,7 @@
 
 namespace App\Filament\Clusters\Reg\Resources\OpenRegs\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -29,6 +30,11 @@ class OpenRegsTable
                 TextColumn::make('batch_code')
                     ->label(__('reg.batch'))
                     ->getStateUsing(fn ($record) => $record->batch?->name_ar ?? $record->batch_code),
+                TextColumn::make('status')
+                    ->label('الحالة')
+                    ->badge()
+                    ->getStateUsing(fn ($record): string => self::isOpenNow($record) ? 'مفتوح' : 'مغلق')
+                    ->color(fn (string $state): string => $state === 'مفتوح' ? 'success' : 'danger'),
                 TextColumn::make('start_date')
                     ->label(__('reg.start_date'))
                     ->date(),
@@ -69,11 +75,42 @@ class OpenRegsTable
             ->searchable()
             ->recordActions([
                 EditAction::make(),
+                Action::make('closeNow')
+                    ->label('قفل التسجيل الآن')
+                    ->icon('heroicon-o-lock-closed')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalDescription('يُقفل التسجيل لهذه الفترة فوراً (يصبح تاريخ النهاية أمس) ولا يظهر طلابها للبنوك.')
+                    ->visible(fn ($record): bool => self::isOpenNow($record))
+                    ->action(fn ($record) => $record->update(['end_date' => now()->subDay()->toDateString()])),
+                Action::make('openNow')
+                    ->label('فتح التسجيل الآن')
+                    ->icon('heroicon-o-lock-open')
+                    ->color('success')
+                    ->visible(fn ($record): bool => ! self::isOpenNow($record))
+                    ->schema([
+                        DatePicker::make('end_date')
+                            ->label(__('reg.end_date'))
+                            ->native(false)
+                            ->displayFormat('d/m/Y')
+                            ->default(fn () => now()->addDays(30))
+                            ->minDate(now())
+                            ->required(),
+                    ])
+                    ->action(fn ($record, array $data) => $record->update(['start_date' => now()->toDateString(), 'end_date' => $data['end_date']])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    private static function isOpenNow(\App\Models\Reg\OpenReg $window): bool
+    {
+        $today = now()->toDateString();
+
+        return ($window->start_date === null || $window->start_date->toDateString() <= $today)
+            && ($window->end_date === null || $window->end_date->toDateString() >= $today);
     }
 }

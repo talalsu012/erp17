@@ -36,6 +36,8 @@ class OpenRegForm
                     )
                     ->searchable()
                     ->live()
+                    ->placeholder('كل الأقسام')
+                    ->helperText('اتركه فارغاً لتشمل الفترة كل أقسام الكلية.')
                     // ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.department_code'))
                     ->dehydrated(),
 
@@ -43,6 +45,8 @@ class OpenRegForm
                     ->label(__('reg.level'))
                     ->options(fn () => Level::query()->pluck('name_ar', 'code'))
                     ->searchable()
+                    ->placeholder('كل المستويات')
+                    ->helperText('اتركه فارغاً لتشمل الفترة كل المستويات.')
                     // ->disabled(fn() => !auth()->user()?->hasFieldPermission('students.level_code'))
                     ->dehydrated(),
 
@@ -53,6 +57,8 @@ class OpenRegForm
                             ->where('grouped', '2003')
                             ->pluck('name_ar', 'code')
                     )
+                    ->placeholder('كل الدفعات')
+                    ->helperText('اتركه فارغاً لتشمل الفترة كل الدفعات.')
                     ->dehydrated(),
 
                 DatePicker::make('start_date')->label(__('reg.start_date'))
@@ -64,6 +70,8 @@ class OpenRegForm
                     ->native(false)
                     ->displayFormat('d/m/Y')
                     ->required()
+                    ->afterOrEqual('start_date')
+                    ->helperText('التسجيل مفتوح من البداية إلى النهاية (شاملتين)، وبعدها يُقفل ولا يظهر الطلاب للبنوك. فتح التسجيل وقفله يتمان من هذه الصفحة فقط.')
                     ->placeholder('DD/MM/YYYY'),
 
             ]);

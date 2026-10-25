@@ -150,10 +150,10 @@ class AdminPanelProvider extends PanelProvider
                         rules: 'mimes:jpeg,png|max:1024' // only accept jpeg and png files with a maximum size of 1MB
                     ),
                 FilamentShieldPlugin::make()
-                    ->navigationLabel('Roles')                  // string|Closure|null
+                    ->navigationLabel('الأدوار')                  // string|Closure|null
                     ->navigationIcon('heroicon-o-home')         // string|Closure|null
                     ->activeNavigationIcon('heroicon-s-home')   // string|Closure|null
-                    ->navigationGroup('Users')                  // string|Closure|null
+                    ->navigationGroup('الصلاحيات')                  // string|Closure|null
                     ->navigationSort(10)                        // int|Closure|null
                     ->navigationBadge()                      // string|Closure|null
                     ->navigationBadgeColor('success'),

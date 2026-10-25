@@ -23,6 +23,7 @@ beforeEach(function () {
         'bank' => 'BOK', 'university' => 'SABFS', 'ip' => '127.0.0.1',
     ]);
     $this->student = Student::factory()->create(['pay1' => 0, 'pay2' => 250, 'pay3' => 0, 'pay4' => 0]);
+    openRegistrationFor($this->student);
     $this->token = $this->postJson('/apitiq/login', ['email' => 'bank@example.test', 'password' => 'Passw0rd!'])->json('token');
 });
 
@@ -87,4 +88,11 @@ it('posts a payment once, then reconciles and looks it up', function () {
 
     $this->putJson('/apitiq/checkPay', ['VOUCHER' => 'RRN-1'], $headers)->assertOk()->assertJson(['VOUCHER' => 'RRN-1', 'BANK' => 'BOK']);
     $this->putJson('/apitiq/checkPay', ['VOUCHER' => 'nope'], $headers)->assertStatus(404);
+});
+
+it('hides students whose registration is closed from the inquiry', function () {
+    $this->student->forceFill(['reg_access' => App\Reg\RegAccess::Closed])->saveQuietly();
+
+    $this->postJson('/apitiq/inquiry', ['unique_id' => (string) $this->student->university_no], ['Authorization' => "Bearer {$this->token}"])
+        ->assertJson(['status' => '11']);
 });

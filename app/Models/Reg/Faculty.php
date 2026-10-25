@@ -19,7 +19,7 @@ class Faculty extends Model implements HasMedia
     protected $fillable = [
         'code', 'name_ar',
         'name_en', 'is_visible',
-        'campus_code', 'start_reg', 'end_reg', 'results_published', 'primary_hex',
+        'campus_code', 'results_published', 'primary_hex',
         'metadata', 'logo', 'results_approver_id',
     ];
 
@@ -28,25 +28,6 @@ class Faculty extends Model implements HasMedia
         'primary_hex' => 'string',
         'logo' => 'string',
     ];
-
-    protected static function booted()
-    {
-        // هذه الدالة تتفعل تلقائياً بعد نجاح أي عملية تحديث على الكلية
-        static::updated(function ($faculty) {
-
-            // التحقق مما إذا كان التحديث قد شمل تواريخ التسجيل
-            if ($faculty->wasChanged(['start_reg', 'end_reg'])) {
-
-                // تنفيذ استعلام مباشر لتحديث جميع طلاب هذه الكلية دفعة واحدة
-                \Illuminate\Support\Facades\DB::statement('
-                    UPDATE students 
-                    SET pay = CalculateEarlyPayment(university_no) 
-                    WHERE faculty_code = ?
-                ', [$faculty->code]);
-
-            }
-        });
-    }
 
     public function campus()
     {

@@ -65,6 +65,30 @@ function migrateErpSchema(): void
         '--path' => 'database/migrations/2026_10_24_093300_add_files_to_users_std_table.php',
         '--no-interaction' => true,
     ]);
+
+    Illuminate\Support\Facades\Artisan::call('migrate', [
+        '--path' => 'database/migrations/2026_10_25_073917_add_registration_access_to_students_table.php',
+        '--no-interaction' => true,
+    ]);
+
+    Illuminate\Support\Facades\Artisan::call('migrate', [
+        '--path' => 'database/migrations/2026_10_25_073917_add_registration_access_to_students_table.php',
+        '--no-interaction' => true,
+    ]);
+}
+
+/**
+ * فترة open-regs مفتوحة اليوم لكلية الطالب (إدراج مباشر كي لا تُعاد حسابات الرسوم).
+ */
+function openRegistrationFor(App\Models\Student $student): void
+{
+    Illuminate\Support\Facades\DB::table('reg_open_reg')->insert([
+        'faculty_code' => $student->faculty_code,
+        'start_date' => now()->subMonth()->toDateString(),
+        'end_date' => now()->addMonth()->toDateString(),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
 }
 
 /**

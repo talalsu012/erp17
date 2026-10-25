@@ -94,6 +94,11 @@ class StudentColumns
             TextColumn::make('all_fees')->label(__('reg.all_fees')),
             TextColumn::make('pay')->label(__('reg.payment')),
             TextColumn::make('xmod')->label(__('reg.xmod')),
+            TextColumn::make('reg_access')
+                ->label('التسجيل للطالب')
+                ->badge()
+                ->placeholder('حسب الفترة')
+                ->toggleable(isToggledHiddenByDefault: false),
 
             TextColumn::make('fees')->label(__('reg.fees'))->toggleable(isToggledHiddenByDefault: false),
             TextColumn::make('reg_fees')->label(__('reg.regfees'))->toggleable(isToggledHiddenByDefault: false),

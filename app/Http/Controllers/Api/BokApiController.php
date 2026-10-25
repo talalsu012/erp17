@@ -104,7 +104,7 @@ class BokApiController extends Controller
             ? null
             : Student::query()->with(['faculty', 'admission'])->has('faculty')->where('university_no', $studentId)->first();
 
-        if (! $student) {
+        if (! $student || ! app(\App\Services\Reg\RegistrationAccessService::class)->isOpen($student)) {
             return response()->json(['status' => '11', 'msg' => 'Invalid client ID']);
         }
 

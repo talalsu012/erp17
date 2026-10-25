@@ -28,8 +28,6 @@ class FacultiesTable
                 TextColumn::make('campus.name_ar')->label(__('reg.campus')),
                 ToggleColumn::make('is_visible')->label(__('reg.is_enabled'))->toggleable(true),
                 ToggleColumn::make('results_published')->label(__('reg.results_published')),
-                TextColumn::make('start_reg')->label(__('reg.start_date')),
-                TextColumn::make('end_reg')->label(__('reg.end_date')),
 
             ])
             ->filters([

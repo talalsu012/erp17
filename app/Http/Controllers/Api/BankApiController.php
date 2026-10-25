@@ -60,7 +60,7 @@ class BankApiController extends BokApiController
 
         $student = Student::query()->with('faculty')->has('faculty')->where('university_no', $studentId)->first();
 
-        if (! $student) {
+        if (! $student || ! app(\App\Services\Reg\RegistrationAccessService::class)->isOpen($student)) {
             return $this->message(0, 404, 'Student Not Found!');
         }
 
