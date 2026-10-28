@@ -73,3 +73,9 @@ it('marks a student with no fees as unpaid', function () {
 
     expect($result)->toMatchArray(['all_fees' => 0.0, 'xmod' => 0.0, 'xstatus' => StudentFeeCalculator::STATUS_UNPAID]);
 });
+
+it('adds fees8 to the registration fees', function () {
+    $result = (new StudentFeeCalculator)->calculate(feeInput(['fees8' => 500]), 0);
+
+    expect($result)->toMatchArray(['all_fees' => 5500.0, 'pay1' => 2500.0, 'pay2' => 1000.0]);
+});

@@ -21,14 +21,14 @@ class StudentFeeCalculator
     private const MANUAL_INSTALLMENT = 7;
 
     /**
-     * @param  array{fees?: mixed, reg_fees?: mixed, fees1?: mixed, fees2?: mixed, fees3?: mixed, fees6?: mixed, fees7?: mixed, fees9?: mixed, installment_code?: mixed, discount_percent?: mixed, pay1?: mixed, pay2?: mixed, pay3?: mixed, pay4?: mixed}  $fees
+     * @param  array{fees?: mixed, reg_fees?: mixed, fees1?: mixed, fees2?: mixed, fees3?: mixed, fees6?: mixed, fees7?: mixed, fees8?: mixed, fees9?: mixed, installment_code?: mixed, discount_percent?: mixed, pay1?: mixed, pay2?: mixed, pay3?: mixed, pay4?: mixed}  $fees
      * @return array{all_fees: float, xmod: float, pay: float, fees10: float, pay1: float, pay2: float, pay3: float, pay4: float, xstatus: int}
      */
     public function calculate(array $fees, float $totalPaid): array
     {
         $regFees = $this->money(
             $this->number($fees['reg_fees'] ?? 0) + $this->number($fees['fees1'] ?? 0) + $this->number($fees['fees2'] ?? 0)
-            + $this->number($fees['fees3'] ?? 0) + $this->number($fees['fees6'] ?? 0) + $this->number($fees['fees7'] ?? 0)
+            + $this->number($fees['fees3'] ?? 0) + $this->number($fees['fees6'] ?? 0) + $this->number($fees['fees7'] ?? 0) + $this->number($fees['fees8'] ?? 0)
         );
         $originalFees = $this->money($this->number($fees['fees'] ?? 0));
         $installments = $this->lastDigits($fees['installment_code'] ?? null, 1);

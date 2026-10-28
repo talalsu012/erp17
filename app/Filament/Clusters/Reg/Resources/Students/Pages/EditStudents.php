@@ -31,9 +31,15 @@ class EditStudents extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->label('تحويل للأرشيف')
+                ->modalHeading('تحويل للأرشيف')
+                ->successNotificationTitle('تم التحويل للأرشيف'),
             ForceDeleteAction::make(),
-            RestoreAction::make(),
+            RestoreAction::make()
+                ->label('استعادة من الأرشيف')
+                ->modalHeading('استعادة من الأرشيف')
+                ->successNotificationTitle('تمت الاستعادة من الأرشيف'),
         ];
     }
 }

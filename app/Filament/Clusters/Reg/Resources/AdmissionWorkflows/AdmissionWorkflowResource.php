@@ -27,6 +27,16 @@ class AdmissionWorkflowResource extends Resource
         return parent::getEloquentQuery()->with('student:university_no,name_ar');
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'معاينة القبول';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'معاينة القبول';
+    }
+
     public static function getLabel(): ?string
     {
         return 'معاينة القبول';

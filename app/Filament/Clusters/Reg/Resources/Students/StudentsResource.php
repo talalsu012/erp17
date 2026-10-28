@@ -38,8 +38,14 @@ class StudentsResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $count = auth()->user()
-            ->constrainToAcademicScope(static::getModel()::query())
+        $user = auth()->user();
+
+        if (! $user?->can('ViewAny:Student')) {
+            return null;
+        }
+
+        $count = $user
+            ->constrainToAcademicScope(static::getModel()::query()->withoutTrashed())
             ->count();
 
         return (string) $count;

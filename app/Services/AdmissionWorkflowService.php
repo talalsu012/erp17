@@ -8,7 +8,9 @@ use App\Models\Student;
 use App\Models\StudentAccount;
 use App\Models\User;
 use App\Reg\AdmissionStage;
+use App\Reg\Currency;
 use DomainException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -28,6 +30,15 @@ class AdmissionWorkflowService
     public const ROLE_DEAN = 'dean';
 
     public const ROLE_SUPER_ADMIN = 'super_admin';
+
+    /** حقول رسوم الطالب القابلة للتحديد من خطوة الرسوم */
+    public const STUDENT_FEE_FIELDS = [
+        'reg_fees', 'fees', 'fees1', 'fees2', 'fees3', 'fees5', 'fees6', 'fees7', 'fees8',
+        'discount_percent', 'currency', 'installment_code', 'fees9',
+    ];
+
+    /** الأقساط المحسوبة: تُعرض في نموذج الرسوم ولا تُحفظ منه */
+    public const STUDENT_INSTALLMENT_FIELDS = ['pay1', 'pay2', 'pay3', 'pay4'];
 
     /** @return list<string> الأدوار المشاركة في المخطط (لإظهار الصفحة) */
     public static function participatingRoles(): array
@@ -107,6 +118,29 @@ class AdmissionWorkflowService
             'fees_at' => now(),
             'stage' => AdmissionStage::AwaitingPayment,
         ]);
+    }
+
+    /**
+     * المسجل يحدد رسوم الطالب كاملة (كما في صفحة الطالب): تُحفظ على الطالب فيُعاد حسابه،
+     * ثم يُعتمد إجمالي رسومه (all_fees) كرسوم المعاملة.
+     *
+     * @param  array<string, mixed>  $fees
+     */
+    public function assignStudentFees(User $user, AdmissionWorkflow $workflow, array $fees): AdmissionWorkflow
+    {
+        $this->assertRole($user, self::ROLE_REGISTRAR);
+        $this->assertStage($workflow, AdmissionStage::AwaitingFees);
+
+        return DB::transaction(function () use ($user, $workflow, $fees) {
+            $fees = Arr::only($fees, self::STUDENT_FEE_FIELDS);
+            $currency = ($fees['currency'] ?? Currency::SDG) instanceof Currency ? $fees['currency']->value : (string) ($fees['currency'] ?? 'SDG');
+            $fees['currency'] = $currency;
+
+            $student = Student::query()->findOrFail($workflow->university_no);
+            $student->update($fees);
+
+            return $this->assignFees($user, $workflow, (float) $student->fresh()->all_fees, $currency);
+        });
     }
 
     /**

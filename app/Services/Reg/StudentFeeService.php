@@ -82,7 +82,7 @@ class StudentFeeService
     {
         $computed = $this->calculator->calculate(
             $student->only([
-                'fees', 'reg_fees', 'fees1', 'fees2', 'fees3', 'fees6', 'fees7', 'fees9',
+                'fees', 'reg_fees', 'fees1', 'fees2', 'fees3', 'fees6', 'fees7', 'fees8', 'fees9',
                 'installment_code', 'discount_percent', 'pay1', 'pay2', 'pay3', 'pay4',
             ]),
             $totalPaid ?? $this->totalPaid($student),

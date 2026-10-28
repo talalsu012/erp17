@@ -2,15 +2,17 @@
 
 namespace App\Filament\Clusters\Reg\Resources\AdmissionWorkflows\Tables;
 
+use App\Filament\Clusters\Reg\Resources\Students\Schemas\StudentFeesSchema;
 use App\Models\Reg\AdmissionWorkflow;
+use App\Models\Student;
 use App\Reg\AdmissionStage;
 use App\Services\AdmissionWorkflowService;
 use DomainException;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -57,10 +59,14 @@ class AdmissionWorkflowsTable
                     Textarea::make('reason')->label('سبب الرفض')->visible(fn ($get): bool => $get('decision') === 'reject')->required(fn ($get): bool => $get('decision') === 'reject'),
                 ], fn (AdmissionWorkflowService $s, AdmissionWorkflow $r, array $d) => $s->recordCommittee(auth()->user(), $r, $d['decision'] === 'accept', $d['notes'] ?? null, $d['reason'] ?? null)),
 
-                self::step('fees', 'تحديد الرسوم', AdmissionStage::AwaitingFees, AdmissionWorkflowService::ROLE_REGISTRAR, [
-                    TextInput::make('amount')->label('قيمة الرسوم')->numeric()->minValue(1)->required(),
-                    TextInput::make('currency')->label('العملة')->default('SDG')->required()->maxLength(10),
-                ], fn (AdmissionWorkflowService $s, AdmissionWorkflow $r, array $d) => $s->assignFees(auth()->user(), $r, (float) $d['amount'], $d['currency'])),
+                self::step('fees', 'تحديد الرسوم', AdmissionStage::AwaitingFees, AdmissionWorkflowService::ROLE_REGISTRAR,
+                    StudentFeesSchema::components(),
+                    fn (AdmissionWorkflowService $s, AdmissionWorkflow $r, array $d) => $s->assignStudentFees(auth()->user(), $r, $d),
+                    fn (AdmissionWorkflow $r): array => Student::query()
+                        ->whereKey($r->university_no)
+                        ->first([...AdmissionWorkflowService::STUDENT_FEE_FIELDS, ...AdmissionWorkflowService::STUDENT_INSTALLMENT_FIELDS])
+                        ?->toArray() ?? [],
+                )->modalWidth(Width::SixExtraLarge),
 
                 self::step('approve', 'الاعتماد النهائي', AdmissionStage::AwaitingDean, AdmissionWorkflowService::ROLE_DEAN, [
                     Textarea::make('notes')->label('ملاحظات العميد'),
@@ -74,12 +80,14 @@ class AdmissionWorkflowsTable
      *
      * @param  list<mixed>  $schema
      * @param  callable(AdmissionWorkflowService, AdmissionWorkflow, array<string, mixed>): mixed  $run
+     * @param  (callable(AdmissionWorkflow): array<string, mixed>)|null  $fill  القيم الابتدائية للنموذج
      */
-    private static function step(string $name, string $label, AdmissionStage $stage, string $role, array $schema, callable $run): Action
+    private static function step(string $name, string $label, AdmissionStage $stage, string $role, array $schema, callable $run, ?callable $fill = null): Action
     {
         return Action::make($name)
             ->label($label)
             ->schema($schema)
+            ->fillForm($fill)
             ->visible(fn (AdmissionWorkflow $record): bool => $record->stage === $stage
                 && (auth()->user()?->hasAnyRole([$role, AdmissionWorkflowService::ROLE_SUPER_ADMIN]) ?? false))
             ->action(function (AdmissionWorkflow $record, array $data) use ($run): void {

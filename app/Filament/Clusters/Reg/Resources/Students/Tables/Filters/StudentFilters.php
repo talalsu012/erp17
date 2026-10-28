@@ -19,7 +19,11 @@ class StudentFilters
     {
         return [
 
-            TrashedFilter::make(),
+            TrashedFilter::make()
+                ->label('الأرشيف')
+                ->placeholder('بدون السجلات المؤرشفة')
+                ->trueLabel('مع السجلات المؤرشفة')
+                ->falseLabel('السجلات المحولة للأرشيف فقط'),
 
             // ... داخل دالة $table->filters([])
 

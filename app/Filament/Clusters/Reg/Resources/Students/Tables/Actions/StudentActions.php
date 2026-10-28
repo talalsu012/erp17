@@ -36,7 +36,14 @@ class StudentActions
             \Filament\Actions\ActionGroup::make([
                 \Filament\Actions\ViewAction::make(),
                 \Filament\Actions\EditAction::make(),
-                \Filament\Actions\DeleteAction::make(),
+                \Filament\Actions\DeleteAction::make()
+                    ->label('تحويل للأرشيف')
+                    ->modalHeading('تحويل للأرشيف')
+                    ->successNotificationTitle('تم التحويل للأرشيف'),
+                \Filament\Actions\RestoreAction::make()
+                    ->label('استعادة من الأرشيف')
+                    ->modalHeading('استعادة من الأرشيف')
+                    ->successNotificationTitle('تمت الاستعادة من الأرشيف'),
 
                 Action::make('resetAccount')
                     ->authorize('resetAccount')
@@ -123,9 +130,15 @@ class StudentActions
     {
         return [
             \Filament\Actions\BulkActionGroup::make([
-                \Filament\Actions\DeleteBulkAction::make(),
+                \Filament\Actions\DeleteBulkAction::make()
+                    ->label('تحويل للأرشيف')
+                    ->modalHeading('تحويل المحدد للأرشيف')
+                    ->successNotificationTitle('تم التحويل للأرشيف'),
                 \Filament\Actions\ForceDeleteBulkAction::make(),
-                \Filament\Actions\RestoreBulkAction::make(),
+                \Filament\Actions\RestoreBulkAction::make()
+                    ->label('استعادة من الأرشيف')
+                    ->modalHeading('استعادة المحدد من الأرشيف')
+                    ->successNotificationTitle('تمت الاستعادة من الأرشيف'),
                 self::registrationAccessAction('openRegistrationBulk', 'فتح التسجيل للمحدَّدين', 'heroicon-o-lock-open', 'success', \App\Reg\RegAccess::Open, bulk: true),
                 self::registrationAccessAction('blockRegistrationBulk', 'حجب التسجيل عن المحدَّدين', 'heroicon-o-lock-closed', 'danger', \App\Reg\RegAccess::Closed, bulk: true),
                 self::registrationAccessAction('resetRegistrationBulk', 'إعادة التسجيل حسب الفترة', 'heroicon-o-arrow-path', 'gray', null, bulk: true),
