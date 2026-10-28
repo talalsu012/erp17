@@ -1,0 +1,8 @@
+php artisan migrate --path=database/migrations/2026_10_25_072734_drop_fee_triggers_and_routines.php
+php artisan migrate --path=database/migrations/2026_10_25_073917_add_registration_access_to_students_table.php
+php artisan migrate --path=database/migrations/2026_10_25_073919_copy_faculty_registration_windows_to_open_reg.php
+
+
+cd /var/www/reg && mysqldump -u root -p erp15 > ~/backup_before_migrate.sql
+
+cd /var/www/reg && for f in $(ls database/migrations | awk '$0 >= "2026_10_14_184446"'); do echo ">> $f"; sudo -u www-data php artisan migrate --path=database/migrations/$f --force || break; done
