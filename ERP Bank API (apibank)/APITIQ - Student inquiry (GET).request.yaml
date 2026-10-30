@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{base_url}}/apibank/APITIQ"
+method: GET
+headers:
+  Accept: application/json
+  Authorization: Bearer {{token}}
+  Stdid: STUDENT_UNIVERSITY_NO
+order: 3000

@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: f7eccfe2-969f-4e75-bf77-4a6946e984c3
+
+localResources:
+  collections:
+    - ../ERP Bank API (apibank)

@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{base_url}}/apibank/register"
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: urlencoded
+  content:
+    name: Bank Name
+    email: api@bank.com
+    password: "12345678"
+    university: RSU
+    bank: BANKCODE
+    ip: 1.2.3.4
+order: 1000

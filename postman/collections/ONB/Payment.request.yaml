@@ -1,0 +1,28 @@
+$kind: http-request
+url: https://portal.sheikan.edu.sd/apibank/APITIQ
+method: POST
+headers:
+  - key: Authorization
+    value: "{{bearer_token_1c2g}}"
+    disabled: false
+  - key: ""
+    value: ""
+    disabled: true
+body:
+  type: json
+  content: "{\r
+
+    \      \"STUDENTSID\": \"2222222222223222251\",\r
+
+    \      \"AMOUNT\" : \"444\",\r
+
+    \      \"BANKDATE\" : \"20261103\",\r
+
+    \      \"VOUCHERNO\" : \"1\",\r
+
+    \      \"BRANCH\" :  \"OMDORMAN\"\r
+
+    \      \r
+
+    }"
+order: 1614

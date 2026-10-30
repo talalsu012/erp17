@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{base_url}}/apibank/APITIQ"
+method: POST
+headers:
+  Accept: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: urlencoded
+  content:
+    STUDENTSID: STUDENT_UNIVERSITY_NO
+    AMOUNT: "1000"
+    BANKDATE: 2026-10-29
+    VOUCHERNO: V-0001
+    BRANCH: Main
+order: 4000

@@ -1,0 +1,21 @@
+$kind: http-request
+url: https://portal.sheikan.edu.sd/apibank/register
+method: POST
+body:
+  type: json
+  content: "{ \r
+
+    \        \"name\": \"ONB\",\r
+
+    \        \"email\": \"api@onb-sd.com\",\r
+
+    \        \"password\": \"info@sheikan.edu.sd\",\r
+
+    \        \"university\" : \"sheikan\",\r
+
+    \        \"bank\" : \"ONB\",\r
+
+    \        \"ip\" : \"10.0.0.2\"\r
+
+    \ }"
+order: 4000

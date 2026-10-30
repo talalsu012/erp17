@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{base_url}}/apibank/login"
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: urlencoded
+  content:
+    email: api@bank.com
+    password: "12345678"
+scripts:
+  - type: afterResponse
+    code: |-
+      const json = pm.response.json();
+      if (json.token) { pm.collectionVariables.set('token', json.token); }
+    language: text/javascript
+order: 2000

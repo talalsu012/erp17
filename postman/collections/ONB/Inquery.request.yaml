@@ -1,0 +1,10 @@
+$kind: http-request
+url: https://portal.sheikan.edu.sd/apibank/APITIQ
+method: GET
+headers:
+  Authorization: "{{bearer_token_1c2g}}"
+  Stdid: "2222222222223222251"
+body:
+  type: json
+  content: ""
+order: 2000

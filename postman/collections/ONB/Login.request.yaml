@@ -1,0 +1,15 @@
+$kind: http-request
+url: https://portal.sheikan.edu.sd/apibank/login
+method: POST
+body:
+  type: json
+  content: "{ \r
+
+    \        \"email\": \"api@onb-sd.com\",\r
+
+    \        \"password\": \"info@sheikan.edu.sd\"\r
+
+    \       \r
+
+    \ }"
+order: 3000
