@@ -22,8 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function (): void {
-            Route::middleware('api')->prefix('apitiq')->group(base_path('routes/apitiq.php'));
-            Route::middleware('api')->prefix('apibank')->group(base_path('routes/apibank.php'));
+            Route::middleware('api')->prefix(config('services.bok.route_prefix'))->group(base_path('routes/apitiq.php'));
+            Route::middleware('api')->prefix(config('services.bok.bank_route_prefix'))->group(base_path('routes/apibank.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
@@ -37,7 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request): bool => $request->is('api/*', 'apitiq/*') || $request->expectsJson()
+            fn (Request $request): bool => $request->is('api/*', config('services.bok.route_prefix').'/*', config('services.bok.bank_route_prefix').'/*') || $request->expectsJson()
         );
 
         // سياق موحّد يُلحق بكل خطأ في السجل لتسهيل التتبع

@@ -41,6 +41,8 @@ return [
     'bok' => [
         'jwt_secret' => env('BOK_JWT_SECRET', env('APP_KEY')),
         'allow_registration' => (bool) env('BOK_ALLOW_REGISTRATION', false),
+        'route_prefix' => env('BOK_API_PREFIX', 'apitiq'),
+        'bank_route_prefix' => env('BANK_API_PREFIX', 'apibank'),
     ],
 
 ];
