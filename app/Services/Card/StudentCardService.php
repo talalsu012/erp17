@@ -86,6 +86,7 @@ class StudentCardService
         // 2. تهيئة mPDF مع إعدادات البطاقة واللغة العربية
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
+            'tempDir' => storage_path('app/mpdf'),
             'format' => [85.6, 53.98], // مقاس بطاقة CR80
             'margin_left' => 0,
             'margin_right' => 0,

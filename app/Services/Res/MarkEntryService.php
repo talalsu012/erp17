@@ -97,6 +97,7 @@ class MarkEntryService
      *  1) بيانات الطالب الأساسية مكتملة، وتطابق كلية/مستوى/دفعة/قسم المادة.
      *  2) عند اختيار تخصص: الطالب والمادة كلاهما في هذا التخصص.
      *  3) بدون اختيار تخصص: إن كانت المادة لتخصص معيّن فيجب أن يكون الطالب فيه.
+     *  4) regulations.entry.strict_special: المادة العامة (بلا تخصص) لا تُدخل لطالب مسجّل في تخصص.
      */
     public function assertEligible(Student $student, Subject $subject, int|string $batch, int|string|null $special = null): void
     {
@@ -132,6 +133,8 @@ class MarkEntryService
             }
         } elseif (filled($subject->special_code) && (string) $student->special_code !== (string) $subject->special_code) {
             throw new DomainException('المادة خاصة بتخصص لا ينتمي إليه الطالب.');
+        } elseif (blank($subject->special_code) && filled($student->special_code) && config('regulations.entry.strict_special')) {
+            throw new DomainException('هذه مادة عامة (بلا تخصص) والطالب مسجّل في تخصص، فلا تُدخل له درجتها.');
         }
     }
 
@@ -170,7 +173,13 @@ class MarkEntryService
             return Student::query()->whereRaw('0 = 1');
         }
 
-        return $user->constrainToAcademicScope(Student::query())
+        $subject = Subject::query()->find($f['subject']);
+
+        if (! $subject || (string) $subject->faculty_code !== (string) $f['faculty'] || (string) $subject->level_code !== (string) $f['level']) {
+            return Student::query()->whereRaw('0 = 1');
+        }
+
+        return $subject->constrainStudents($user->constrainToAcademicScope(Student::query()))
             ->with(['marks' => fn ($q) => $q->where([
                 ['subject_code', $f['subject']],
                 ['batch_code', $f['batch']],
@@ -337,7 +346,6 @@ class MarkEntryService
         return $examType === 2 ? min($score, RegulationProfile::current()->supplementaryMaxMark()) : $score;
     }
 
-    /** يجلب سجل الدرجة بقفل (أو ينشئه) بالمفتاح الفريد نفسه للجدول، ويستعيده إن كان محذوفاً. */
     /**
      * ينسخ درجة السبب وتقديره ونقاطه إلى صف الدرجة (وتُلغى أعمال السنة).
      * إن حدّد السبب درجة دون تقدير أو نقاط، يُكمَل الناقص من جدول التقديرات.
@@ -379,6 +387,10 @@ class MarkEntryService
         }
     }
 
+    /**
+     * يجلب سجل الدرجة بقفل (أو ينشئه) بالمفتاح الفريد نفسه للجدول، ويستعيده إن كان محذوفاً.
+     * كلية الصف وقسمه وتخصصه من الطالب دائماً (الطالب هو الأصل ثم المقرر) فتتطابق مع توصيته.
+     */
     private function lockRow(User $user, Student $student, Subject $subject, int|string $batch, int $examType): Mark
     {
         $key = [
@@ -390,16 +402,15 @@ class MarkEntryService
             'examType' => $examType,
         ];
 
-        $mark = Mark::withTrashed()->where($key)->lockForUpdate()->first()
-            ?? new Mark($key + [
-                'faculty_code' => $subject->faculty_code,
-                'department_code' => $subject->department_code,
-                'special_code' => $subject->special_code,
-            ]);
+        $mark = Mark::withTrashed()->where($key)->lockForUpdate()->first() ?? new Mark($key);
 
         if ($mark->exists && $mark->is_locked && ! $user->isSuperAdmin()) {
             throw new DomainException('هذه النتيجة معتمدة ومقفلة نهائياً، ولا يعدّلها إلا المدير الأعلى.');
         }
+
+        $mark->faculty_code = $student->faculty_code;
+        $mark->department_code = $student->department_code;
+        $mark->special_code = $student->special_code;
 
         if ($mark->trashed()) {
             $mark->restore();

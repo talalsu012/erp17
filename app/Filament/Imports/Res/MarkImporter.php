@@ -3,6 +3,11 @@
 namespace App\Filament\Imports\Res;
 
 use App\Models\Res\Mark;
+use App\Models\Res\Subject;
+use App\Models\Student;
+use App\Services\Res\MarkEntryService;
+use DomainException;
+use Filament\Actions\Imports\Exceptions\RowImportFailedException;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
@@ -100,6 +105,8 @@ class MarkImporter extends Importer
 
     public function resolveRecord(): Mark
     {
+        $this->stampFromStudent();
+
         $isMarkNumeric = isset($this->data['mark']) && is_numeric($this->data['mark']);
         $resonCode = $this->data['reson_code'] ?? null;
 
@@ -146,6 +153,29 @@ class MarkImporter extends Importer
 
         ]);
 
+    }
+
+    /**
+     * الطالب هو الأصل: يُتحقق من أهليته للمقرر، وكلية الدرجة وقسمها وتخصصها تؤخذ من سجله لا من الملف.
+     */
+    private function stampFromStudent(): void
+    {
+        $student = Student::query()->where('university_no', $this->data['university_no'])->first();
+        $subject = Subject::query()->find($this->data['subject_code']);
+
+        if (! $student || ! $subject) {
+            throw new RowImportFailedException('الطالب أو المقرر غير موجود.');
+        }
+
+        try {
+            app(MarkEntryService::class)->assertEligible($student, $subject, $this->data['batch_code']);
+        } catch (DomainException $e) {
+            throw new RowImportFailedException($e->getMessage());
+        }
+
+        $this->data['faculty_code'] = $student->faculty_code;
+        $this->data['department_code'] = $student->department_code;
+        $this->data['special_code'] = $student->special_code;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

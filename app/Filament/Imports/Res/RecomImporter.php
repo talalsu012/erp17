@@ -3,6 +3,8 @@
 namespace App\Filament\Imports\Res;
 
 use App\Models\Res\Recom;
+use App\Models\Student;
+use Filament\Actions\Imports\Exceptions\RowImportFailedException;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
@@ -64,6 +66,14 @@ class RecomImporter extends Importer
 
     public function resolveRecord(): Recom
     {
+        $student = Student::query()->where('university_no', $this->data['university_no'])->first();
+
+        if (! $student) {
+            throw new RowImportFailedException('الطالب غير موجود.');
+        }
+
+        $this->data['department_code'] = $student->department_code;
+        $this->data['special_code'] = $student->special_code;
 
         return Recom::firstOrNew([
             'recom_code' => $this->data['recom_code'],

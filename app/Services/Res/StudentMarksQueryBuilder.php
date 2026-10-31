@@ -2,6 +2,7 @@
 
 namespace App\Services\Res;
 
+use App\Models\Res\Subject;
 use App\Models\Student;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -16,7 +17,13 @@ class StudentMarksQueryBuilder
             return Student::query()->whereRaw('0 = 1');
         }
 
-        $query = Student::query()
+        $subject = Subject::query()->find($data['subject']);
+
+        if (! $subject || (string) $subject->faculty_code !== (string) $data['faculty'] || (string) $subject->level_code !== (string) $data['level']) {
+            return Student::query()->whereRaw('0 = 1');
+        }
+
+        $query = $subject->constrainStudents(Student::query())
             ->with($this->getEagerLoads($data))
             ->where('faculty_code', $data['faculty'])
             ->when($data['department'], fn ($q) => $q->where('department_code', $data['department']))

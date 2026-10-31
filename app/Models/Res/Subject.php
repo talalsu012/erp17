@@ -42,6 +42,24 @@ class Subject extends Model
         $query->where('is_visible', true);
     }
 
+    /**
+     * يقيّد استعلام الطلاب بمن يحق لهم هذه المادة: قسمها وتخصصها (المادة الخاصة بتخصص لطلابه فقط،
+     * والمادة العامة لطلاب بلا تخصص فقط عند تفعيل regulations.entry.strict_special).
+     *
+     * @param  Builder<Student>  $students
+     * @return Builder<Student>
+     */
+    public function constrainStudents(Builder $students): Builder
+    {
+        return $students
+            ->when(filled($this->department_code), fn (Builder $q) => $q->where('department_code', $this->department_code))
+            ->when(
+                filled($this->special_code),
+                fn (Builder $q) => $q->where('special_code', $this->special_code),
+                fn (Builder $q) => $q->when(config('regulations.entry.strict_special'), fn (Builder $strict) => $strict->whereNull('special_code')),
+            );
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

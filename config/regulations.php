@@ -86,6 +86,14 @@ $regulation = [
     ],
 
     /*
+    | إدخال الدرجات: strict_special = المادة العامة (بلا تخصص) لا تُدخل لطالب مسجّل في تخصص، والمادة الخاصة بتخصص
+    | لطلابه فقط. قائمة الطلاب في شاشة الإدخال تُشتق من قسم المادة وتخصصها، وكلية الدرجة وقسمها وتخصصها من الطالب.
+    */
+    'entry' => [
+        'strict_special' => false,
+    ],
+
+    /*
     | الحرمان بالغياب: نسبة الإنذار ونسبة الحرمان (بعد تجاوزها)، وهل يُحتسب الغياب بعذر غياباً.
     */
     'absence' => [
@@ -117,6 +125,7 @@ $profiles = [
     'kassala' => [
         'supplementary' => ['mode' => 'count', 'repeat_some_max_subjects' => 2],
         'decisions' => ['repeat_above' => [1, 2], 'dismiss_above' => [3, 4], 'inclusive' => true],
+        'entry' => ['strict_special' => true],
     ],
 ];
 

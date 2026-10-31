@@ -262,3 +262,54 @@ it('reports whether a reason applies a score', function () {
         ->and((new Reson)->forceFill(['point' => 0])->appliesScore())->toBeTrue()
         ->and((new Reson)->forceFill(['grade' => ''])->appliesScore())->toBeFalse();
 });
+
+it('stamps the mark and recom with the student faculty, department and special', function () {
+    $student = (new Student)->forceFill([
+        'university_no' => 2, 'faculty_code' => 10, 'department_code' => 100, 'special_code' => 7,
+        'level_code' => 1, 'batch_code' => 2026, 'stady_code' => 20060001,
+    ]);
+
+    $result = test()->service->saveScore(test()->user, $student, Subject::find(5), 2026, 1, 'mark', 80);
+
+    expect($result['mark']->only(['faculty_code', 'department_code', 'special_code']))->toBe(['faculty_code' => 10, 'department_code' => 100, 'special_code' => 7])
+        ->and($result['recom']->special_code)->toBe(7);
+});
+
+it('corrects a stale special on an existing mark row when saved again', function () {
+    $student = (new Student)->forceFill([
+        'university_no' => 2, 'faculty_code' => 10, 'department_code' => 100, 'special_code' => 7,
+        'level_code' => 1, 'batch_code' => 2026, 'stady_code' => 20060001,
+    ]);
+    Mark::create(['university_no' => 2, 'subject_code' => 5, 'faculty_code' => 10, 'department_code' => 100, 'special_code' => null, 'level_code' => 1, 'batch_code' => 2026, 'semester' => 1, 'examType' => 1, 'mark' => 50]);
+
+    $result = test()->service->saveScore(test()->user, $student, Subject::find(5), 2026, 1, 'mark', 80);
+
+    expect($result['mark']->special_code)->toBe(7);
+});
+
+it('lists only the students of the subject special, and of no special for a general subject when strict', function () {
+    $special = (new Subject)->forceFill(['department_code' => 100, 'special_code' => 7]);
+    $general = (new Subject)->forceFill(['department_code' => 100, 'special_code' => null]);
+
+    expect($special->constrainStudents(Student::query())->toRawSql())
+        ->toContain('"department_code" = 100')->toContain('"special_code" = 7')
+        ->and($general->constrainStudents(Student::query())->toRawSql())->not->toContain('special_code');
+
+    config(['regulations.entry.strict_special' => true]);
+
+    expect($general->constrainStudents(Student::query())->toRawSql())->toContain('"special_code" is null');
+});
+
+it('refuses a common subject for a student with a special when strict', function () {
+    $student = (new Student)->forceFill([
+        'university_no' => 2, 'faculty_code' => 10, 'department_code' => 100, 'special_code' => 7,
+        'level_code' => 1, 'batch_code' => 2026, 'stady_code' => 20060001,
+    ]);
+
+    test()->service->assertEligible($student, Subject::find(5), 2026);
+
+    config(['regulations.entry.strict_special' => true]);
+
+    expect(fn () => test()->service->assertEligible($student, Subject::find(5), 2026))
+        ->toThrow(DomainException::class, 'مادة عامة');
+});

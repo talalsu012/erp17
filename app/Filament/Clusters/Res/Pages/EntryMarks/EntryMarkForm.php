@@ -135,7 +135,11 @@ trait EntryMarkForm
                                         ->Exam()
                                         ->where('faculty_code', $get('faculty'))
                                         ->when($get('department'), fn ($query) => $query->where('department_code', $get('department')))
-                                        ->when($get('special'), fn ($query) => $query->where('special_code', $get('special')))
+                                        ->when(
+                                            $get('special'),
+                                            fn ($query) => $query->where('special_code', $get('special')),
+                                            fn ($query) => $query->when(config('regulations.entry.strict_special'), fn ($strict) => $strict->whereNull('special_code')),
+                                        )
                                         ->where('level_code', $get('level'));
 
                                     // ->where('semester_id', $get('semester'))
