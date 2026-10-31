@@ -93,4 +93,10 @@ return [
     */
     'faculties' => [],
 
+    /*
+    | حذف مشغّلات ودالة وإجراء حساب الرسوم القديمة من القاعدة عند تنفيذ الـ migrations.
+    | يبقى false حتى لا تتغير القاعدة الحالية؛ فعّله فقط عند تحويل النظام إلى StudentFeeService.
+    */
+    'drop_legacy_fee_triggers' => (bool) env('DROP_LEGACY_FEE_TRIGGERS', false),
+
 ];

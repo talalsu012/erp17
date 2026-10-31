@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! $this->supportsRoutines()) {
+        if (! config('regulations.drop_legacy_fee_triggers') || ! $this->supportsRoutines()) {
             return;
         }
 

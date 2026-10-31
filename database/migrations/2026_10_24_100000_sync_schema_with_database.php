@@ -70,12 +70,11 @@ return new class extends Migration
         });
     }
 
+    /**
+     * لا يحذف أي عمود أو قيد: الأعمدة القديمة تبقى بجانب الجديدة، ويُضاف الجديد الناقص فقط.
+     */
     private function syncResultTables(): void
     {
-        if (Schema::hasColumn('res_marks', 'approval_status')) {
-            Schema::table('res_marks', fn (Blueprint $table) => $table->dropColumn('approval_status'));
-        }
-
         $this->addColumnIfMissing('res_marks', 'department_code', function (Blueprint $table): void {
             $table->unsignedBigInteger('department_code')->nullable()->after('faculty_code');
             $table->unsignedBigInteger('special_code')->nullable()->after('department_code');
@@ -83,37 +82,28 @@ return new class extends Migration
             $table->foreign('special_code', 'FK_res_marks_reg_specials')->references('code')->on('reg_specials')->cascadeOnUpdate()->cascadeOnDelete();
         });
 
-        if (Schema::hasColumn('res_recoms', 'gpa')) {
-            return;
+        $this->addColumnIfMissing('res_recoms', 'department_code', fn (Blueprint $table) => $table->unsignedBigInteger('department_code')->nullable()->after('faculty_code'));
+        $this->addColumnIfMissing('res_recoms', 'special_code', fn (Blueprint $table) => $table->unsignedBigInteger('special_code')->nullable()->after('department_code'));
+        $this->addColumnIfMissing('res_recoms', 'countSubject', fn (Blueprint $table) => $table->integer('countSubject')->nullable());
+        $this->addColumnIfMissing('res_recoms', 'sumMarks', fn (Blueprint $table) => $table->integer('sumMarks')->nullable());
+        $this->addColumnIfMissing('res_recoms', 's_pass', fn (Blueprint $table) => $table->integer('s_pass')->nullable());
+        $this->addColumnIfMissing('res_recoms', 's_fail', fn (Blueprint $table) => $table->integer('s_fail')->nullable());
+        $this->addColumnIfMissing('res_recoms', 'crch_fail', fn (Blueprint $table) => $table->integer('crch_fail')->nullable());
+        $this->addColumnIfMissing('res_recoms', 's_abs', fn (Blueprint $table) => $table->integer('s_abs')->nullable());
+        $this->addColumnIfMissing('res_recoms', 'gpa', fn (Blueprint $table) => $table->float('gpa')->nullable());
+        $this->addColumnIfMissing('res_recoms', 'cgpa', fn (Blueprint $table) => $table->float('cgpa')->nullable());
+
+        $this->addForeignKeyIfMissing('res_recoms', 'FK_res_recoms_reg_departments', 'department_code', 'reg_departments');
+        $this->addForeignKeyIfMissing('res_recoms', 'FK_res_recoms_reg_specials', 'special_code', 'reg_specials');
+    }
+
+    private function addForeignKeyIfMissing(string $table, string $name, string $column, string $references): void
+    {
+        $exists = collect(Schema::getForeignKeys($table))->contains(fn (array $foreignKey): bool => $foreignKey['name'] === $name);
+
+        if (! $exists) {
+            Schema::table($table, fn (Blueprint $blueprint) => $blueprint->foreign($column, $name)->references('code')->on($references)->cascadeOnUpdate()->cascadeOnDelete());
         }
-
-        $recomForeignKey = collect(Schema::getForeignKeys('res_recoms'))
-            ->first(fn (array $foreignKey): bool => $foreignKey['columns'] === ['recom_code']);
-
-        Schema::table('res_recoms', function (Blueprint $table) use ($recomForeignKey): void {
-            if ($recomForeignKey !== null) {
-                $table->dropForeign($recomForeignKey['name']);
-            }
-
-            $table->dropColumn(['cfail', 'cabs', 'subject_fail', 'subject_abs', 'pga', 'cpga']);
-        });
-
-        Schema::table('res_recoms', function (Blueprint $table): void {
-            $table->unsignedBigInteger('department_code')->nullable()->after('faculty_code');
-            $table->unsignedBigInteger('special_code')->nullable()->after('department_code');
-            $table->integer('countSubject')->nullable()->after('examType');
-            $table->integer('sumMarks')->nullable()->after('countSubject');
-            $table->integer('s_pass')->nullable()->after('sumMarks');
-            $table->integer('s_fail')->nullable()->after('s_pass');
-            $table->integer('crch_fail')->nullable()->after('s_fail');
-            $table->integer('s_abs')->nullable()->after('crch_fail');
-            $table->float('gpa')->nullable()->after('points');
-            $table->float('cgpa')->nullable()->after('gpa');
-
-            $table->foreign('department_code', 'FK_res_recoms_reg_departments')->references('code')->on('reg_departments')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreign('special_code', 'FK_res_recoms_reg_specials')->references('code')->on('reg_specials')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->unique(['university_no', 'faculty_code', 'department_code', 'level_code', 'batch_code', 'semester', 'examType'], 'unique_student_recom');
-        });
     }
 
     private function createMissingTables(): void
