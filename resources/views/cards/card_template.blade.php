@@ -253,7 +253,7 @@
         <table width="100%" height="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="center" valign="middle">
-                    <div style="font-size: 8px; font-weight: bold; color: #FFFFFF;">أمانة الشؤون العلمية</div>
+                    <div style="font-size: 8px; font-weight: bold; color: #FFFFFF;">عمادة شؤون الطلاب</div>
                     <div style="font-size: 6px; color: #A0C8B0; margin-top: 1px;" dir="ltr">Academic Affairs Office |
                         www.kassalauni.edu.sd</div>
                 </td>

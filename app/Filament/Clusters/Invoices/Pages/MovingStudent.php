@@ -11,7 +11,9 @@ use App\Models\Reg\Level;
 use App\Models\Reg\LtColumn;
 use App\Models\Res\LtRecom;
 use App\Models\Student;
+use App\Services\Reg\StudentPromotionService;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use DomainException;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -26,7 +28,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Facades\DB;
 
 class MovingStudent extends Page implements HasForms, HasTable
 {
@@ -72,6 +73,7 @@ class MovingStudent extends Page implements HasForms, HasTable
 
     public ?array $promotionData = [];
 
+    /** @var list<int|string> */
     public array $studentsToMove = [];
 
     public function mount(): void
@@ -100,7 +102,7 @@ class MovingStudent extends Page implements HasForms, HasTable
 
                             Select::make('faculty_code')
                                 ->label('الكلية')
-                                ->options(fn () => Faculty::pluck('name_ar', 'code'))
+                                ->options(fn () => auth()->user()->constrainToAcademicScope(Faculty::query(), ['faculty' => 'code'])->pluck('name_ar', 'code'))
                                 ->searchable()
 
                                 ->required(),
@@ -183,14 +185,21 @@ class MovingStudent extends Page implements HasForms, HasTable
             ]);
     }
 
-    public function loadStudentsForPromotion()
+    public function loadStudentsForPromotion(): void
     {
-        $this->studentsToMove = Student::query()
-            ->where('faculty_code', $this->promotionData['faculty_code'] ?? null)
-            ->where('level_code', $this->promotionData['current_level'] ?? null)
-            ->where('batch_code', $this->promotionData['current_batch_code'] ?? null)
-            ->get()
-            ->toArray();
+        $criteria = $this->promotionForm->getState();
+
+        try {
+            $this->studentsToMove = app(StudentPromotionService::class)
+                ->query(auth()->user(), $criteria)
+                ->pluck('university_no')
+                ->all();
+        } catch (DomainException $exception) {
+            $this->studentsToMove = [];
+            Notification::make()->title($exception->getMessage())->danger()->send();
+
+            return;
+        }
 
         $this->resetTable();
 
@@ -200,52 +209,29 @@ class MovingStudent extends Page implements HasForms, HasTable
             ->send();
     }
 
-    public function executePromotion()
+    public function executePromotion(): void
     {
-        $formData = $this->promotionData;
+        $data = $this->promotionForm->getState();
 
-        if (empty($this->studentsToMove)) {
-            Notification::make()
-                ->title('لا يوجد طلاب للترحيل')
-                ->danger()
-                ->send();
+        try {
+            $count = app(StudentPromotionService::class)
+                ->promote(auth()->user(), $data, $data['new_level'] ?? null, $data['new_batch_code'] ?? null);
+        } catch (DomainException $exception) {
+            Notification::make()->title($exception->getMessage())->danger()->send();
 
             return;
         }
 
-        $promotion = Student::query()
-            ->where('faculty_code', $formData['faculty_code'] ?? null)
-            ->where('level_code', $formData['current_level'] ?? null)
-            ->where('batch_code', $formData['current_batch_code'] ?? null)
+        if ($count === 0) {
+            Notification::make()->title('لا يوجد طلاب للترحيل')->danger()->send();
 
-            ->whereHas('recom', function ($query) use ($formData) {
+            return;
+        }
 
-                // فلترة حسب recom المختارة
-                $query->when(
-                    ! empty($formData['recom_code']),
-                    fn ($q) => $q->whereIn('recom_code', $formData['recom_code'])
-                );
-                $query->whereColumn('res_recoms.level_code', 'students.level_code');
-                $query->whereColumn('res_recoms.batch_code', 'students.batch_code');
-                $query->where('res_recoms.semester', 2);
-            });
-
-        $promotedStudents = (clone $promotion)->pluck('university_no');
-
-        $promotion->update([
-            'level_code' => $this->promotionData['new_level'],
-            'batch_code' => $this->promotionData['new_batch_code'], // لو العام الجديد نفسه
-            'fees8' => DB::raw('fees8 + xmod'),
-        ]);
-
-        app(\App\Services\Reg\StudentFeeService::class)->refreshMany($promotedStudents);
-
-        Notification::make()
-            ->title('تم ترحيل الطلاب بنجاح')
-            ->success()
-            ->send();
+        Notification::make()->title("تم ترحيل {$count} طالباً بنجاح")->success()->send();
 
         $this->studentsToMove = [];
+        $this->resetTable();
     }
 
     public function table(Table $table): Table
@@ -254,9 +240,7 @@ class MovingStudent extends Page implements HasForms, HasTable
             ->query(
                 query: Student::query()
                     ->with('faculty', 'level', 'batch')
-                    ->where('faculty_code', $this->promotionData['faculty_code'] ?? null)
-                    ->where('level_code', $this->promotionData['current_level'] ?? null)
-                    ->where('batch_code', $this->promotionData['current_batch_code'] ?? null)
+                    ->whereIn('university_no', $this->studentsToMove)
             )
             ->columns([
                 TextColumn::make('university_no')

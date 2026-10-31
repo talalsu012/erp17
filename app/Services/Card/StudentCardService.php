@@ -54,7 +54,7 @@ class StudentCardService
 
             'title' => config('university.name_ar'),
             'in_card' => 'بطاقة  طالب',
-            'content' => 'أمانة الشؤون العلمية',
+            'content' => 'عمادة شؤون الطلاب',
 
             'full_name_label' => 'الاسم الكامل',
             'stu_num_label' => 'الرقم الجامعي',

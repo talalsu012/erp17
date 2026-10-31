@@ -159,7 +159,7 @@ return [
     'card_number' => 'رقم البطاقة',
     'issue_date' => 'اريخ الاصدار',
     'expiry_date' => 'تاريخ الانتهاء',
-    'back_footer' => 'امانة الشؤون العلمية',
+    'back_footer' => 'عمادة شؤون الطلاب',
     'back_instructions' => 'يجب إبراز هذه البطاقة عند الدخول للحرم الجامعي',
 
     // CardStatus Enum [active', 'inactive', 'lost', 'expired', 'demo']
