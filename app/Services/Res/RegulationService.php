@@ -271,8 +271,11 @@ class RegulationService
     {
         [$numerator, $denominator] = $profile->failFraction($rule);
 
+        $failed = $stats['crch_fail'] * $denominator;
+        $allowed = $stats['crch'] * $numerator;
+
         return $stats['crch'] > 0
-            && ($stats['crch_fail'] * $denominator) > ($stats['crch'] * $numerator);
+            && ($profile->inclusiveFailThresholds() ? $failed >= $allowed : $failed > $allowed);
     }
 
     /**
@@ -297,6 +300,10 @@ class RegulationService
     /** نتيجة الملاحق (examType = 2) */
     private static function decideSupplementaryExam(array $stats, float $failPct, Closure $repeated, Closure $external, RegulationProfile $profile): RecomCode
     {
+        if ($profile->supplementaryByCount()) {
+            return self::decideSupplementaryByCount($stats, $repeated, $profile);
+        }
+
         $repeatAll = $profile->repeatAllAbovePct();
         $repeatSome = $profile->repeatSomeAbovePct();
 
@@ -306,6 +313,22 @@ class RegulationService
             $stats['s_fail'] >= 1 && $stats['s_fail'] <= $profile->removeFailMaxSubjects() && ! $external() && ! $repeated() => RecomCode::RemoveFail,
             $stats['s_fail'] > 0 && $repeated() => RecomCode::AcademicDismissal,
             default => RecomCode::Pass,
+        };
+    }
+
+    /**
+     * الملاحق بعدد المقررات الراسبة (م 8-13 و9-13): حتى repeat_some_max_subjects إعادة بها، وأكثر إعادة الفصل كله،
+     * والراسب بعد إعادة سابقة يُفصل.
+     *
+     * @param  array<string, mixed>  $stats
+     */
+    private static function decideSupplementaryByCount(array $stats, Closure $repeated, RegulationProfile $profile): RecomCode
+    {
+        return match (true) {
+            $stats['s_fail'] <= 0 => RecomCode::Pass,
+            $repeated() => RecomCode::AcademicDismissal,
+            $stats['s_fail'] <= $profile->repeatSomeMaxSubjects() => RecomCode::RepeatSome,
+            default => RecomCode::RepeatAll,
         };
     }
 

@@ -14,7 +14,7 @@
 |
 */
 
-return [
+$regulation = [
 
     /*
     | النظام الأكاديمي: semester | annual | semester_annual
@@ -29,6 +29,9 @@ return [
     'pass_mark' => 50,
 
     /*
+    | mode: percent = القرار بنسبة الساعات الراسبة (repeat_*_above_pct)، وcount = بعدد المقررات الراسبة:
+    | حتى repeat_some_max_subjects مقرراً إعادة هذه المقررات، وأكثر منها إعادة الفصل كله.
+    |
     | امتحان الملاحق: أقصى درجة، ونقاط الناتج إن لم يُعرَّف تقدير ناجح للخطة.
     | النسب نسب الساعات الراسبة من ساعات الفصل: فوق الأولى إعادة السنة/الفصل كله،
     | وبين الثانية والأولى إعادة بعض المقررات. وأقصى عدد مقررات راسبة يُسمح بإزالة رسوبه.
@@ -39,6 +42,8 @@ return [
         'repeat_all_above_pct' => 70,
         'repeat_some_above_pct' => 50,
         'remove_fail_max_subjects' => 1,
+        'mode' => 'percent',
+        'repeat_some_max_subjects' => 2,
     ],
 
     /*
@@ -54,12 +59,14 @@ return [
     | قرارات الامتحان الأساسي (الدور الأول):
     | repeat_above: رسوب أكثر من هذا الكسر من الساعات = إعادة. dismiss_above: أكثر من هذا الكسر = فصل
     | (السنة النهائية تُعاد ولا تُفصل). final_year_levels: عدد آخر مستويات الخطة المعدودة سنة نهائية.
+    | inclusive: true = تساوي الحد يكفي (رسوب 50% بالضبط = إعادة)، وfalse = يجب تجاوزه.
     | repeat_history_codes / external_history_codes: رموز توصيات سابقة تُعد إعادة سابقة / إزالة رسوب سابقة.
     */
     'decisions' => [
         'repeat_above' => [1, 3],
         'dismiss_above' => [2, 3],
         'final_year_levels' => 2,
+        'inclusive' => false,
         'repeat_history_codes' => [2001, 2002],
         'external_history_codes' => [4005],
     ],
@@ -100,3 +107,17 @@ return [
     'drop_legacy_fee_triggers' => (bool) env('DROP_LEGACY_FEE_TRIGGERS', false),
 
 ];
+
+/*
+| لائحة جامعة كسلا (2023): تُفعَّل بـ REG_PROFILE=kassala في .env.
+| الدور الأول: الإعادة عند رسوب 50% فأكثر من الساعات والفصل عند 75% فأكثر (م 3-13 إلى 5-13).
+| الدور الثاني: بعدد المقررات الراسبة، مقرر أو مقرران إعادة بها وثلاثة فأكثر إعادة الفصل.
+*/
+$profiles = [
+    'kassala' => [
+        'supplementary' => ['mode' => 'count', 'repeat_some_max_subjects' => 2],
+        'decisions' => ['repeat_above' => [1, 2], 'dismiss_above' => [3, 4], 'inclusive' => true],
+    ],
+];
+
+return array_replace_recursive($regulation, $profiles[(string) env('REG_PROFILE')] ?? []);

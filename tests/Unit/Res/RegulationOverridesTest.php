@@ -80,3 +80,37 @@ it('treats the configured reason codes as excluded or excused absence', function
     expect(RegulationService::isAbsentReason(7777))->toBeTrue()
         ->and(RegulationService::isAbsentReason(3001))->toBeFalse();
 });
+
+it('decides the supplementary sitting by failed subjects count under the count mode', function () {
+    config(['regulations.supplementary.mode' => 'count']);
+
+    expect(decideWith(2, ['s_fail' => 0]))->toBe(RecomCode::Pass)
+        ->and(decideWith(2, ['crch_fail' => 3, 's_fail' => 1]))->toBe(RecomCode::RepeatSome)
+        ->and(decideWith(2, ['crch_fail' => 6, 's_fail' => 2]))->toBe(RecomCode::RepeatSome)
+        ->and(decideWith(2, ['crch_fail' => 9, 's_fail' => 3]))->toBe(RecomCode::RepeatAll)
+        ->and(decideWith(2, ['crch_fail' => 12, 's_fail' => 5]))->toBe(RecomCode::RepeatAll);
+});
+
+it('dismisses a supplementary failure after a previous repeat under the count mode', function () {
+    config(['regulations.supplementary.mode' => 'count']);
+
+    $decision = RegulationService::decide(2, ['crch' => 20, 'crch_fail' => 3, 's_fail' => 1, 's_abs' => 0], true, fn () => true, fn () => false);
+
+    expect($decision)->toBe(RecomCode::AcademicDismissal);
+});
+
+it('treats the fail thresholds as inclusive when the regulation says so', function () {
+    config(['regulations.decisions.repeat_above' => [1, 2], 'regulations.decisions.dismiss_above' => [3, 4]]);
+
+    $half = ['crch_fail' => 10, 's_fail' => 3];
+    $threeQuarters = ['crch_fail' => 15, 's_fail' => 4];
+
+    expect(decideWith(1, $half))->toBe(RecomCode::Supplementary)
+        ->and(decideWith(1, $threeQuarters))->toBe(RecomCode::RepeatSome);
+
+    config(['regulations.decisions.inclusive' => true]);
+
+    expect(decideWith(1, ['crch_fail' => 9, 's_fail' => 3]))->toBe(RecomCode::Supplementary)
+        ->and(decideWith(1, $half))->toBe(RecomCode::RepeatSome)
+        ->and(decideWith(1, $threeQuarters))->toBe(RecomCode::AcademicDismissal);
+});

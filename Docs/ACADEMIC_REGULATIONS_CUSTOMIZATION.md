@@ -33,10 +33,13 @@
 | `supplementary.repeat_all_above_pct` | رسوب ساعات الفصل أكثر من هذه النسبة بعد الملاحق = إعادة الكل (2001) | 70 |
 | `supplementary.repeat_some_above_pct` | أكثر منها (وأقل من السابقة) = إعادة بعض المقررات (2002) | 50 |
 | `supplementary.remove_fail_max_subjects` | أقصى عدد مقررات راسبة تُزال بالملاحق (4005) | 1 |
+| `supplementary.mode` | `percent` (نسبة الساعات) أو `count` (عدد المقررات الراسبة: حتى `repeat_some_max_subjects` إعادة بها، وأكثر إعادة الفصل) | percent |
+| `supplementary.repeat_some_max_subjects` | أقصى عدد مقررات راسبة تُعاد بها فقط في وضع `count` | 2 |
 | `reasons.excluded` | رمز السبب «مستبعد من الحساب» | 21 |
 | `reasons.absent_codes` | رموز الغياب بعذر (لا نجاح ولا رسوب) | 3001, 18 |
 | `decisions.repeat_above` | رسوب أكثر من هذا الكسر من الساعات = إعادة | 1/3 |
 | `decisions.dismiss_above` | أكثر من هذا الكسر = فصل (السنة النهائية تُعاد ولا تُفصل) | 2/3 |
+| `decisions.inclusive` | `true` = تساوي الحد يكفي (رسوب 50% بالضبط = إعادة) | لا |
 | `decisions.final_year_levels` | عدد آخر مستويات الخطة المعدودة سنة نهائية | 2 |
 | `decisions.repeat_history_codes` | رموز توصيات سابقة تُعدّ «إعادة سابقة» | 2001, 2002 |
 | `decisions.external_history_codes` | رموز توصيات سابقة تُعدّ «إزالة رسوب سابقة» | 4005 |
@@ -191,3 +194,7 @@
 - منطق قديم خامل ولا يستعمله الحساب الحي: `app/Helpers/Res/Services/MarkCalculationService.php` (ونسخته `...Copy.php`)، و`MarkHelper` و`GradeHelper` و`EntryMarkTable`. لا تعتمد عليها.
 - الثوابت القديمة (`RegulationService::PASS_MARK`, `REASON_*`, `MarkEntryService::SUPPLEMENTARY_MAX`, `GraduationService::MIN_GPA`, `AbsenceService::*_PCT`, `Grade::DEFAULT_PLAN`) باقية للتوافق وعليها وسم `@deprecated`، وقيمها لا تحكم الحساب؛ المرجع `config/regulations.php`.
 - `app/Services/Res/README.md` قد يذكر نسباً قديمة (75%)؛ الصحيح ما في هذا الدليل وفي الكود.
+
+## ملف جامعة كسلا
+
+`REG_PROFILE=kassala` في `.env` يفعّل لائحة كسلا: إعادة عند رسوب 50% فأكثر وفصل عند 75% فأكثر، والملاحق بعدد المقررات (1–2 إعادة بها، 3 فأكثر إعادة الفصل).

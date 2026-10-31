@@ -115,6 +115,16 @@ final class RegulationProfile
         return (int) $this->get('supplementary.remove_fail_max_subjects', 1);
     }
 
+    public function supplementaryByCount(): bool
+    {
+        return $this->get('supplementary.mode', 'percent') === 'count';
+    }
+
+    public function repeatSomeMaxSubjects(): int
+    {
+        return (int) $this->get('supplementary.repeat_some_max_subjects', 2);
+    }
+
     public function excludedReason(): int
     {
         return (int) $this->get('reasons.excluded', 21);
@@ -144,6 +154,11 @@ final class RegulationProfile
         $fraction = (array) $this->get("decisions.{$rule}", $rule === 'repeat_above' ? [1, 3] : [2, 3]);
 
         return [(int) ($fraction[0] ?? 1), max(1, (int) ($fraction[1] ?? 1))];
+    }
+
+    public function inclusiveFailThresholds(): bool
+    {
+        return (bool) $this->get('decisions.inclusive', false);
     }
 
     public function finalYearLevels(): int
