@@ -73,7 +73,7 @@
     <!-- شارة بطاقة طالب -->
     <div style="position: absolute; top: 3.2mm; left: 3mm; border: 0.3mm solid #C9A227; border-radius: 1mm; padding: 0.6mm 2mm; text-align: center; z-index: 5;">
         <div style="font-size: 6.5px; font-weight: bold; color: #C9A227;">{{ $data['in_card'] }}</div>
-        <div dir="ltr" style="font-size: 5px; color: #A8D5BA;">STUDENT ID</div>
+        <div dir="ltr" style="font-size: 5px; color: #A8D5BA;">{{ $data['badge_en'] ?? config('card.badge_en') }}</div>
     </div>
 
     <!-- الصورة -->
@@ -88,7 +88,7 @@
         <div class="lbl">{{ $data['full_name_label'] }}</div>
         <div style="font-size: 9.5px; font-weight: bold; color: #1B2A22; padding-bottom: 1mm;">{{ $data['name_ar'] }}</div>
 
-        <div class="lbl">{{ $data['stu_num_label'] }} &nbsp;·&nbsp; <span dir="ltr">STUDENT ID</span></div>
+        <div class="lbl">{{ $data['stu_num_label'] }} &nbsp;·&nbsp; <span dir="ltr">{{ $data['badge_en'] ?? config('card.badge_en') }}</span></div>
         <div dir="ltr" style="font-size: 9px; font-weight: bold; color: {{ $primary }}; text-align: right; padding-bottom: 1mm;">{{ $data['university_no'] }}</div>
 
         <div class="lbl">{{ $data['std_prog_label'] }}</div>
@@ -101,7 +101,7 @@
                     <div class="val">{{ $data['level'] }}</div>
                 </td>
                 <td width="50%" style="padding-bottom: 1mm;">
-                    <div class="lbl">العام الدراسي</div>
+                    <div class="lbl">{{ $data['batch_label'] ?? config('card.labels.batch') }}</div>
                     <div class="val">{{ $data['batch'] ?? '' }}</div>
                 </td>
             </tr>
@@ -123,7 +123,7 @@
         <table width="100%" height="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="right" valign="middle" style="padding-right: 3mm; color: #FFFFFF; font-size: 6.5px; font-weight: bold;">{{ $data['content'] }}</td>
-                <td align="left" valign="middle" dir="ltr" style="padding-left: 3mm; color: #A8D5BA; font-size: 5.5px;">Student Affairs Deanship</td>
+                <td align="left" valign="middle" dir="ltr" style="padding-left: 3mm; color: #A8D5BA; font-size: 5.5px;">{{ $data['issuer_en'] ?? config('card.issuer_en') }}</td>
             </tr>
         </table>
     </div>
@@ -158,18 +158,18 @@
             </tr>
             <tr>
                 <td valign="top" style="color: #14A05A; font-size: 8px; padding-bottom: 1.6mm;">●</td>
-                <td valign="top" style="font-size: 6.5px; color: #44544B; padding-bottom: 1.6mm;">امسح رمز QR للتحقق من صحة البطاقة وبيانات حاملها</td>
+                <td valign="top" style="font-size: 6.5px; color: #44544B; padding-bottom: 1.6mm;">{{ $data['scan_note'] ?? config('card.instructions.scan') }}</td>
             </tr>
             <tr>
                 <td valign="top" style="color: #14A05A; font-size: 8px;">●</td>
-                <td valign="top" style="font-size: 6.5px; color: #44544B;">عند العثور على البطاقة تُعاد إلى {{ $data['content'] }}</td>
+                <td valign="top" style="font-size: 6.5px; color: #44544B;">{{ $data['return_note'] ?? config('card.instructions.return') }} {{ $data['content'] }}</td>
             </tr>
         </table>
     </div>
 
     <!-- التوقيع -->
     <div style="position: absolute; bottom: 8mm; right: 33mm; left: 3mm; border-top: 0.2mm dashed #9FB5A8; padding-top: 0.5mm; z-index: 5;">
-        <span class="lbl">توقيع حامل البطاقة</span>
+        <span class="lbl">{{ $data['signature_label'] ?? config('card.labels.signature') }}</span>
     </div>
 
     <!-- الفوتر الخلفي -->
@@ -177,7 +177,7 @@
         <table width="100%" height="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="right" valign="middle" style="padding-right: 3mm; color: #FFFFFF; font-size: 6.5px; font-weight: bold;">{{ $data['content'] }}</td>
-                <td align="left" valign="middle" dir="ltr" style="padding-left: 3mm; color: #A8D5BA; font-size: 5.5px;">www.kassalauni.edu.sd</td>
+                <td align="left" valign="middle" dir="ltr" style="padding-left: 3mm; color: #A8D5BA; font-size: 5.5px;">{{ $data['website'] ?? config('card.website') }}</td>
             </tr>
         </table>
     </div>

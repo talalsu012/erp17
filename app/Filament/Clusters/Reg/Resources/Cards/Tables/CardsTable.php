@@ -96,13 +96,10 @@ class CardsTable
                         ->icon('heroicon-o-identification')
                         ->color('success')
                         ->tooltip('معاينة البطاقة')
-                        ->modalContent(fn ($record): View => view(
-                            'Reg.print-card',
-                            ['record' => $record]
-                        ))
+                        ->modalContent(fn ($record): View => view('Reg.card-preview', ['record' => $record]))
                         ->modalSubmitAction(false)
                         ->modalCancelActionLabel(__('reg.close'))
-                        ->modalWidth(Width::TwoExtraLarge),
+                        ->modalWidth(Width::ThreeExtraLarge),
                 ])
                     ->label('')
                     ->icon('heroicon-m-cog-8-tooth') // أيقونة ترس احترافية للمجموعة

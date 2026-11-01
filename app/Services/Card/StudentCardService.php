@@ -46,20 +46,27 @@ class StudentCardService
             'photo' => self::studentPhotoToBase64($student),
 
             'title' => config('university.name_ar'),
-            'in_card' => 'بطاقة  طالب',
-            'content' => 'عمادة شؤون الطلاب',
+            'in_card' => config('card.badge_ar'),
+            'badge_en' => config('card.badge_en'),
+            'content' => config('card.issuer_ar'),
+            'issuer_en' => config('card.issuer_en'),
+            'website' => config('card.website'),
 
-            'full_name_label' => 'الاسم الكامل',
-            'stu_num_label' => 'الرقم الجامعي',
-            'std_prog_label' => 'الكلية',
-            'std_level_label' => 'الفصل',
-            'std_status_label' => 'الحالة',
-            'active_status' => 'نشط',
-            'std_card_expi_label' => 'صالحة حتى',
-            'std_card_label' => 'رقم البطاقة',
+            'full_name_label' => config('card.labels.full_name'),
+            'stu_num_label' => config('card.labels.university_no'),
+            'std_prog_label' => config('card.labels.faculty'),
+            'std_level_label' => config('card.labels.level'),
+            'batch_label' => config('card.labels.batch'),
+            'std_status_label' => config('card.labels.status'),
+            'active_status' => config('card.labels.active'),
+            'std_card_expi_label' => config('card.labels.expiry'),
+            'std_card_label' => config('card.labels.card_number'),
+            'signature_label' => config('card.labels.signature'),
 
-            'in_come' => 'يجب إبراز هذه البطاقة',
-            'in_come_card' => 'عند الدخول للحرم الجامعي',
+            'in_come' => config('card.instructions.show_card'),
+            'in_come_card' => config('card.instructions.show_card_at'),
+            'scan_note' => config('card.instructions.scan'),
+            'return_note' => config('card.instructions.return'),
 
             // البيانات الفعلية للطالب
             'name_ar' => $student->name_ar,
@@ -126,8 +133,6 @@ class StudentCardService
         return $file;
     }
 
-    public const DEFAULT_COLOR = '#0A522E';
-
     /**
      * لون البطاقة من لون الكلية إن وُجد وصحّ، وإلا الأخضر الافتراضي، مع درجة أغمق للتدرّج.
      *
@@ -138,7 +143,7 @@ class StudentCardService
         $hex = trim((string) $hex);
 
         if (preg_match('/^#?([0-9a-f]{6})$/i', $hex, $match) !== 1) {
-            $hex = self::DEFAULT_COLOR;
+            $hex = config('card.default_color');
             preg_match('/^#?([0-9a-f]{6})$/i', $hex, $match);
         }
 

@@ -68,3 +68,15 @@ it('derives the card gradient from the faculty colour and falls back to green', 
         ->and(StudentCardService::palette('zzz'))->toMatchArray(['primary' => '#0A522E'])
         ->and(StudentCardService::palette(null))->toMatchArray(['primary' => '#0A522E']);
 });
+
+it('prints the card texts from config on both sides', function () {
+    config(['card.issuer_en' => 'Deanship X', 'card.website' => 'example.test', 'card.instructions.scan' => 'امسح هنا', 'card.badge_en' => 'ID CARD']);
+
+    $html = view('cards.card_template', [
+        'card' => new Card, 'qrCode' => base64_encode('<svg xmlns="http://www.w3.org/2000/svg"></svg>'),
+        'data' => ['logo' => '', 'avatar' => null, 'title' => 't', 'name_ar' => 'ط', 'faculty' => '', 'level' => '', 'university_no' => '1', 'card_number' => 'C', 'expiry_date' => '',
+            ...array_fill_keys(['active_status', 'content', 'full_name_label', 'in_card', 'in_come', 'in_come_card', 'std_card_expi_label', 'std_card_label', 'std_level_label', 'std_prog_label', 'std_status_label', 'stu_num_label'], 'x')],
+    ])->render();
+
+    expect($html)->toContain('Deanship X', 'example.test', 'امسح هنا', 'ID CARD');
+});
