@@ -2,7 +2,7 @@
 
 namespace App\Filament\Clusters\Invoices\Pages;
 
-use App\Filament\Clusters\Invoices\InvoicesCluster;
+use App\Filament\Clusters\Reg\RegCluster;
 use App\Models\Reg\Department;
 use App\Models\Reg\Faculty;
 use App\Models\Reg\Level;
@@ -28,7 +28,7 @@ class BulkStudentFees extends Page
 
     protected string $view = 'filament.clusters.invoices.pages.bulk-student-fees';
 
-    protected static ?string $cluster = InvoicesCluster::class;
+    protected static ?string $cluster = RegCluster::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
 
@@ -39,6 +39,11 @@ class BulkStudentFees extends Page
 
     /** @var array{count: int, samples: list<array<string, mixed>>}|null */
     public ?array $preview = null;
+
+    public static function getNavigationGroup(): string
+    {
+        return __('main.registration_procedures');
+    }
 
     public static function getNavigationLabel(): string
     {

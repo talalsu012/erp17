@@ -73,7 +73,7 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-cog-6-tooth')
                     ->collapsed(),
                 NavigationGroup::make()
-                    ->label(__('main.movingStudent'))
+                    ->label(__('main.registration_procedures'))
                     ->icon('heroicon-o-arrow-right-circle')
                     ->collapsed(),
             ])

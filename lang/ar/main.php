@@ -13,6 +13,7 @@
 return [
     'univ_name' => config('university.name_ar'),
     'registration' => 'التسجيل',
+    'registration_procedures' => 'إجراءات التسجيل والرسوم',
     'exam_entry' => 'النتائج  و الامتحانات',
     'results' => 'النتائج',
     'settings' => 'الاعدادات',

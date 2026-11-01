@@ -29,7 +29,7 @@ class OpenRegResource extends Resource
 
     public static function getNavigationGroup(): string
     {
-        return __('main.registration');
+        return __('main.registration_procedures');
     }
 
     public static function getLabel(): ?string

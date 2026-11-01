@@ -43,7 +43,7 @@ class MovingStudent extends Page implements HasForms, HasTable
 
     public static function getNavigationGroup(): string
     {
-        return __('main.movingStudent');
+        return __('main.registration_procedures');
     }
 
     public static function getLabel(): ?string
