@@ -10,6 +10,7 @@ use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
 use Filament\Forms\Components\Checkbox;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 /**
@@ -46,21 +47,26 @@ class StudentImporter extends Importer
             ...array_map(
                 self::namePartColumn(...),
                 self::NAME_PARTS,
-                ['محمد', 'أحمد', 'علي', 'حسن'],
+                [
+                    ['محمد', 'فاطمة', 'أحمد', 'مريم', 'عمر'],
+                    ['أحمد', 'عثمان', 'إبراهيم', 'الطيب', 'خالد'],
+                    ['علي', 'حسن', 'موسى', 'عبدالله', 'يوسف'],
+                    ['حسن', 'محمد', 'آدم', 'سليمان', 'إسماعيل'],
+                ],
             ),
 
             // الأكاديمية (الكلية والفصل إلزاميان عند إنشاء طالب جديد)
-            self::lookupColumn('faculty_code', 'reg.faculty_code', 'reg_faculties', '101', required: true),
+            self::lookupColumn('faculty_code', 'reg.faculty_code', 'reg_faculties', ['101', '101', '102', '102', '103'], required: true),
             self::departmentColumn(),
-            self::lookupColumn('level_code', 'reg.level_code', 'reg_levels', '1', required: true),
-            self::ltColumn('batch_code', 'reg.batch_code', self::GROUP_BATCH, '2023'),
-            self::ltColumn('admission_code', 'reg.admission', self::GROUP_ADMISSION, 'عام'),
-            self::ltColumn('stady_code', 'reg.stady', self::GROUP_STADY, '20060001'),
-            self::ltColumn('academic_year_code', 'reg.academic_year', self::GROUP_BATCH, '2024'),
+            self::lookupColumn('level_code', 'reg.level_code', 'reg_levels', ['1', '2', '3', '1', '2'], required: true),
+            self::ltColumn('batch_code', 'reg.batch_code', self::GROUP_BATCH, ['2023', '2023', '2024', '2024', '2025']),
+            self::ltColumn('admission_code', 'reg.admission', self::GROUP_ADMISSION, ['عام', 'عام', 'خاص', 'عام', 'خاص']),
+            self::ltColumn('stady_code', 'reg.stady', self::GROUP_STADY, ['20060001', '20060001', '20060001', '20060001', '20060001']),
+            self::ltColumn('academic_year_code', 'reg.academic_year', self::GROUP_BATCH, ['2024', '2024', '2025', '2025', '2026']),
 
             // الشخصية
-            self::ltColumn('gender_code', 'reg.gender', self::GROUP_GENDER, 'ذكر'),
-            self::ltColumn('nationality_code', 'reg.nationality', self::GROUP_NATIONALITY, '10020001'),
+            self::ltColumn('gender_code', 'reg.gender', self::GROUP_GENDER, ['ذكر', 'أنثى', 'ذكر', 'أنثى', 'ذكر']),
+            self::ltColumn('nationality_code', 'reg.nationality', self::GROUP_NATIONALITY, ['10020001', '10020001', '10020001', '10020001', '10020001']),
             self::nationaltyNoColumn(),
 
             // المالية
@@ -161,7 +167,7 @@ class StudentImporter extends Importer
             ->guess(['university_no', 'university number', 'student_no', 'الرقم الجامعي'])
             ->castStateUsing(fn ($originalState) => self::toInteger($originalState))
             ->rules(['required', 'integer', 'min:1'])
-            ->example('20230001');
+            ->examples(['20230001', '20230002', '20230003', '20230004', '20230005']);
     }
 
     private static function nameArColumn(): ImportColumn
@@ -172,7 +178,7 @@ class StudentImporter extends Importer
             ->castStateUsing(fn ($state) => self::cleanText($state))
             ->ignoreBlankState()
             ->rules(['nullable', 'string', 'max:200'])
-            ->example('محمد أحمد علي');
+            ->examples(['محمد أحمد علي', 'فاطمة عثمان حسن', 'أحمد إبراهيم موسى', 'مريم الطيب عبدالله', 'عمر خالد يوسف']);
     }
 
     private static function nameEnColumn(): ImportColumn
@@ -183,31 +189,35 @@ class StudentImporter extends Importer
             ->castStateUsing(fn ($state) => self::cleanText($state))
             ->ignoreBlankState()
             ->rules(['nullable', 'string', 'max:200'])
-            ->example('Mohamed Ahmed Ali');
+            ->examples(['Mohamed Ahmed Ali', 'Fatima Osman Hassan', 'Ahmed Ibrahim Musa', 'Maryam Altayeb Abdallah', 'Omar Khalid Yousif']);
     }
 
     /**
-     * عمود رمز يشير إلى `$table.code`. الإلزامي يجب أن يكون موجوداً ومعبّأً عند إنشاء طالب جديد.
+     * عمود رمز يشير إلى `$table.code`: يقبل الرمز أو اسم العنصر (عربي/إنجليزي) فيُحوَّل إلى رمزه، وغير ذلك يُرفض. الإلزامي يجب أن يكون موجوداً ومعبّأً عند إنشاء طالب جديد.
      */
-    private static function lookupColumn(string $name, string $labelKey, string $table, string $example, bool $required = false): ImportColumn
+    /**
+     * @param  list<string>  $examples
+     */
+    private static function lookupColumn(string $name, string $labelKey, string $table, array $examples, bool $required = false): ImportColumn
     {
         return ImportColumn::make($name)
             ->label(__($labelKey))
             ->requiredMappingForNewRecordsOnly($required)
-            ->castStateUsing(fn ($originalState) => self::toInteger($originalState))
+            ->castStateUsing(fn ($originalState) => self::resolveByName($originalState, $table))
             ->ignoreBlankState()
             ->rules(fn (Student $record) => [
                 $required && ! $record->exists ? 'required' : 'nullable',
                 'integer',
                 Rule::exists($table, 'code'),
             ])
-            ->example($example);
+            ->examples($examples);
     }
 
     /**
      * عمود من `reg_ltcolumns`: يقبل الرمز (مثل 10010001) أو الاسم العربي/الإنجليزي (ذكر، male) ضمن المجموعة.
      */
-    private static function ltColumn(string $name, string $labelKey, int $group, string $example): ImportColumn
+    /** @param  list<string>  $examples */
+    private static function ltColumn(string $name, string $labelKey, int $group, array $examples): ImportColumn
     {
         return ImportColumn::make($name)
             ->label(__($labelKey))
@@ -218,17 +228,18 @@ class StudentImporter extends Importer
                 'integer',
                 Rule::exists('reg_ltcolumns', 'code')->where('grouped', $group),
             ])
-            ->example($example);
+            ->examples($examples);
     }
 
-    private static function namePartColumn(string $name, string $example): ImportColumn
+    /** @param  list<string>  $examples */
+    private static function namePartColumn(string $name, array $examples): ImportColumn
     {
         return ImportColumn::make($name)
             ->label(__("reg.{$name}"))
             ->castStateUsing(fn ($state) => self::cleanText($state))
             ->ignoreBlankState()
             ->rules(['nullable', 'string', 'max:50'])
-            ->example($example);
+            ->examples($examples);
     }
 
     /** اختياري، وإن وُجد فيجب أن يتبع كلية الصف. */
@@ -236,7 +247,11 @@ class StudentImporter extends Importer
     {
         return ImportColumn::make('department_code')
             ->label(__('reg.department_code'))
-            ->castStateUsing(fn ($originalState) => self::toInteger($originalState))
+            ->castStateUsing(fn ($originalState, array $data) => self::resolveByName(
+                $originalState,
+                'reg_departments',
+                is_numeric($data['faculty_code'] ?? null) ? ['faculty_code' => (int) $data['faculty_code']] : [],
+            ))
             ->ignoreBlankState()
             ->rules(function (Student $record, array $data): array {
                 $facultyCode = $data['faculty_code'] ?? $record->faculty_code;
@@ -248,7 +263,7 @@ class StudentImporter extends Importer
                         ->when(is_numeric($facultyCode), fn ($rule) => $rule->where('faculty_code', (int) $facultyCode)),
                 ];
             })
-            ->example('10101');
+            ->examples(['10101', '10101', '10102', '10102', '10103']);
     }
 
     private static function nationaltyNoColumn(): ImportColumn
@@ -263,7 +278,7 @@ class StudentImporter extends Importer
                 'max:30',
                 Rule::unique('students', 'nationaltyno')->ignore($record->getKey(), 'university_no'),
             ])
-            ->example('1234567890');
+            ->examples(['1234567890', '1234567891', '1234567892', '1234567893', '1234567894']);
     }
 
     /**
@@ -272,11 +287,11 @@ class StudentImporter extends Importer
     private static function feesColumns(): array
     {
         return [
-            self::moneyColumn('fees', 'reg.fees', '5000'),
-            self::moneyColumn('reg_fees', 'reg.regfees', '1000'),
-            self::moneyColumn('fees1', 'reg.fees1', '0'),
-            self::moneyColumn('fees2', 'reg.fees2', '0'),
-            self::moneyColumn('fees3', 'reg.fees3', '0'),
+            self::moneyColumn('fees', 'reg.fees', ['5000', '5000', '6000', '6000', '7000']),
+            self::moneyColumn('reg_fees', 'reg.regfees', ['1000', '1000', '1000', '1000', '1000']),
+            self::moneyColumn('fees1', 'reg.fees1', ['0', '0', '0', '0', '0']),
+            self::moneyColumn('fees2', 'reg.fees2', ['0', '0', '0', '0', '0']),
+            self::moneyColumn('fees3', 'reg.fees3', ['0', '0', '0', '0', '0']),
         ];
     }
 
@@ -284,14 +299,15 @@ class StudentImporter extends Importer
      * أعمدة الرسوم NOT NULL في قاعدة البيانات، فالخلايا الفارغة تُتجاهل
      * (تبقى القيمة الحالية، أو 0 للطالب الجديد).
      */
-    private static function moneyColumn(string $name, string $labelKey, string $example): ImportColumn
+    /** @param  list<string>  $examples */
+    private static function moneyColumn(string $name, string $labelKey, array $examples): ImportColumn
     {
         return ImportColumn::make($name)
             ->label(__($labelKey))
             ->castStateUsing(fn ($originalState) => self::toNumber($originalState))
             ->ignoreBlankState()
             ->rules(['nullable', 'numeric', 'min:0'])
-            ->example($example);
+            ->examples($examples);
     }
 
     /**************************
@@ -364,6 +380,30 @@ class StudentImporter extends Importer
             ->all();
 
         return self::$ltColumnCache[$group][mb_strtolower((string) self::cleanText($value))] ?? $value;
+    }
+
+    /**
+     * الرمز يمرّ كما هو، والاسم (عربي/إنجليزي) يتحوّل إلى رمز العنصر الوحيد المطابق له، وإلا تبقى القيمة فيُبلَّغ عنها.
+     *
+     * @param  array<string, int>  $scope  تقييد البحث بالاسم (مثل كلية القسم)
+     */
+    private static function resolveByName(mixed $value, string $table, array $scope = []): int|string|null
+    {
+        $code = self::toInteger($value);
+
+        if ($code === null || is_int($code)) {
+            return $code;
+        }
+
+        $name = mb_strtolower((string) self::cleanText($value));
+
+        $matches = DB::table($table)
+            ->where($scope)
+            ->where(fn ($query) => $query->whereRaw('LOWER(TRIM(name_ar)) = ?', [$name])->orWhereRaw('LOWER(TRIM(name_en)) = ?', [$name]))
+            ->pluck('code')
+            ->unique();
+
+        return $matches->count() === 1 ? (int) $matches->first() : $code;
     }
 
     private static function toNumber(mixed $value): float|string|null
