@@ -64,3 +64,26 @@ it('rejects a missing new level or an unchanged position', function () {
         ->and(fn () => $service->promote(promoter(), $this->criteria, 1, 2025))->toThrow(DomainException::class)
         ->and(Student::query()->find(1)->level_code)->toBe(1);
 });
+
+it('matches any exam type unless one is chosen, narrows by department and explains an empty result', function () {
+    DB::table('res_recoms')->where('university_no', 1)->update(['examType' => '2']);
+    $service = app(StudentPromotionService::class);
+    $user = promoter();
+
+    expect($service->query($user, $this->criteria)->count())->toBe(1)
+        ->and($service->query($user, $this->criteria + ['exam_type' => 1])->count())->toBe(0)
+        ->and($service->diagnose($user, $this->criteria + ['exam_type' => 1]))->toMatchArray(['students' => 2, 'with_result' => 2, 'with_recom' => 1, 'with_exam_type' => 0])
+        ->and($service->query($user, $this->criteria + ['department_code' => 999])->count())->toBe(0)
+        ->and($service->query($user, $this->criteria + ['department_code' => 100])->count())->toBe(1);
+});
+
+it('renders the promotion page with the search row and the position row', function () {
+    actingAsSuperAdmin();
+
+    Livewire\Livewire::test(App\Filament\Clusters\Invoices\Pages\MovingStudent::class)
+        ->assertSuccessful()
+        ->assertFormExists('promotionForm')
+        ->assertFormFieldExists('department_code', 'promotionForm')
+        ->assertFormFieldExists('exam_type', 'promotionForm')
+        ->assertFormFieldDoesNotExist('semester', 'promotionForm');
+});

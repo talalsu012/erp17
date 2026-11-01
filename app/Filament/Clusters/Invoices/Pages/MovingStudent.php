@@ -6,11 +6,13 @@
 namespace App\Filament\Clusters\Invoices\Pages;
 
 use App\Filament\Clusters\Reg\RegCluster;
+use App\Models\Reg\Department;
 use App\Models\Reg\Faculty;
 use App\Models\Reg\Level;
 use App\Models\Reg\LtColumn;
 use App\Models\Res\LtRecom;
 use App\Models\Student;
+use App\Reg\AbsStatus;
 use App\Services\Reg\StudentPromotionService;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use DomainException;
@@ -94,36 +96,42 @@ class MovingStudent extends Page implements HasForms, HasTable
             ->statePath('promotionData')
             ->schema([
 
-                Section::make('بيانات الترحيل')
-                    ->description('اختيار معايير الطلاب المراد نقلهم')
+                Section::make('البحث عن الطلاب')
+                    ->description('معايير الطلاب المراد ترحيلهم')
                     ->schema([
-
-                        Grid::make(3)->schema([
-
+                        Grid::make(4)->schema([
                             Select::make('faculty_code')
                                 ->label('الكلية')
                                 ->options(fn () => auth()->user()->constrainToAcademicScope(Faculty::query(), ['faculty' => 'code'])->pluck('name_ar', 'code'))
                                 ->searchable()
+                                ->required()
+                                ->live()
+                                ->afterStateUpdated(fn (callable $set) => $set('department_code', null)),
 
-                                ->required(),
+                            Select::make('department_code')
+                                ->label('القسم')
+                                ->options(fn (callable $get) => Department::query()->where('faculty_code', $get('faculty_code'))->pluck('name_ar', 'code'))
+                                ->searchable()
+                                ->placeholder('كل الأقسام'),
+
+                            Select::make('exam_type')
+                                ->label('الدور')
+                                ->options(AbsStatus::class)
+                                ->placeholder('كل الأدوار'),
 
                             Select::make('recom_code')
                                 ->label(__('res.recom'))
                                 ->multiple()
                                 ->options(fn () => LtRecom::pluck('name_ar', 'code'))
                                 ->searchable()
-
-                                ->required()
-                                ->columnSpan(2),
-
+                                ->required(),
                         ]),
                     ]),
 
-                Section::make('الوضع الحالي')
+                Section::make('الترحيل')
+                    ->description('الوضع الحالي والوضع الجديد')
                     ->schema([
-
-                        Grid::make(2)->schema([
-
+                        Grid::make(4)->schema([
                             Select::make('current_level')
                                 ->label('المستوى الحالي')
                                 ->options(fn () => Level::pluck('name_ar', 'code'))
@@ -133,13 +141,6 @@ class MovingStudent extends Page implements HasForms, HasTable
                                 ->label('العام الأكاديمي الحالي')
                                 ->options(fn () => LtColumn::where('grouped', '2003')->pluck('name_ar', 'code'))
                                 ->required(),
-                        ]),
-                    ]),
-
-                Section::make('الوضع الجديد')
-                    ->schema([
-
-                        Grid::make(2)->schema([
 
                             Select::make('new_level')
                                 ->label('المستوى الجديد')
@@ -164,11 +165,7 @@ class MovingStudent extends Page implements HasForms, HasTable
                                 ->label('عرض الطلاب')
                                 ->icon('heroicon-o-eye')
                                 ->color('info')
-                                ->action(function () {
-
-                                    $data = $this->promotionForm->getState();
-                                    $this->loadStudentsForPromotion();
-                                }),
+                                ->action(fn () => $this->loadStudentsForPromotion()),
 
                             Action::make('execute')
                                 ->label('تنفيذ الترحيل')
@@ -202,6 +199,18 @@ class MovingStudent extends Page implements HasForms, HasTable
         }
 
         $this->resetTable();
+
+        if ($this->studentsToMove === []) {
+            $d = app(StudentPromotionService::class)->diagnose(auth()->user(), $criteria);
+
+            Notification::make()
+                ->title('لا يوجد طلاب مطابقون')
+                ->body("طلاب الكلية والمستوى والعام: {$d['students']} — لهم نتيجة في الفصل والعام نفسيهما: {$d['with_result']} — بالتوصية المختارة: {$d['with_recom']}".($d['with_exam_type'] === null ? '' : " — وبالدور المختار: {$d['with_exam_type']}"))
+                ->warning()
+                ->send();
+
+            return;
+        }
 
         Notification::make()
             ->title('تم تحميل '.count($this->studentsToMove).' طالب')

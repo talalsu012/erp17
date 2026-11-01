@@ -21,7 +21,7 @@ class StudentPromotionService
     /**
      * الطلاب المرحَّلون: الاستعلام نفسه للمعاينة والجدول والتنفيذ، ضمن نطاق المستخدم الأكاديمي.
      *
-     * @param  array{faculty_code?: mixed, current_level?: mixed, current_batch_code?: mixed, recom_code?: mixed}  $criteria
+     * @param  array{faculty_code?: mixed, department_code?: mixed, current_level?: mixed, current_batch_code?: mixed, recom_code?: mixed, exam_type?: mixed}  $criteria
      * @return Builder<Student>
      */
     public function query(User $user, array $criteria): Builder
@@ -40,18 +40,53 @@ class StudentPromotionService
             throw new DomainException('اختر التوصية المطلوبة للترحيل.');
         }
 
-        return $user->constrainToAcademicScope(
-            Student::query()
-                ->where('faculty_code', $criteria['faculty_code'])
-                ->where('level_code', $criteria['current_level'])
-                ->where('batch_code', $criteria['current_batch_code'])
-                ->whereHas('recom', function (Builder $query) use ($recoms): void {
-                    $query->whereIn('recom_code', $recoms)
-                        ->whereColumn('res_recoms.level_code', 'students.level_code')
-                        ->whereColumn('res_recoms.batch_code', 'students.batch_code')
-                        ->where('res_recoms.semester', 2);
-                })
-        );
+        return $this->matching($user, $criteria, $recoms, $criteria['exam_type'] ?? null);
+    }
+
+    /**
+     * يشرح سبب عدم ظهور طلاب: عدد الطلاب بعد كل شرط على حدة.
+     *
+     * @param  array<string, mixed>  $criteria
+     * @return array{students: int, with_result: int, with_recom: int, with_exam_type: ?int}
+     */
+    public function diagnose(User $user, array $criteria): array
+    {
+        $this->assertAllowed($user);
+
+        $recoms = array_filter((array) ($criteria['recom_code'] ?? []));
+        $examType = $criteria['exam_type'] ?? null;
+
+        return [
+            'students' => $this->matching($user, $criteria, [], null, false)->count(),
+            'with_result' => $this->matching($user, $criteria, [], null)->count(),
+            'with_recom' => $this->matching($user, $criteria, $recoms, null)->count(),
+            'with_exam_type' => filled($examType) ? $this->matching($user, $criteria, $recoms, $examType)->count() : null,
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $criteria
+     * @param  list<mixed>  $recoms
+     * @return Builder<Student>
+     */
+    private function matching(User $user, array $criteria, array $recoms, mixed $examType, bool $requireResult = true): Builder
+    {
+        $query = Student::query()
+            ->where('faculty_code', $criteria['faculty_code'])
+            ->where('level_code', $criteria['current_level'])
+            ->where('batch_code', $criteria['current_batch_code'])
+            ->when(filled($criteria['department_code'] ?? null), fn (Builder $q) => $q->where('department_code', $criteria['department_code']));
+
+        if ($requireResult) {
+            $query->whereHas('recom', function (Builder $query) use ($recoms, $examType): void {
+                $query->whereColumn('res_recoms.level_code', 'students.level_code')
+                    ->whereColumn('res_recoms.batch_code', 'students.batch_code')
+                    ->when($recoms !== [], fn (Builder $q) => $q->whereIn('recom_code', $recoms))
+                    ->when(filled($examType), fn (Builder $q) => $q->where('res_recoms.examType', $examType));
+            });
+        }
+
+        return $user->constrainToAcademicScope($query);
     }
 
     /**
