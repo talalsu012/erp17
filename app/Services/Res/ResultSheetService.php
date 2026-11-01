@@ -216,7 +216,7 @@ class ResultSheetService
     private function stats(Collection $students, int $registered): array
     {
         $failed = $students->filter(fn (Student $s) => $s->marks->contains(
-            fn ($m) => in_array($m->grade, ShowAbsentCode::getMarkValues(), true)
+            fn ($m) => in_array(trim((string) $m->grade), [...self::FAIL_GRADES, ...ShowAbsentCode::getMarkValues()], true)
         ))->count();
 
         return [

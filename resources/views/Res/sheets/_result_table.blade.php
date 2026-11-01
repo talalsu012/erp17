@@ -38,7 +38,7 @@
         @if ($has('crch'))<th class="{{ $th }}" style="width: {{ $widths['crch'] }}mm">الساعات</th>@endif
         @if ($has('crch_fail'))<th class="{{ $th }}" style="width: {{ $widths['crch_fail'] }}mm">ساعات الرسوب</th>@endif
         @if ($has('point'))<th class="{{ $th }}" style="width: {{ $widths['point'] }}mm">النقاط</th>@endif
-        @if ($has('subjectFail'))<th class="{{ $th }}" style="width: {{ $widths['subjectFail'] }}mm">مواد الملحق</th>@endif
+        @if ($has('subjectFail'))<th class="{{ $th }}" style="width: {{ $widths['subjectFail'] }}mm">مواد الرسوب</th>@endif
         @if ($has('gpa'))<th class="{{ $th }}" style="width: {{ $widths['gpa'] }}mm">المعدل</th>@endif
         @if ($has('recom'))<th class="{{ $th }}" style="width: {{ $widths['recom'] }}mm">القرار</th>@endif
 
@@ -87,8 +87,8 @@
             @if ($has('crch_fail'))<td class="{{ $td }} tabular-nums">{{ $row->crch_fail ?? '-' }}</td>@endif
             @if ($has('point'))<td class="{{ $td }} tabular-nums">{{ $row->points ?? '-' }}</td>@endif
             @if ($has('subjectFail'))
-                <td class="{{ $td }} text-[9px]">
-                    {{ $student->marks->filter(fn ($m) => in_array($m->grade, $absentFails, true))->map(fn ($m) => $m->subject?->name_ar)->filter()->implode('، ') ?: '-' }}
+                <td class="{{ $td }} overflow-hidden text-[8.5px] leading-tight">
+                    {{ $student->marks->filter(fn ($m) => in_array(trim((string) $m->grade), [...$failGrades, ...$absentFails], true))->map(fn ($m) => $m->subject?->name_ar)->filter()->implode('، ') ?: '-' }}
                 </td>
             @endif
             @if ($has('gpa'))<td class="{{ $td }} font-bold tabular-nums">{{ $row?->gpa ?? '-' }}</td>@endif

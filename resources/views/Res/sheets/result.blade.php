@@ -76,7 +76,8 @@
 
             @include('Res.sheets._footer', [
                 'footLeft' => 'صفحة '.($index + 1).' من '.$totalPages,
-                'footRight' => 'طُبع في '.now()->format('Y-m-d H:i'),
+                'footRight' => 'طُبع بواسطة '.(auth()->user()?->name ?? '—').' في '.now()->format('Y-m-d H:i'),
+                'footStats' => $stats,
             ])
         </section>
     @empty
@@ -135,7 +136,8 @@
 
             @include('Res.sheets._footer', [
                 'footLeft' => 'صفحة '.$totalPages.' من '.$totalPages.' — ملخص التقديرات',
-                'footRight' => 'طُبع في '.now()->format('Y-m-d H:i'),
+                'footRight' => 'طُبع بواسطة '.(auth()->user()?->name ?? '—').' في '.now()->format('Y-m-d H:i'),
+                'footStats' => $stats,
             ])
         </section>
     @endif

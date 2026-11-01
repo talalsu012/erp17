@@ -121,6 +121,39 @@ class DashboardResult extends Page
 
     public $search_results = null;
 
+    /**
+     * @return array<int|string, string>
+     */
+    public function subjectOptions(mixed $faculty, mixed $department, mixed $level, mixed $special): array
+    {
+        if (blank($faculty) || blank($department) || blank($level)) {
+            return [];
+        }
+
+        return Subject::query()
+            ->where('faculty_code', $faculty)
+            ->where('department_code', $department)
+            ->where('level_code', $level)
+            ->when(filled($special), fn ($query) => $query->where('special_code', $special))
+            ->orderBy('code')
+            ->pluck('name_ar', 'code')
+            ->all();
+    }
+
+    /**
+     * المقررات المختارة، وإن لم يُختر شيء فكل مقررات الكلية والقسم والفصل.
+     *
+     * @return list<string>
+     */
+    public function effectiveSubjects(): array
+    {
+        $chosen = array_filter((array) $this->subjects, filled(...));
+
+        return array_values($chosen !== []
+            ? $chosen
+            : array_map(strval(...), array_keys($this->subjectOptions($this->faculty, $this->department, $this->level, $this->special))));
+    }
+
     public function EntryMarksForm(Schema $schema): Schema
     {
         return $schema
@@ -229,8 +262,14 @@ class DashboardResult extends Page
                             ->native()
                             ->required(),
 
+                        Checkbox::make('previousResults')
+                            ->label('نتائج سابقة')
+                            ->inline(false)
+                            ->extraAttributes(['title' => 'الطباعة بحسب المستوى والتخصص والعام المسجّلة بهما النتائج لا بحسب وضع الطالب الحالي']),
+
                         Select::make('subjects')
                             ->label(__('res.subjects'))
+                            ->helperText('عند عدم الاختيار تُحتسب كل المقررات')
                             ->multiple()
                             ->hintActions([
                                 Action::make('selectAllSubjects')
@@ -247,33 +286,7 @@ class DashboardResult extends Page
                             ])
                             ->native(false)
                             ->searchable()
-                            ->options(function (Get $get): array {
-
-                                if (
-                                    blank($get('faculty')) ||
-                                    blank($get('department')) ||
-                                    blank($get('level'))
-                                ) {
-                                    return [];
-                                }
-
-                                return Subject::query()
-                                    ->where('faculty_code', $get('faculty'))
-                                    ->where('department_code', $get('department'))
-                                    ->where('level_code', $get('level'))
-
-                                    ->when(
-                                        filled($get('special')),
-                                        fn ($query) => $query->where(
-                                            'special_code',
-                                            $get('special')
-                                        )
-                                    )
-
-                                    ->orderBy('code')
-                                    ->pluck('name_ar', 'code')
-                                    ->all();
-                            })
+                            ->options(fn (Get $get): array => $this->subjectOptions($get('faculty'), $get('department'), $get('level'), $get('special')))
 
                             ->visible(
                                 fn (Get $get): bool => filled($get('faculty'))
@@ -431,11 +444,6 @@ class DashboardResult extends Page
                             ->dehydrated()
                             ->columnSpan(2),
 
-                        Checkbox::make('previousResults')
-                            ->label('نتائج سابقة')
-                            ->helperText('الطباعة بحسب المستوى والتخصص والعام المسجّلة بهما النتائج لا بحسب وضع الطالب الحالي')
-                            ->columnSpanFull(),
-
                         CheckboxList::make('fields')
                             ->bulkToggleable()
                             ->label(__('res.fields'))
@@ -476,7 +484,6 @@ class DashboardResult extends Page
                                                 'department' => 'required',
                                                 'level' => 'required',
                                                 'absent' => 'required',
-                                                'subjects' => 'required',
                                                 'fields' => 'required|array|min:1',
                                             ], [
                                                 // رسائل الخطأ المخصصة
@@ -499,7 +506,7 @@ class DashboardResult extends Page
                                                 'semester' => $livewire->semester,
                                                 'absent' => $livewire->absent,
                                                 'countstudent' => $livewire->countstudent,
-                                                'subjects' => $livewire->subjects,
+                                                'subjects' => $livewire->effectiveSubjects(),
                                                 'grades' => $livewire->grades,
                                                 'fields' => $livewire->fields,
                                                 'result_type' => $livewire->previousResults ? 'previous' : 'current',
@@ -542,7 +549,7 @@ class DashboardResult extends Page
                                                 'level' => $livewire->level,
                                                 'semester' => $livewire->semester,
                                                 'absent' => $livewire->absent,
-                                                'subjects' => $livewire->subjects,
+                                                'subjects' => $livewire->effectiveSubjects(),
                                                 'grades' => $livewire->grades,
                                                 'fields' => $livewire->fields,
                                                 'result_type' => $livewire->previousResults ? 'previous' : 'current',
@@ -614,7 +621,7 @@ class DashboardResult extends Page
                                                 'level' => $livewire->level,
                                                 'semester' => $livewire->semester,
                                                 'absent' => $livewire->absent,
-                                                'subjects' => $livewire->subjects,
+                                                'subjects' => $livewire->effectiveSubjects(),
                                                 'grades' => $livewire->grades,
                                                 'fields' => $livewire->fields,
                                                 'result_type' => $livewire->previousResults ? 'previous' : 'current',
