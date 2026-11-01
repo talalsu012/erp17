@@ -106,11 +106,11 @@ class AdminPanelProvider extends PanelProvider
                     ->url(fn (): string => route('help.show', 'entry-marks'))
                     ->openUrlInNewTab()
                     ->icon('heroicon-o-question-mark-circle'),
-                'help_entry_marks_redsea' => MenuItem::make()
-                    ->label('دليل إدخال الدرجات (البحر الأحمر)')
-                    ->url(fn (): string => route('help.show', 'entry-marks_redsea'))
-                    ->openUrlInNewTab()
-                    ->icon('heroicon-o-question-mark-circle'),
+                // 'help_entry_marks_redsea' => MenuItem::make()
+                //     ->label('دليل إدخال الدرجات (البحر الأحمر)')
+                //     ->url(fn (): string => route('help.show', 'entry-marks_redsea'))
+                //     ->openUrlInNewTab()
+                //     ->icon('heroicon-o-question-mark-circle'),
                 'help_result_print' => MenuItem::make()
                     ->label('دليل طباعة النتيجة')
                     ->url(fn (): string => route('help.show', 'result-print'))
