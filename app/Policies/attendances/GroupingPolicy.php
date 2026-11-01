@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies\attendances;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\attendances\Grouping;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class GroupingPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Grouping');
@@ -66,4 +66,5 @@ class GroupingPolicy
     {
         return $authUser->can('Reorder:Grouping');
     }
+
 }

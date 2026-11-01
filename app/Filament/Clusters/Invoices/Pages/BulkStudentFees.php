@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
@@ -65,35 +66,39 @@ class BulkStudentFees extends Page
         return $schema
             ->statePath('data')
             ->components([
-                Select::make('faculty_code')
-                    ->label(__('reg.faculty'))
-                    ->options(fn () => auth()->user()->constrainToAcademicScope(Faculty::query(), ['faculty' => 'code'])->pluck('name_ar', 'code'))
-                    ->searchable()->required()->live()
-                    ->afterStateUpdated(fn (callable $set) => $set('department_code', null)),
-                Select::make('department_code')
-                    ->label(__('reg.department'))
-                    ->options(fn (callable $get) => Department::query()->where('faculty_code', $get('faculty_code'))->pluck('name_ar', 'code'))
-                    ->searchable()->required(),
-                Select::make('level_code')
-                    ->label(__('reg.level'))
-                    ->options(fn () => Level::query()->pluck('name_ar', 'code'))
-                    ->searchable()->required(),
-                Select::make('batch_code')
-                    ->label(__('reg.batch'))
-                    ->options(fn () => LtColumn::query()->where('grouped', '2003')->pluck('name_ar', 'code'))
-                    ->searchable()->required(),
-                Select::make('fee_type')
-                    ->label(__('invoice.bulk_fees.fee_type'))
-                    ->options(collect(BulkStudentFeeService::FEE_TYPES)->mapWithKeys(fn (string $field): array => [
-                        $field => __($field === 'reg_fees' ? 'reg.regfees' : "reg.{$field}"),
-                    ])->all())
-                    ->required(),
-                TextInput::make('amount')
-                    ->label(__('invoice.bulk_fees.amount'))
-                    ->numeric()->minValue(0)->required(),
-                Select::make('installment_code')
-                    ->label(__('reg.Installments'))
-                    ->options(fn () => LtColumn::optionsFor(LtGroup::Installment)),
+                Grid::make(3)->schema([
+                    Select::make('faculty_code')
+                        ->label(__('reg.faculty'))
+                        ->options(fn () => auth()->user()->constrainToAcademicScope(Faculty::query(), ['faculty' => 'code'])->pluck('name_ar', 'code'))
+                        ->searchable()->required()->live()
+                        ->afterStateUpdated(fn (callable $set) => $set('department_code', null)),
+                    Select::make('department_code')
+                        ->label(__('reg.department'))
+                        ->options(fn (callable $get) => Department::query()->where('faculty_code', $get('faculty_code'))->pluck('name_ar', 'code'))
+                        ->searchable()->required(),
+                    Select::make('level_code')
+                        ->label(__('reg.level'))
+                        ->options(fn () => Level::query()->pluck('name_ar', 'code'))
+                        ->searchable()->required(),
+                ]),
+                Grid::make(4)->schema([
+                    Select::make('batch_code')
+                        ->label(__('reg.batch'))
+                        ->options(fn () => LtColumn::query()->where('grouped', '2003')->pluck('name_ar', 'code'))
+                        ->searchable()->required(),
+                    Select::make('fee_type')
+                        ->label(__('invoice.bulk_fees.fee_type'))
+                        ->options(collect(BulkStudentFeeService::FEE_TYPES)->mapWithKeys(fn (string $field): array => [
+                            $field => __($field === 'reg_fees' ? 'reg.regfees' : "reg.{$field}"),
+                        ])->all())
+                        ->required(),
+                    TextInput::make('amount')
+                        ->label(__('invoice.bulk_fees.amount'))
+                        ->numeric()->minValue(0)->required(),
+                    Select::make('installment_code')
+                        ->label(__('reg.Installments'))
+                        ->options(fn () => LtColumn::optionsFor(LtGroup::Installment)),
+                ]),
                 Actions::make([
                     Action::make('preview')
                         ->label(__('invoice.bulk_fees.preview'))

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies\Reg;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Reg\Department;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class DepartmentPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Department');
@@ -66,4 +66,5 @@ class DepartmentPolicy
     {
         return $authUser->can('Reorder:Department');
     }
+
 }

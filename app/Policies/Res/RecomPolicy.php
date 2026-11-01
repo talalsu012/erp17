@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies\Res;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Res\Recom;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class RecomPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Recom');
@@ -66,4 +66,5 @@ class RecomPolicy
     {
         return $authUser->can('Reorder:Recom');
     }
+
 }

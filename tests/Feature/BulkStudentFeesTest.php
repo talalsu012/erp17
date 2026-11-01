@@ -138,3 +138,11 @@ it('forbids the page to users without the permission', function () {
 
     expect(BulkStudentFees::canAccess())->toBeFalse();
 });
+
+it('lets the super admin role apply fees even when the gate does not intercept it', function () {
+    $user = User::factory()->create();
+    $user->faculties()->attach([10]);
+    $user->assignRole(Spatie\Permission\Models\Role::findOrCreate(config('filament-shield.super_admin.name'), 'web'));
+
+    expect(app(BulkStudentFeeService::class)->apply($user->fresh(), $this->filters, $this->changes))->toBe(2);
+});

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies\Cert;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Cert\CertStyle;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class CertStylePolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:CertStyle');
@@ -66,4 +66,5 @@ class CertStylePolicy
     {
         return $authUser->can('Reorder:CertStyle');
     }
+
 }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Student;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class StudentPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Student');
@@ -67,13 +67,4 @@ class StudentPolicy
         return $authUser->can('Reorder:Student');
     }
 
-    public function resetAccount(AuthUser $authUser, Student $student): bool
-    {
-        return $authUser->can('ResetAccount:Student');
-    }
-
-    public function bulkUpdate(AuthUser $authUser): bool
-    {
-        return $authUser->can('BulkUpdate:Student');
-    }
 }

@@ -145,7 +145,7 @@ class StudentPromotionService
 
     private function assertAllowed(User $user): void
     {
-        if (! $user->can(self::PERMISSION)) {
+        if (! $user->hasRole(config('filament-shield.super_admin.name')) && ! $user->can(self::PERMISSION)) {
             throw new DomainException('لا تملك صلاحية ترحيل الطلاب.');
         }
     }

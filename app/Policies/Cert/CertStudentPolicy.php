@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies\Cert;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Cert\CertStudent;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class CertStudentPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:CertStudent');
@@ -66,4 +66,5 @@ class CertStudentPolicy
     {
         return $authUser->can('Reorder:CertStudent');
     }
+
 }

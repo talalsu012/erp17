@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies\Res;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Res\Mark;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class MarkPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Mark');
@@ -66,4 +66,5 @@ class MarkPolicy
     {
         return $authUser->can('Reorder:Mark');
     }
+
 }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies\Reg;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Reg\OpenReg;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class OpenRegPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:OpenReg');
@@ -66,4 +66,5 @@ class OpenRegPolicy
     {
         return $authUser->can('Reorder:OpenReg');
     }
+
 }

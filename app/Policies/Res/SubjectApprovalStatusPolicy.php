@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies\Res;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Res\SubjectApprovalStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Foundation\Auth\User as AuthUser;
 
 class SubjectApprovalStatusPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:SubjectApprovalStatus');
@@ -66,4 +66,5 @@ class SubjectApprovalStatusPolicy
     {
         return $authUser->can('Reorder:SubjectApprovalStatus');
     }
+
 }
