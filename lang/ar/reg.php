@@ -9,6 +9,7 @@ return [
     // Students
     'student' => 'طالب',
     'students' => 'الطلاب',
+    'close' => 'إغلاق',
     'action' => 'الإجراء',
     'parent' => 'المجموعة الرئيسية',
 
