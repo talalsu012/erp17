@@ -189,6 +189,67 @@ class AdmissionWorkflowService
         ]);
     }
 
+    /** المراحل التي يمكن للعميد إعادة المعاملة إليها، وحقول كل مرحلة التي تُمسح عند إعادة فتحها */
+    private const REOPEN_FIELDS = [
+        'awaiting_doctor' => ['medical_fitness', 'medical_notes', 'medical_by', 'medical_at'],
+        'awaiting_committee' => ['committee_decision', 'committee_notes', 'rejection_reason', 'committee_by', 'committee_at'],
+        'awaiting_fees' => ['assigned_fees', 'fees_by', 'fees_at'],
+    ];
+
+    /** @return list<AdmissionStage> المراحل المتاحة للعميد لإعادة المعاملة إليها */
+    public static function reopenTargets(): array
+    {
+        return [AdmissionStage::AwaitingDoctor, AdmissionStage::AwaitingCommittee, AdmissionStage::AwaitingFees];
+    }
+
+    /**
+     * العميد يعيد معاملة (حتى المغلقة) إلى مرحلة سابقة لتصحيح خطأ؛ تُمسح قرارات تلك المرحلة وما بعدها
+     * ويُسجَّل المنفِّذ والسبب والقيم السابقة في سجل النشاط.
+     */
+    public function reopen(User $user, AdmissionWorkflow $workflow, AdmissionStage $target, string $reason): AdmissionWorkflow
+    {
+        $this->assertRole($user, self::ROLE_DEAN);
+
+        if (! in_array($target, self::reopenTargets(), true)) {
+            throw new DomainException('لا يمكن إعادة المعاملة إلى هذه المرحلة.');
+        }
+
+        if (blank($reason)) {
+            throw new DomainException('يلزم تدوين سبب إعادة فتح المعاملة.');
+        }
+
+        $order = array_keys(self::REOPEN_FIELDS);
+        $cleared = array_slice($order, (int) array_search($target->value, $order, true));
+        $rank = ['awaiting_doctor' => 0, 'awaiting_committee' => 1, 'rejected' => 1.5, 'awaiting_fees' => 2, 'awaiting_payment' => 3, 'awaiting_dean' => 4, 'approved' => 5];
+
+        if ($rank[$target->value] >= $rank[$workflow->stage->value]) {
+            throw new DomainException('المعاملة لم تبلغ هذه المرحلة بعد، فلا حاجة لإعادة فتحها.');
+        }
+
+        $attributes = ['stage' => $target, 'dean_notes' => null, 'dean_by' => null, 'dean_at' => null];
+
+        foreach ($cleared as $stage) {
+            foreach (self::REOPEN_FIELDS[$stage] as $field) {
+                $attributes[$field] = null;
+            }
+        }
+
+        $before = $workflow->only(array_keys($attributes));
+        $before['stage'] = $workflow->stage->value;
+
+        return DB::transaction(function () use ($user, $workflow, $attributes, $before, $target, $reason) {
+            $this->save($workflow, $attributes);
+
+            activity('admission')
+                ->performedOn($workflow)
+                ->causedBy($user)
+                ->withProperties(['before' => $before, 'to' => $target->value, 'reason' => $reason])
+                ->log('إعادة فتح معاملة قبول');
+
+            return $workflow;
+        });
+    }
+
     /**
      * حساب الطالب في users_std (كلمة المرور عشوائية وتُعاد بالاستعادة).
      * البريد المسجّل للطالب، وإلا بريد افتراضي من الرقم الجامعي.

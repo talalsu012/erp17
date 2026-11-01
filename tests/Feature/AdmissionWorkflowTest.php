@@ -188,3 +188,33 @@ it('lets the super admin act on any step', function () {
 
     expect($workflow->fresh()->stage)->toBe(AdmissionStage::AwaitingCommittee);
 });
+
+it('lets the dean reopen a closed transaction to an earlier stage and clears the later decisions', function () {
+    $service = new AdmissionWorkflowService;
+    $workflow = $service->register(actor(['Registrar']), Student::find(100));
+    $service->recordMedical(actor(['medical_doctor']), $workflow, 'fit');
+    $service->recordCommittee(actor(['faculty_committee']), $workflow->fresh(), false, null, 'سبب');
+    expect($workflow->fresh()->stage)->toBe(AdmissionStage::Rejected);
+
+    $service->reopen(actor(['dean']), $workflow->fresh(), AdmissionStage::AwaitingCommittee, 'خطأ في الإدخال');
+
+    $fresh = $workflow->fresh();
+    expect($fresh->stage)->toBe(AdmissionStage::AwaitingCommittee)
+        ->and($fresh->committee_decision)->toBeNull()
+        ->and($fresh->rejection_reason)->toBeNull()
+        ->and($fresh->medical_fitness)->toBe('fit');
+
+    $service->recordCommittee(actor(['faculty_committee']), $fresh, true);
+    expect($workflow->fresh()->stage)->toBe(AdmissionStage::AwaitingFees);
+});
+
+it('refuses reopening by non-deans, without a reason, or to a stage not reached', function () {
+    $service = new AdmissionWorkflowService;
+    $workflow = $service->register(actor(['Registrar']), Student::find(100));
+    $service->recordMedical(actor(['medical_doctor']), $workflow, 'fit');
+
+    expect(fn () => $service->reopen(actor(['Registrar']), $workflow->fresh(), AdmissionStage::AwaitingDoctor, 'سبب'))->toThrow(DomainException::class)
+        ->and(fn () => $service->reopen(actor(['dean']), $workflow->fresh(), AdmissionStage::AwaitingDoctor, ''))->toThrow(DomainException::class)
+        ->and(fn () => $service->reopen(actor(['dean']), $workflow->fresh(), AdmissionStage::AwaitingFees, 'سبب'))->toThrow(DomainException::class)
+        ->and($workflow->fresh()->stage)->toBe(AdmissionStage::AwaitingCommittee);
+});

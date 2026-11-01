@@ -10,6 +10,7 @@ use App\Services\AdmissionWorkflowService;
 use DomainException;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\Width;
@@ -71,6 +72,30 @@ class AdmissionWorkflowsTable
                 self::step('approve', 'الاعتماد النهائي', AdmissionStage::AwaitingDean, AdmissionWorkflowService::ROLE_DEAN, [
                     Textarea::make('notes')->label('ملاحظات العميد'),
                 ], fn (AdmissionWorkflowService $s, AdmissionWorkflow $r, array $d) => $s->approve(auth()->user(), $r, $d['notes'] ?? null)),
+
+                Action::make('reopen')
+                    ->label('إعادة فتح المعاملة')
+                    ->icon('heroicon-o-arrow-uturn-left')
+                    ->color('danger')
+                    ->schema([
+                        Select::make('target')
+                            ->label('إعادتها إلى مرحلة')
+                            ->options(collect(AdmissionWorkflowService::reopenTargets())->mapWithKeys(fn (AdmissionStage $stage): array => [$stage->value => $stage->getLabel()])->all())
+                            ->required(),
+                        Textarea::make('reason')->label('سبب الإعادة')->required(),
+                    ])
+                    ->requiresConfirmation()
+                    ->modalDescription('ستُمسح قرارات المرحلة المختارة وما بعدها ويُسجَّل ذلك باسمك، ثم تعيد الجهة المعنية إدخالها.')
+                    ->visible(fn (AdmissionWorkflow $record): bool => $record->stage !== AdmissionStage::AwaitingDoctor
+                        && (auth()->user()?->hasAnyRole([AdmissionWorkflowService::ROLE_DEAN, AdmissionWorkflowService::ROLE_SUPER_ADMIN]) ?? false))
+                    ->action(function (AdmissionWorkflow $record, array $data): void {
+                        try {
+                            app(AdmissionWorkflowService::class)->reopen(auth()->user(), $record, AdmissionStage::from($data['target']), $data['reason']);
+                            Notification::make()->title('أُعيدت المعاملة.')->success()->send();
+                        } catch (DomainException $e) {
+                            Notification::make()->title($e->getMessage())->danger()->send();
+                        }
+                    }),
             ])
             ->defaultSort('updated_at', 'desc');
     }
