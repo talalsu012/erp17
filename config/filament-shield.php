@@ -230,6 +230,7 @@ return [
 
     'custom_permissions' => [
         'Apply:BulkStudentFees' => 'تطبيق الرسوم الدراسية جماعياً',
+        'BulkUpdate:Student' => 'تعديل بيانات الطلاب جماعياً',
     ],
 
     /*
