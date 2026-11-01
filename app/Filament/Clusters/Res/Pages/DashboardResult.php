@@ -20,6 +20,7 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use DomainException;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -97,6 +98,8 @@ class DashboardResult extends Page
 
     #[Url]
     public $result_type = 'current';
+
+    public bool $previousResults = false;
 
     #[Url]
     public $design = 'page_header';
@@ -428,6 +431,11 @@ class DashboardResult extends Page
                             ->dehydrated()
                             ->columnSpan(2),
 
+                        Checkbox::make('previousResults')
+                            ->label('نتائج سابقة')
+                            ->helperText('الطباعة بحسب المستوى والتخصص والعام المسجّلة بهما النتائج لا بحسب وضع الطالب الحالي')
+                            ->columnSpanFull(),
+
                         CheckboxList::make('fields')
                             ->bulkToggleable()
                             ->label(__('res.fields'))
@@ -494,7 +502,7 @@ class DashboardResult extends Page
                                                 'subjects' => $livewire->subjects,
                                                 'grades' => $livewire->grades,
                                                 'fields' => $livewire->fields,
-                                                'result_type' => $livewire->result_type,
+                                                'result_type' => $livewire->previousResults ? 'previous' : 'current',
                                                 'design' => $livewire->design,
                                                 'show_history' => (int) $livewire->show_history,
                                                 'per_page' => $livewire->countstudent,
@@ -537,7 +545,7 @@ class DashboardResult extends Page
                                                 'subjects' => $livewire->subjects,
                                                 'grades' => $livewire->grades,
                                                 'fields' => $livewire->fields,
-                                                'result_type' => $livewire->result_type,
+                                                'result_type' => $livewire->previousResults ? 'previous' : 'current',
                                             ];
 
                                             return redirect()->route('reports.result_summary', array_filter(
@@ -609,7 +617,7 @@ class DashboardResult extends Page
                                                 'subjects' => $livewire->subjects,
                                                 'grades' => $livewire->grades,
                                                 'fields' => $livewire->fields,
-                                                'result_type' => $livewire->result_type,
+                                                'result_type' => $livewire->previousResults ? 'previous' : 'current',
                                             ];
 
                                             session()->flash('print_student_data', $formData);

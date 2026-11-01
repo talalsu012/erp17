@@ -17,14 +17,14 @@
         @php($before = $stats['before'])
         @php($after = $stats['after'])
 
-        <div class="grid gap-4 sm:grid-cols-4">
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
             @foreach ([
                 __('res.distortion_students') => $before['count'],
                 __('res.distortion_mean') => $before['mean'],
                 __('res.distortion_sd') => $before['sd'],
                 __('res.distortion_fail') => $before['failCount'],
             ] as $label => $value)
-                <x-filament::section>
+                <x-filament::section :compact="true">
                     <div class="text-sm text-gray-500">{{ $label }}</div>
                     <div class="text-2xl font-bold">{{ $value }}</div>
                 </x-filament::section>

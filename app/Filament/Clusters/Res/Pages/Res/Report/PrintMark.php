@@ -15,6 +15,7 @@ use App\Reg\AbsStatus;
 use App\Reg\Semester;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -65,6 +66,8 @@ class PrintMark extends Page
     public $semester;
 
     public $absent;
+
+    public bool $previous = false;
 
     public $marksDetails = [];
 
@@ -151,6 +154,11 @@ class PrintMark extends Page
                             ->live()
                             ->native()
                             ->required(),
+
+                        Checkbox::make('previous')
+                            ->label('نتائج سابقة')
+                            ->helperText('الطباعة بحسب المستوى والتخصص والعام المسجّلة بهما النتائج لا بحسب وضع الطالب الحالي')
+                            ->columnSpan(2),
 
                         Select::make('subjects')
                             // ->required()
@@ -247,6 +255,7 @@ class PrintMark extends Page
             'batch' => $this->batch,
             'semester' => $this->semester,
             'absent' => $this->absent,
+            'previous' => $this->previous,
             'subjects' => $this->subjects,
             'fields' => implode(',', $this->fields ?? []),
             'grades' => $this->grades,

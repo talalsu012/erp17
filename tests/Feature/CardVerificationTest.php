@@ -62,3 +62,9 @@ it('encodes the signed verification link in the printed card', function () {
 
     expect($file)->toBeFile();
 });
+
+it('derives the card gradient from the faculty colour and falls back to green', function () {
+    expect(StudentCardService::palette('#1E3A8A'))->toMatchArray(['primary' => '#1E3A8A', 'primary_dark' => '#11204C'])
+        ->and(StudentCardService::palette('zzz'))->toMatchArray(['primary' => '#0A522E'])
+        ->and(StudentCardService::palette(null))->toMatchArray(['primary' => '#0A522E']);
+});

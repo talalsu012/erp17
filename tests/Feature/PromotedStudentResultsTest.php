@@ -23,17 +23,23 @@ beforeEach(function () {
     }
 });
 
-function printedStudents(): array
+function printedStudents(bool $previous = false): array
 {
-    $data = base64_encode(json_encode(['faculty' => 10, 'level' => 10, 'batch' => 2026, 'semester' => 2, 'absent' => 1]));
+    $data = base64_encode(json_encode(['faculty' => 10, 'level' => 10, 'batch' => 2026, 'semester' => 2, 'absent' => 1, 'previous' => $previous]));
 
     return test()->get(route('student.results', ['dataForm' => $data]))->assertOk()->viewData('students')->pluck('university_no')->all();
 }
 
-it('still prints the result of a level for students already promoted out of it', function () {
+it('prints previous results by the recorded level and year, including students promoted out of it', function () {
     actingAsSuperAdmin();
 
-    expect(printedStudents())->toBe([1, 2]);
+    expect(printedStudents(previous: true))->toBe([1, 2]);
+});
+
+it('prints by the current level and year of the student when previous results is off', function () {
+    actingAsSuperAdmin();
+
+    expect(printedStudents())->toBe([1]);
 });
 
 it('keeps the result sheet roster after the students were promoted to the next level', function () {

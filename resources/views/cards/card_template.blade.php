@@ -1,3 +1,8 @@
+@php
+    $primary = $data['primary'] ?? '#0A522E';
+    $primaryDark = $data['primary_dark'] ?? '#052D19';
+    $primaryTint = $data['primary_tint'] ?? '#E6F3EB';
+@endphp
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -29,7 +34,7 @@
             left: -12mm;
             width: 38mm;
             height: 38mm;
-            background-color: #E6F3EB;
+            background-color: {{ $primaryTint }};
             border-radius: 50%;
             z-index: 0;
         }
@@ -53,7 +58,7 @@
     <div class="page-bg"></div>
     <div class="circle-tl"></div>
 
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 13mm; background-color: #0A522E; z-index: 3;"></div>
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 13mm; background-color: {{ $primary }}; background: linear-gradient(135deg, {{ $primaryDark }}, {{ $primary }}); z-index: 3;"></div>
     <div style="position: absolute; top: 13mm; left: 0; width: 100%; height: 0.7mm; background-color: #C9A227; z-index: 3;"></div>
 
     <!-- الشعار واسم الجامعة -->
@@ -73,11 +78,8 @@
 
     <!-- الصورة -->
     <div style="position: absolute; top: 15.8mm; right: 3mm; width: 24mm; text-align: center; z-index: 5;">
-        <div style="border: 0.5mm solid #14A05A; padding: 0.4mm; background-color: #FFFFFF; border-radius: 2mm; width: 21mm;">
+        <div style="border: 0.5mm solid {{ $primary }}; padding: 0.4mm; background-color: #FFFFFF; border-radius: 2mm; width: 21mm;">
             <img src="{{ $data['avatar'] ?: $data['logo'] }}" style="width: 20mm; height: 26mm;" alt="صورة الطالب">
-        </div>
-        <div dir="ltr" style="background-color: #0A522E; color: #FFFFFF; font-size: 7px; font-weight: bold; text-align: center; padding: 0.5mm 0; margin-top: 1mm; border-radius: 2mm; width: 22mm;">
-            {{ $data['university_no'] }}
         </div>
     </div>
 
@@ -85,6 +87,9 @@
     <div style="position: absolute; top: 15.8mm; right: 29mm; left: 3mm; z-index: 5;">
         <div class="lbl">{{ $data['full_name_label'] }}</div>
         <div style="font-size: 9.5px; font-weight: bold; color: #1B2A22; padding-bottom: 1mm;">{{ $data['name_ar'] }}</div>
+
+        <div class="lbl">{{ $data['stu_num_label'] }} &nbsp;·&nbsp; <span dir="ltr">STUDENT ID</span></div>
+        <div dir="ltr" style="font-size: 9px; font-weight: bold; color: {{ $primary }}; text-align: right; padding-bottom: 1mm;">{{ $data['university_no'] }}</div>
 
         <div class="lbl">{{ $data['std_prog_label'] }}</div>
         <div class="val" style="padding-bottom: 1mm;">{{ $data['faculty'] }}</div>
@@ -114,7 +119,7 @@
     </div>
 
     <!-- الفوتر الأمامي -->
-    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4.6mm; background-color: #0A522E; border-top: 0.5mm solid #C9A227; z-index: 5;">
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4.6mm; background-color: {{ $primary }}; background: linear-gradient(135deg, {{ $primaryDark }}, {{ $primary }}); border-top: 0.5mm solid #C9A227; z-index: 5;">
         <table width="100%" height="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="right" valign="middle" style="padding-right: 3mm; color: #FFFFFF; font-size: 6.5px; font-weight: bold;">{{ $data['content'] }}</td>
@@ -128,7 +133,7 @@
 
     <div class="page-bg"></div>
 
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 9mm; background-color: #0A522E; z-index: 3;"></div>
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 9mm; background-color: {{ $primary }}; background: linear-gradient(135deg, {{ $primaryDark }}, {{ $primary }}); z-index: 3;"></div>
     <div style="position: absolute; top: 9mm; left: 0; width: 100%; height: 0.7mm; background-color: #C9A227; z-index: 3;"></div>
     <div style="position: absolute; top: 1mm; left: 0; width: 100%; text-align: center; z-index: 5;">
         <div style="font-size: 10px; font-weight: bold; color: #FFFFFF;">{{ config('university.name_ar') }}</div>
@@ -137,7 +142,7 @@
 
     <!-- QR ورقم البطاقة -->
     <div style="position: absolute; top: 12mm; right: 3mm; width: 28mm; text-align: center; z-index: 5;">
-        <div style="border: 0.5mm solid #14A05A; padding: 0.6mm; background-color: #FFFFFF; border-radius: 1.5mm; width: 25mm;">
+        <div style="border: 0.5mm solid {{ $primary }}; padding: 0.6mm; background-color: #FFFFFF; border-radius: 1.5mm; width: 25mm;">
             <img src="data:image/svg+xml;base64,{{ $qrCode }}" width="92" height="92">
         </div>
         <div class="lbl" style="margin-top: 1mm;">{{ $data['std_card_label'] }}</div>
@@ -168,7 +173,7 @@
     </div>
 
     <!-- الفوتر الخلفي -->
-    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 5.4mm; background-color: #0A522E; border-top: 0.5mm solid #C9A227; z-index: 5;">
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 5.4mm; background-color: {{ $primary }}; background: linear-gradient(135deg, {{ $primaryDark }}, {{ $primary }}); border-top: 0.5mm solid #C9A227; z-index: 5;">
         <table width="100%" height="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="right" valign="middle" style="padding-right: 3mm; color: #FFFFFF; font-size: 6.5px; font-weight: bold;">{{ $data['content'] }}</td>

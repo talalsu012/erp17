@@ -123,14 +123,16 @@ class DistortionTreatment extends Page implements HasActions, HasForms
             Select::make('subject')
                 ->label(__('res.subject'))
                 ->options(function (Get $get): array {
-                    if (blank($get('faculty')) || blank($get('level'))) {
+                    if (blank($get('faculty'))) {
                         return [];
                     }
 
                     return Subject::query()
                         ->where('faculty_code', $get('faculty'))
-                        ->where('level_code', $get('level'))
-                        ->when($get('department'), fn ($query, $department) => $query->where('department_code', $department))
+                        ->when($get('level'), fn ($query, $level) => $query->where('level_code', $level))
+                        ->when($get('department'), fn ($query, $department) => $query->where(
+                            fn ($inner) => $inner->where('department_code', $department)->orWhereNull('department_code'),
+                        ))
                         ->orderBy('code')
                         ->pluck('name_ar', 'code')
                         ->all();

@@ -70,7 +70,7 @@ class StudentCardService
             'university_no' => (string) $student->university_no,
             'card_number' => (string) $card->card_number,
             'expiry_date' => $card->expiry_date ? Carbon::parse($card->expiry_date)->format('Y-m-d') : '',
-        ];
+        ] + self::palette($student->faculty?->primary_hex);
 
         $defaultConfig = (new ConfigVariables)->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
@@ -124,6 +124,34 @@ class StudentCardService
         $mpdf->Output($file, Destination::FILE);
 
         return $file;
+    }
+
+    public const DEFAULT_COLOR = '#0A522E';
+
+    /**
+     * لون البطاقة من لون الكلية إن وُجد وصحّ، وإلا الأخضر الافتراضي، مع درجة أغمق للتدرّج.
+     *
+     * @return array{primary: string, primary_dark: string, primary_tint: string}
+     */
+    public static function palette(?string $hex): array
+    {
+        $hex = trim((string) $hex);
+
+        if (preg_match('/^#?([0-9a-f]{6})$/i', $hex, $match) !== 1) {
+            $hex = self::DEFAULT_COLOR;
+            preg_match('/^#?([0-9a-f]{6})$/i', $hex, $match);
+        }
+
+        $rgb = array_map('hexdec', str_split($match[1], 2));
+        $dark = array_map(fn (int $channel): int => (int) round($channel * 0.55), $rgb);
+
+        $tint = array_map(fn (int $channel): int => (int) round($channel + (255 - $channel) * 0.9), $rgb);
+
+        return [
+            'primary_tint' => sprintf('#%02X%02X%02X', ...$tint),
+            'primary' => '#'.strtoupper($match[1]),
+            'primary_dark' => sprintf('#%02X%02X%02X', ...$dark),
+        ];
     }
 
     private static function mediaToBase64($model, string $collection): ?string

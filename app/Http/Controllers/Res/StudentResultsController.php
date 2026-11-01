@@ -79,10 +79,14 @@ class StudentResultsController extends Controller
             },
         ])
             ->where('faculty_code', $params['faculty_code'])
-            ->where(function ($cohort) use ($params) {
-                $cohort->where(['level_code' => $params['level'], 'batch_code' => $params['batch']])
-                    ->orWhereHas('recom', fn ($q) => $q->where(['level_code' => $params['level'], 'batch_code' => $params['batch']]));
-            })
+            ->when(
+                $params['previous'],
+                fn ($students) => $this->constrainToRecordedResults($students, $params),
+                fn ($students) => $students
+                    ->where(['level_code' => $params['level'], 'batch_code' => $params['batch']])
+                    ->when(filled($params['department']), fn ($q) => $q->where('department_code', $params['department']))
+                    ->when(filled($params['special']), fn ($q) => $q->where('special_code', $params['special'])),
+            )
             ->orderBy('name_ar', 'asc');
 
         return $query->get()->map(function ($student) use ($semester) {
@@ -91,6 +95,21 @@ class StudentResultsController extends Controller
 
             return $student;
         });
+    }
+
+    /**
+     * النتائج السابقة: الطلاب بحسب المستوى والعام والتخصص المسجّلة بها نتائجهم لا بحسب وضعهم الحالي.
+     * القسم والتخصص يُؤخذان من مواد درجاتهم في ذلك المستوى والعام.
+     */
+    private function constrainToRecordedResults($students, array $params)
+    {
+        return $students
+            ->whereHas('recom', fn ($q) => $q->where(['level_code' => $params['level'], 'batch_code' => $params['batch']]))
+            ->when(filled($params['department']) || filled($params['special']), fn ($q) => $q->whereHas('marks', fn ($marks) => $marks
+                ->where(['level_code' => $params['level'], 'batch_code' => $params['batch']])
+                ->whereHas('subject', fn ($subject) => $subject
+                    ->when(filled($params['department']), fn ($inner) => $inner->where('department_code', $params['department']))
+                    ->when(filled($params['special']), fn ($inner) => $inner->where('special_code', $params['special'])))));
     }
 
     /**
@@ -281,6 +300,9 @@ class StudentResultsController extends Controller
             'semester' => $data['semester'],
             'batch' => $data['batch'],
             'absent' => $data['absent'],
+            'department' => $data['department'] ?? null,
+            'special' => $data['special'] ?? null,
+            'previous' => (bool) ($data['previous'] ?? false),
             'subjects' => $data['subjects'] ?? [],
             'fields' => $data['fields'] ?? [],
             'grades' => $data['grades'] ?? [],
