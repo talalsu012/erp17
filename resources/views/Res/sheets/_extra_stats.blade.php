@@ -50,11 +50,24 @@
 
         <div class="p-4 pt-0">
             <h4 class="mb-2 text-center font-medium">توزيع التوصيات</h4>
+            @php
+                $palette = ['#1e40af', '#2563eb', '#60a5fa', '#93c5fd', '#bfdbfe'];
+                $darkText = fn (int $i): bool => $i % 5 >= 3;
+            @endphp
             <div class="flex h-8 overflow-hidden rounded bg-gray-200">
                 @foreach ($recomStats as $row)
-                    <div class="bg-blue-{{ [800, 600, 400, 300, 200][$loop->index % 5] }} transition-opacity hover:opacity-90"
-                         style="width: {{ $row['percent'] }}%; background-color: {{ ['#1e40af', '#2563eb', '#60a5fa', '#93c5fd', '#bfdbfe'][$loop->index % 5] }}"
-                         title="{{ $row['name'] }}: {{ $row['percent'] }}%"></div>
+                    <div class="flex items-center justify-center text-[10px] font-bold"
+                         style="width: {{ $row['percent'] }}%; background-color: {{ $palette[$loop->index % 5] }}; color: {{ $darkText($loop->index) ? '#0f172a' : '#fff' }}"
+                         title="{{ $row['name'] }}: {{ $row['percent'] }}%">{{ $row['percent'] >= 6 ? $row['percent'].'%' : '' }}</div>
+                @endforeach
+            </div>
+            <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-1 text-[11px]">
+                @foreach ($recomStats as $row)
+                    <div class="flex items-center gap-1.5">
+                        <span class="inline-block h-3 w-3 rounded-sm border border-slate-300" style="background-color: {{ $palette[$loop->index % 5] }}"></span>
+                        <span class="font-medium">{{ $row['name'] }}</span>
+                        <span class="text-slate-500">({{ $row['count'] }} — {{ $row['percent'] }}%)</span>
+                    </div>
                 @endforeach
             </div>
         </div>
