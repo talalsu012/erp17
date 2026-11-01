@@ -22,6 +22,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -159,7 +160,7 @@ class MovingStudent extends Page implements HasForms, HasTable
                 Section::make()
                     ->schema([
 
-                        Grid::make(2)->schema([
+                        Actions::make([
 
                             Action::make('preview')
                                 ->label('عرض الطلاب')
@@ -177,7 +178,7 @@ class MovingStudent extends Page implements HasForms, HasTable
                                 ->modalDescription('سيتم تحديث جميع الطلاب المطابقين للمعايير المحددة.')
                                 ->action(fn () => $this->executePromotion()),
 
-                        ]),
+                        ])->key('promotionActions'),
                     ]),
             ]);
     }
@@ -240,7 +241,6 @@ class MovingStudent extends Page implements HasForms, HasTable
         Notification::make()->title("تم ترحيل {$count} طالباً بنجاح")->success()->send();
 
         $this->studentsToMove = [];
-        $this->resetTable();
     }
 
     public function table(Table $table): Table

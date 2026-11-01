@@ -1,0 +1,64 @@
+<?php
+
+use App\Models\Reg\Card;
+use App\Models\Student;
+use App\Reg\CardStatus;
+use App\Services\Card\CardVerificationService;
+use App\Services\Card\StudentCardService;
+use Database\Seeders\RegLtColumns;
+use Database\Seeders\RegSettingsTableSeeder;
+
+beforeEach(function () {
+    migrateErpSchema();
+    $this->seed([RegSettingsTableSeeder::class, RegLtColumns::class]);
+
+    $this->student = Student::query()->forceCreate(['university_no' => 1190662722, 'name_ar' => 'هدى محمد طاهر', 'faculty_code' => 10, 'department_code' => 100, 'level_code' => 3, 'batch_code' => 2026]);
+});
+
+function issueCard(Student $student, array $attributes = []): Card
+{
+    return Card::query()->create($attributes + [
+        'university_no' => $student->university_no, 'card_number' => 'C-'.uniqid(), 'issue_date' => now()->toDateString(),
+        'expiry_date' => now()->addYear()->toDateString(), 'status' => CardStatus::active,
+    ]);
+}
+
+it('lets a guard in with a valid card and hides the university number', function () {
+    $card = issueCard($this->student);
+
+    $this->get(CardVerificationService::url($card))
+        ->assertOk()
+        ->assertSee('مسموح بالدخول')
+        ->assertSee('هدى محمد طاهر')
+        ->assertDontSee((string) $this->student->university_no);
+});
+
+it('rejects an unsigned or tampered link', function () {
+    $card = issueCard($this->student);
+
+    $this->get(route('cards.verify', ['card' => $card->getKey()]))->assertForbidden();
+    $this->get(str_replace('card/'.$card->getKey(), 'card/'.($card->getKey() + 1), CardVerificationService::url($card)))->assertForbidden();
+});
+
+it('denies entry for expired, lost or deleted cards', function (array $attributes, string $reason, bool $deleted) {
+    $card = issueCard($this->student, $attributes);
+    $url = CardVerificationService::url($card);
+
+    if ($deleted) {
+        $card->delete();
+    }
+
+    $this->get($url)->assertOk()->assertSee('ممنوع الدخول')->assertSee($reason);
+})->with([
+    'expired' => [['expiry_date' => '2020-01-01'], 'انتهت صلاحية البطاقة', false],
+    'lost' => [['status' => CardStatus::lost], 'البطاقة غير سارية', false],
+    'deleted' => [[], 'البطاقة ملغاة', true],
+]);
+
+it('encodes the signed verification link in the printed card', function () {
+    $card = issueCard($this->student);
+
+    $file = StudentCardService::generate($card);
+
+    expect($file)->toBeFile();
+});

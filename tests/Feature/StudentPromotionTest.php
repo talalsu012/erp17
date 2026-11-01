@@ -87,3 +87,38 @@ it('renders the promotion page with the search row and the position row', functi
         ->assertFormFieldExists('exam_type', 'promotionForm')
         ->assertFormFieldDoesNotExist('semester', 'promotionForm');
 });
+
+it('defaults a missing installment plan to full payment and recalculates the carried balance', function () {
+    DB::table('students')->where('university_no', 1)->update(['xmod' => 500, 'installment_code' => null]);
+
+    app(StudentPromotionService::class)->promote(promoter(), $this->criteria, 2, 2026);
+
+    expect(Student::query()->find(1))
+        ->installment_code->toBe(StudentPromotionService::FULL_PAYMENT)
+        ->discount_percent->toBe(0)
+        ->fees8->toEqual(500)
+        ->all_fees->toEqual(1600)
+        ->xmod->toEqual(1600)
+        ->pay1->toEqual(1600)
+        ->pay2->toEqual(0);
+});
+
+it('runs the execute action from the page without losing it after the students list empties', function () {
+    actingAsSuperAdmin();
+    DB::table('reg_levels')->insert([['code' => 1, 'name_ar' => 'أول'], ['code' => 2, 'name_ar' => 'ثان']]);
+    DB::table('reg_ltcolumns')->insert([
+        ['code' => 2025, 'name_ar' => '2025', 'name_en' => 'a', 'grouped' => 2003],
+        ['code' => 2026, 'name_ar' => '2026', 'name_en' => 'b', 'grouped' => 2003],
+    ]);
+    DB::table('res_ltrecoms')->insert(['code' => 1005, 'name_ar' => 'نجاح', 'name_en' => 'pass']);
+
+    Livewire\Livewire::test(App\Filament\Clusters\Invoices\Pages\MovingStudent::class)
+        ->fillForm($this->criteria + ['new_level' => 2, 'new_batch_code' => 2026], 'promotionForm')
+        ->call('loadStudentsForPromotion')
+        ->assertSet('studentsToMove', [1])
+        ->callAction(Filament\Actions\Testing\TestAction::make('execute')->schemaComponent('promotionActions', schema: 'promotionForm'))
+        ->assertHasNoErrors()
+        ->assertSet('studentsToMove', []);
+
+    expect(Student::query()->find(1)->level_code)->toBe(2);
+});

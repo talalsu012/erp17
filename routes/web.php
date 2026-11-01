@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\StudentDocumentController;
 use App\Http\Controllers\Attendance\AttendanceReportController;
+use App\Http\Controllers\CardVerificationController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\Res\DashBoardResultController;
@@ -16,6 +17,12 @@ use App\Services\Card\StudentCardService;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+
+// Card verification (QR scanned by guards)
+Route::get('/verify/card/{card}', CardVerificationController::class)
+    ->whereNumber('card')
+    ->name('cards.verify')
+    ->middleware(['signed', 'throttle:60,1']);
 
 // Certificate
 Route::get('/verify/{hash}', [QRCodeController::class, 'verify'])

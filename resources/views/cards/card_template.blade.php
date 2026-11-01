@@ -10,9 +10,9 @@
             margin: 0;
             padding: 0;
             background-color: #FFFFFF;
+            color: #1B2A22;
         }
 
-        /* خلفية الصفحة بيضاء بالكامل */
         .page-bg {
             position: absolute;
             top: 0;
@@ -23,44 +23,25 @@
             z-index: -1;
         }
 
-        /* دوائر الزينة الخلفية بدرجات الأخضر الشفاف */
         .circle-tl {
             position: absolute;
-            top: -10mm;
-            left: -10mm;
-            width: 40mm;
-            height: 40mm;
-            background-color: rgba(20, 160, 90, 0.08);
+            top: -12mm;
+            left: -12mm;
+            width: 38mm;
+            height: 38mm;
+            background-color: #E6F3EB;
             border-radius: 50%;
             z-index: 0;
         }
 
-        .circle-br {
-            position: absolute;
-            bottom: -5mm;
-            right: -10mm;
-            width: 35mm;
-            height: 35mm;
-            background-color: rgba(20, 160, 90, 0.12);
-            border-radius: 50%;
-            z-index: 0;
+        .lbl {
+            color: #6B7A72;
+            font-size: 5.5px;
         }
 
-        /* النصوص المشتركة */
-        .text-muted {
-            color: #555555;
-            font-size: 6px;
-        }
-
-        .text-main {
-            color: #000000;
-            font-size: 9px;
-            font-weight: bold;
-        }
-
-        .text-accent {
-            color: #0E7340;
-            font-size: 10px;
+        .val {
+            color: #1B2A22;
+            font-size: 8px;
             font-weight: bold;
         }
     </style>
@@ -72,123 +53,72 @@
     <div class="page-bg"></div>
     <div class="circle-tl"></div>
 
-    <!-- 1. الهيدر (الشعار واسم الجامعة) -->
-    <div style="position: absolute; top: 2mm; right: 2mm; width: 81.6mm; z-index: 5;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 13mm; background-color: #0A522E; z-index: 3;"></div>
+    <div style="position: absolute; top: 13mm; left: 0; width: 100%; height: 0.7mm; background-color: #C9A227; z-index: 3;"></div>
+
+    <!-- الشعار واسم الجامعة -->
+    <div style="position: absolute; top: 1.6mm; right: 3mm; width: 10mm; height: 10mm; background-color: #FFFFFF; border-radius: 50%; text-align: center; z-index: 5;">
+        <img src="{{ $data['logo'] }}" alt="{{ config('university.name_ar') }}" width="26" height="26" style="margin-top: 1mm;">
+    </div>
+    <div style="position: absolute; top: 2.2mm; right: 15mm; z-index: 5;">
+        <div style="font-size: 11px; font-weight: bold; color: #FFFFFF;">{{ $data['title'] }}</div>
+        <div dir="ltr" style="font-size: 5.5px; color: #A8D5BA; text-align: right;">{{ config('university.name_en') }}</div>
+    </div>
+
+    <!-- شارة بطاقة طالب -->
+    <div style="position: absolute; top: 3.2mm; left: 3mm; border: 0.3mm solid #C9A227; border-radius: 1mm; padding: 0.6mm 2mm; text-align: center; z-index: 5;">
+        <div style="font-size: 6.5px; font-weight: bold; color: #C9A227;">{{ $data['in_card'] }}</div>
+        <div dir="ltr" style="font-size: 5px; color: #A8D5BA;">STUDENT ID</div>
+    </div>
+
+    <!-- الصورة -->
+    <div style="position: absolute; top: 15.8mm; right: 3mm; width: 24mm; text-align: center; z-index: 5;">
+        <div style="border: 0.5mm solid #14A05A; padding: 0.4mm; background-color: #FFFFFF; border-radius: 2mm; width: 21mm;">
+            <img src="{{ $data['avatar'] ?: $data['logo'] }}" style="width: 20mm; height: 26mm;" alt="صورة الطالب">
+        </div>
+        <div dir="ltr" style="background-color: #0A522E; color: #FFFFFF; font-size: 7px; font-weight: bold; text-align: center; padding: 0.5mm 0; margin-top: 1mm; border-radius: 2mm; width: 22mm;">
+            {{ $data['university_no'] }}
+        </div>
+    </div>
+
+    <!-- البيانات -->
+    <div style="position: absolute; top: 15.8mm; right: 29mm; left: 3mm; z-index: 5;">
+        <div class="lbl">{{ $data['full_name_label'] }}</div>
+        <div style="font-size: 9.5px; font-weight: bold; color: #1B2A22; padding-bottom: 1mm;">{{ $data['name_ar'] }}</div>
+
+        <div class="lbl">{{ $data['std_prog_label'] }}</div>
+        <div class="val" style="padding-bottom: 1mm;">{{ $data['faculty'] }}</div>
+
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <td align="right" valign="middle">
-                    <div style="font-size: 11px; font-weight: bold; color: #0A522E;"> {{ $data['title'] }}</div>
-                    <div class="text-muted" dir="ltr" style="margin-top: 1px;">{{ config('university.name_en') }}</div>
+                <td width="50%" style="padding-bottom: 1mm;">
+                    <div class="lbl">{{ $data['std_level_label'] }}</div>
+                    <div class="val">{{ $data['level'] }}</div>
                 </td>
-                <td width="10mm" align="left" valign="middle">
-                    <img src="{{ $data['logo'] }}" alt="{{ config('university.name_ar') }}"
-                        width="30" height="30">
+                <td width="50%" style="padding-bottom: 1mm;">
+                    <div class="lbl">العام الدراسي</div>
+                    <div class="val">{{ $data['batch'] ?? '' }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td width="50%">
+                    <div class="lbl">{{ $data['std_status_label'] }}</div>
+                    <div class="val" style="color: #0E7340;">● {{ $data['active_status'] }}</div>
+                </td>
+                <td width="50%">
+                    <div class="lbl">{{ $data['std_card_expi_label'] }}</div>
+                    <div class="val" dir="ltr" style="color: #B3261E; text-align: right;">{{ $data['expiry_date'] }}</div>
                 </td>
             </tr>
         </table>
     </div>
 
-    <!-- 2. شريط العنوان الأخضر الداكن -->
-    <div
-        style="position: absolute; top: 12mm; left: 0; width: 100%; height: 0.5mm; background-color: #14A05A; z-index: 5;">
-    </div>
-    <div
-        style="position: absolute; top: 12.5mm; left: 0; width: 100%; height: 4mm; background-color: #0A522E; text-align: center; z-index: 5;">
+    <!-- الفوتر الأمامي -->
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4.6mm; background-color: #0A522E; border-top: 0.5mm solid #C9A227; z-index: 5;">
         <table width="100%" height="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <td align="center" valign="middle"
-                    style="color: #FFFFFF; font-size: 7.5px; font-weight: bold; letter-spacing: 1px;">
-                    {{ $data['in_card'] }} &nbsp;|&nbsp; STUDENT ID CARD
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- 3. منطقة بيانات الطالب والصورة -->
-    <div style="position: absolute; top: 18mm; right: 2mm; width: 81.6mm; z-index: 5;">
-        <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-                <!-- قسم الصورة (يمين - مع التوسيط وتدوير الحواف باستخدام Div للخلفية) -->
-                <!-- قسم الصورة (يمين - مع التوسيط وتدوير الحواف) -->
-                <td width="28mm" align="center" valign="top">
-                    <!-- إطار الصورة -->
-                    <div
-                        style="border: 1.5px solid #14A05A; padding: 2px; background: #FFFFFF; border-radius: 6px; display: inline-block;">
-                        @if($data['avatar'])
-                            <img src="{{ $data['avatar'] }}" width="72" height="92"
-                                style="border-radius: 4px; display: block; margin: 0 auto;" alt="صورة الطالب">
-                        @else
-                            <!-- في حال عدم وجود صورة، نعرض الشعار مع خلفية رمادية فاتحة لتمييزه -->
-                            <img src="{{ $data['logo'] }}" width="72" height="92"
-                                style="border-radius: 4px; display: block; margin: 0 auto; background-color: #f9f9f9;"
-                                alt="صورة الطالب">
-                        @endif
-                    </div>
-
-                    <!-- رقم الطالب -->
-                    <div
-                        style="background: #14A05A; color: #FFFFFF; font-size: 8px; font-weight: bold; text-align: center; padding: 2.5px 0; margin-top: 1.5mm; border-radius: 4px; width: 76px; display: inline-block;">
-                        {{ $data['university_no'] }}
-                    </div>
-                </td>
-                <!-- قسم البيانات (يسار) -->
-                <td valign="top" style="padding-right: 3mm;">
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td colspan="2" style="padding-bottom: 0.5mm;">
-                                <div class="text-muted">{{ $data['full_name_label'] }}</div>
-                                <div class="text-main">{{ $data['name_ar'] }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="padding-bottom: 0.5mm;">
-                                <div class="text-muted">{{ $data['stu_num_label'] }}</div>
-                                <div class="text-accent" dir="ltr" style="text-align: right;">
-                                    {{ $data['university_no'] }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="padding-bottom: 0.5mm;">
-                                <div class="text-muted">{{ $data['std_prog_label'] }}</div>
-                                <div style="color: #333333; font-size: 8.5px; font-weight: bold;">{{ $data['faculty'] }}
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%">
-                                <div class="text-muted">{{ $data['std_level_label'] }}</div>
-                                <div style="color: #333333; font-size: 8px; font-weight: bold;">{{ $data['level'] }}
-                                </div>
-                            </td>
-                            <td width="50%">
-                                <div class="text-muted">{{ $data['std_status_label'] }}</div>
-                                <div style="color: #14A05A; font-size: 8.5px; font-weight: bold;">●
-                                    {{ $data['active_status'] }}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="padding-top: 1mm;">
-                                <div class="text-muted">{{ $data['std_card_expi_label'] }}</div>
-                                <div style="color: #D93025; font-size: 8px; font-weight: bold;" dir="ltr">
-                                    {{ $data['expiry_date'] }}</div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- 4. الفوتر الأمامي -->
-    <div
-        style="position: absolute; bottom: 0; left: 0; width: 100%; height: 5mm; background-color: #0A522E; border-top: 0.5mm solid #14A05A; z-index: 5;">
-        <table width="100%" height="100%" cellpadding="0" cellspacing="0">
-            <tr>
-                <td align="center" valign="middle">
-                    <span style="color: #FFFFFF; font-size: 6px;">{{ $data['content'] }}</span>
-                    <span style="color: #14A05A; font-size: 9px; margin: 0 2mm;">•••••</span>
-                    <span style="color: #FFFFFF; font-size: 6px;" dir="ltr">Academic Affairs</span>
-                </td>
+                <td align="right" valign="middle" style="padding-right: 3mm; color: #FFFFFF; font-size: 6.5px; font-weight: bold;">{{ $data['content'] }}</td>
+                <td align="left" valign="middle" dir="ltr" style="padding-left: 3mm; color: #A8D5BA; font-size: 5.5px;">Student Affairs Deanship</td>
             </tr>
         </table>
     </div>
@@ -197,66 +127,52 @@
     <pagebreak />
 
     <div class="page-bg"></div>
-    <div class="circle-br" style="top: -5mm; right: auto; left: -10mm;"></div>
 
-    <div style="position: absolute; top: 3mm; left: 0; width: 100%; text-align: center; z-index: 5;">
-        <div style="font-size: 13px; font-weight: bold; color: #0A522E;">{{ config('university.name_ar') }}</div>
-        <div class="text-muted" dir="ltr" style="margin-top: 1px;">{{ config('university.name_en') }}</div>
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 9mm; background-color: #0A522E; z-index: 3;"></div>
+    <div style="position: absolute; top: 9mm; left: 0; width: 100%; height: 0.7mm; background-color: #C9A227; z-index: 3;"></div>
+    <div style="position: absolute; top: 1mm; left: 0; width: 100%; text-align: center; z-index: 5;">
+        <div style="font-size: 10px; font-weight: bold; color: #FFFFFF;">{{ config('university.name_ar') }}</div>
+        <div dir="ltr" style="font-size: 5.5px; color: #A8D5BA;">{{ config('university.name_en') }}</div>
     </div>
 
-    <div
-        style="position: absolute; top: 12mm; left: 0; width: 100%; height: 0.5mm; background-color: #14A05A; z-index: 5;">
+    <!-- QR ورقم البطاقة -->
+    <div style="position: absolute; top: 12mm; right: 3mm; width: 28mm; text-align: center; z-index: 5;">
+        <div style="border: 0.5mm solid #14A05A; padding: 0.6mm; background-color: #FFFFFF; border-radius: 1.5mm; width: 25mm;">
+            <img src="data:image/svg+xml;base64,{{ $qrCode }}" width="92" height="92">
+        </div>
+        <div class="lbl" style="margin-top: 1mm;">{{ $data['std_card_label'] }}</div>
+        <div dir="ltr" style="color: #0E7340; font-size: 7px; font-weight: bold;">{{ $data['card_number'] }}</div>
     </div>
 
-    <!-- تم إضافة ارتفاع (height) للجدول لضمان التوسيط العمودي -->
-    <div style="position: absolute; top: 14mm; right: 2mm; width: 81.6mm; height: 32mm; z-index: 5;">
-        <table width="100%" height="100%" cellpadding="0" cellspacing="0">
+    <!-- التعليمات -->
+    <div style="position: absolute; top: 12.5mm; right: 33mm; left: 3mm; z-index: 5;">
+        <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <!-- قسم الـ QR ورقم البطاقة (يمين) -->
-                <td width="35mm" align="center" valign="middle">
-                    <div
-                        style="border: 1.5px solid #14A05A; padding: 2px; background: #FFFFFF; border-radius: 4px; display: inline-block;">
-                        <img src="data:image/svg+xml;base64,{{ $qrCode }}" width="72" height="72"
-                            style="display: block;">
-                    </div>
-                    <!-- رقم البطاقة تم نقله هنا -->
-                    <div style="text-align: center; margin-top: 1.5mm;">
-                        <br>
-                        <div class="text-muted" style="font-size: 5px;">{{ $data['std_card_label'] }}</div>
-                        <div style="color: #0E7340; font-size: 9.5px; letter-spacing: 1px; font-weight: bold;"
-                            dir="ltr">{{ $data['card_number'] }}</div>
-                    </div>
-                </td>
-
-                <!-- قسم التنبيهات (يسار - وموسطة بالكامل) -->
-                <td align="center" valign="middle" style="padding-right: 2mm; padding-left: 2mm;">
-                    <div>
-                        <span style="color: #14A05A; font-size: 8px;">●</span>
-                        <span style="color: #000000; font-size: 8.5px; font-weight: bold; line-height: 1.6;">
-                            {{ $data['in_come'] }}<br>{{ $data['in_come_card'] }}
-                        </span>
-                    </div>
-
-                    <div style="text-align: center;">
-                        <span style="color: #14A05A; font-size: 8px;">●</span>
-                        <span style="color: #555555; font-size: 7px; font-weight: bold;" dir="ltr">Verified &
-                            Authenticated</span>
-                    </div>
-                </td>
+                <td width="4mm" valign="top" style="color: #14A05A; font-size: 8px; padding-bottom: 1.6mm;">●</td>
+                <td valign="top" style="font-size: 7.5px; font-weight: bold; color: #1B2A22; padding-bottom: 1.6mm;">{{ $data['in_come'] }} {{ $data['in_come_card'] }}</td>
+            </tr>
+            <tr>
+                <td valign="top" style="color: #14A05A; font-size: 8px; padding-bottom: 1.6mm;">●</td>
+                <td valign="top" style="font-size: 6.5px; color: #44544B; padding-bottom: 1.6mm;">امسح رمز QR للتحقق من صحة البطاقة وبيانات حاملها</td>
+            </tr>
+            <tr>
+                <td valign="top" style="color: #14A05A; font-size: 8px;">●</td>
+                <td valign="top" style="font-size: 6.5px; color: #44544B;">عند العثور على البطاقة تُعاد إلى {{ $data['content'] }}</td>
             </tr>
         </table>
     </div>
 
+    <!-- التوقيع -->
+    <div style="position: absolute; bottom: 8mm; right: 33mm; left: 3mm; border-top: 0.2mm dashed #9FB5A8; padding-top: 0.5mm; z-index: 5;">
+        <span class="lbl">توقيع حامل البطاقة</span>
+    </div>
+
     <!-- الفوتر الخلفي -->
-    <div
-        style="position: absolute; bottom: 0; left: 0; width: 100%; height: 6mm; background-color: #0A522E; border-top: 0.5mm solid #14A05A; z-index: 5;">
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 5.4mm; background-color: #0A522E; border-top: 0.5mm solid #C9A227; z-index: 5;">
         <table width="100%" height="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <td align="center" valign="middle">
-                    <div style="font-size: 8px; font-weight: bold; color: #FFFFFF;">عمادة شؤون الطلاب</div>
-                    <div style="font-size: 6px; color: #A0C8B0; margin-top: 1px;" dir="ltr">Academic Affairs Office |
-                        www.kassalauni.edu.sd</div>
-                </td>
+                <td align="right" valign="middle" style="padding-right: 3mm; color: #FFFFFF; font-size: 6.5px; font-weight: bold;">{{ $data['content'] }}</td>
+                <td align="left" valign="middle" dir="ltr" style="padding-left: 3mm; color: #A8D5BA; font-size: 5.5px;">www.kassalauni.edu.sd</td>
             </tr>
         </table>
     </div>

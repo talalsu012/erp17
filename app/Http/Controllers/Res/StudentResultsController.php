@@ -78,7 +78,11 @@ class StudentResultsController extends Controller
                 $query->orderByDesc('semester');
             },
         ])
-            ->where(['level_code' => $params['level'], 'batch_code' => $params['batch'], 'faculty_code' => $params['faculty_code']])
+            ->where('faculty_code', $params['faculty_code'])
+            ->where(function ($cohort) use ($params) {
+                $cohort->where(['level_code' => $params['level'], 'batch_code' => $params['batch']])
+                    ->orWhereHas('recom', fn ($q) => $q->where(['level_code' => $params['level'], 'batch_code' => $params['batch']]));
+            })
             ->orderBy('name_ar', 'asc');
 
         return $query->get()->map(function ($student) use ($semester) {
@@ -112,7 +116,7 @@ class StudentResultsController extends Controller
                 // ->whereIn('recom_code', $remedialCodes);
             },
         ])
-            ->where(['level_code' => $params['level'], 'batch_code' => $params['batch'], 'faculty_code' => $params['faculty_code']])
+            ->where('faculty_code', $params['faculty_code'])
             // الشرط الأساسي: فلترة الطلاب الذين لديهم توصية "ملحق/بديل" من امتحان الدور الأول للفصل الثاني
             ->whereHas('recom', function ($q) use ($params, $remedialCodes) {
                 $q->where('level_code', $params['level'])

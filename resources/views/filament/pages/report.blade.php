@@ -216,7 +216,6 @@
                 </div>
             </div>
 
-            {{ $field }} //universityno,name_ar,...
             <!-- Table -->
             <div class="p-4 overflow-x-auto">
                 <table class="w-full border-collapse">

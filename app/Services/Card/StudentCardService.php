@@ -20,6 +20,7 @@ class StudentCardService
             'student.faculty',
             'student.department',
             'student.level',
+            'student.batch',
         ]);
 
         $student = $card->student;
@@ -28,20 +29,12 @@ class StudentCardService
             throw new RuntimeException('لا يوجد طالب مرتبط بهذه البطاقة.');
         }
 
-        $json = json_encode([
-            'id' => $student->university_no,
-            'name' => $student->name_ar,
-            'faculty' => $student->faculty?->name_ar,
-            'expiry' => $card->expiry_date,
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
         $qrCode = base64_encode(
             QrCode::format('svg')
-                ->encoding('UTF-8')
                 ->size(180)
                 ->margin(0)
-                ->errorCorrection('H')
-                ->generate($json)
+                ->errorCorrection('M')
+                ->generate(CardVerificationService::url($card))
         );
 
         $data = [
@@ -73,6 +66,7 @@ class StudentCardService
             'faculty' => $student->faculty?->name_ar ?? '',
             'department' => $student->department?->name_ar ?? '',
             'level' => $student->level?->name_ar ?? '',
+            'batch' => $student->batch?->name_ar ?? '',
             'university_no' => (string) $student->university_no,
             'card_number' => (string) $card->card_number,
             'expiry_date' => $card->expiry_date ? Carbon::parse($card->expiry_date)->format('Y-m-d') : '',

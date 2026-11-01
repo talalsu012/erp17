@@ -10,11 +10,16 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * ترحيل طلاب كلية ومستوى وعام دراسي إلى مستوى وعام جديدين، لمن حصل منهم على إحدى توصيات الفصل الثاني.
- * الرصيد المتبقي (xmod) يُرحَّل إلى fees8 ثم تُعاد حسابات الرسوم عبر StudentFeeService.
+ * الرصيد المتبقي (xmod) يُرحَّل إلى fees8، ومن لا تخفيض أو تقسيط له يُجعل «بدون تخفيض» و«كامل»، ثم تُعاد حسابات الرسوم عبر StudentFeeService.
  */
 class StudentPromotionService
 {
     public const PERMISSION = 'View:MovingStudent';
+
+    /** reg_ltcolumns: «بدون تخفيض» (2008) و«كامل» (2005) للطالب الذي لا تخفيض أو تقسيط له */
+    public const NO_DISCOUNT = 2008000;
+
+    public const FULL_PAYMENT = 20050001;
 
     public function __construct(private readonly StudentFeeService $fees) {}
 
@@ -116,7 +121,9 @@ class StudentPromotionService
             Student::query()->whereIn('university_no', $ids)->update([
                 'level_code' => $newLevel,
                 'batch_code' => $newBatch,
-                'fees8' => DB::raw('fees8 + xmod'),
+                'fees8' => DB::raw('COALESCE(fees8, 0) + COALESCE(xmod, 0)'),
+                'discount_percent' => DB::raw('COALESCE(discount_percent, '.self::NO_DISCOUNT.')'),
+                'installment_code' => DB::raw('COALESCE(installment_code, '.self::FULL_PAYMENT.')'),
             ]);
 
             $this->fees->refreshMany($ids);
