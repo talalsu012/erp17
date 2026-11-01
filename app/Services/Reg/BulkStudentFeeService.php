@@ -63,7 +63,7 @@ class BulkStudentFeeService
      * @param  array<string, mixed>  $changes  fee_type, amount, installment_code
      * @return array{count: int, samples: list<array<string, mixed>>}
      */
-    public function preview(User $user, array $filters, array $changes, int $sampleSize = 5): array
+    public function preview(User $user, array $filters, array $changes, int $sampleSize = 25): array
     {
         $attributes = $this->attributes($changes);
         $query = $this->query($user, $filters);
