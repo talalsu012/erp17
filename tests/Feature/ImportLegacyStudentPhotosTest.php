@@ -36,6 +36,7 @@ it('imports legacy photos for existing students and skips unusable files', funct
 });
 
 it('keeps an existing photo unless overwrite is requested and changes nothing on dry run', function () {
+    Storage::disk('public')->put('students/avatar/old.jpg', 'x');
     Student::query()->find(101)->forceFill(['photo' => 'students/avatar/old.jpg'])->save();
 
     $this->artisan('students:import-legacy-photos', ['path' => $this->folder, '--dry-run' => true])->assertSuccessful();
@@ -45,5 +46,13 @@ it('keeps an existing photo unless overwrite is requested and changes nothing on
     expect(Student::query()->find(101)->photo)->toBe('students/avatar/old.jpg');
 
     $this->artisan('students:import-legacy-photos', ['path' => $this->folder, '--overwrite' => true])->assertSuccessful();
+    expect(Student::query()->find(101)->photo)->toBe('students/avatar/std101.png');
+});
+
+it('treats a junk photo value whose file does not exist as no photo', function () {
+    Student::query()->find(101)->forceFill(['photo' => '0'])->save();
+
+    $this->artisan('students:import-legacy-photos', ['path' => $this->folder])->assertSuccessful();
+
     expect(Student::query()->find(101)->photo)->toBe('students/avatar/std101.png');
 });

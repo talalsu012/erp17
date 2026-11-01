@@ -6,6 +6,7 @@ use App\Actions\Student\StoreStudentFiles;
 use App\Models\Student;
 use Illuminate\Console\Command;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * يستورد صور الطلاب من مشروع kassala القديم (ملفات std{الرقم الجامعي}.jpg) إلى الصورة الموحّدة في سجل الطالب.
@@ -49,7 +50,7 @@ class ImportLegacyStudentPhotos extends Command
                 continue;
             }
 
-            if (filled($student->photo) && ! $this->option('overwrite')) {
+            if (! $this->option('overwrite') && filled($student->photo) && Storage::disk('public')->exists($student->photo)) {
                 $counts['has_photo']++;
 
                 continue;
